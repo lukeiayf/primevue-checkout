@@ -15,3 +15,5 @@ npm run dev
 ```
 npm run build
 ```
+
+Node version => 14.19.0
