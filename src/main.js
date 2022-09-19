@@ -2,8 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import PrimeVue from 'primevue/config';
 import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
-import Card from 'primevue/card';
+
 
 
 
@@ -12,9 +11,15 @@ import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 
 const app = createApp(App);
-app.use(PrimeVue);
+app.use(PrimeVue, {
+    locale: {
+        dayNames: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
+        dayNamesShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+        dayNamesMin: ["Do", "Se", "Te", "Qua", "Qui", "Sx", "Sa"],
+        monthNames: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+        monthNamesShort: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+    }
+});
 app.component('Button', Button);
-app.component('InputText', InputText);
-app.component('Card', Card);
 
 app.mount('#app');

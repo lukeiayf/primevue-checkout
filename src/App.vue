@@ -7,7 +7,7 @@ import FormComponent from './components/FormComponent.vue';
 </script>
 
 <template>
-  <div style="align-items:center">
+  <div style="justify-content:center; display: flex;">
     <FormComponent></FormComponent>
   </div>
 </template>
