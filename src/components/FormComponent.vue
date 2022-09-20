@@ -12,7 +12,8 @@
           <label for="cpf">CPF</label>
         </span>
         <span class="p-float-label">
-          <Calendar inputId="birthdate" v-model="birthdate" autocomplete="off" class="full date-size" dateFormat="dd/mm/yy" />
+          <Calendar inputId="birthdate" v-model="birthdate" autocomplete="off" class="full date-size"
+            dateFormat="dd/mm/yy" />
           <label for="birthdate">Data de nascimento</label>
         </span>
         <span class="p-float-label">
@@ -50,44 +51,63 @@
           <label for="city">Cidade</label>
         </span>
 
+        <h5>Dados do Pagamento</h5>
+        
+        <SelectButton class="button-payment" v-model="paymentMethod" :options="paymentOptions" optionLabel="name" aria-labelledby="single" />
 
-
+        <div style="display: flex; flex-wrap: nowrap; width: 100%">
+          <span class="p-float-label">
+            <InputNumber v-model="installments" id="installments" showButtons mode="decimal" :min="1" :max="12" />
+            <label for="installments">Quantidade de parcelas</label>
+          </span>
+        </div>
+        <CreditCardComponent v-if="paymentMethod.value==1"></CreditCardComponent>
       </div>
+
     </template>
   </Card>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 import InputText from 'primevue/inputtext';
 import Card from 'primevue/card';
 import Calendar from 'primevue/calendar';
-import InputMask from 'primevue/inputmask'
+import InputMask from 'primevue/inputmask';
+import InputNumber from 'primevue/inputnumber';
+import SelectButton from 'primevue/selectbutton';
+import CreditCardComponent from './CreditCardComponent.vue';
 
-export default {
-  components: {
-    InputText,
-    Card,
-    Calendar,
-    InputMask
+const username = ref();
+const cpf = ref();
+const birthdate = ref();
+const email = ref();
+const phone = ref();
+const cep = ref();
+const street = ref();
+const number = ref();
+const line2 = ref();
+const state = ref();
+const city = ref();
+const installments = ref();
+const paymentMethod = ref({
+  name: 'Cartão',
+  value: 1
+})
+console.log(paymentMethod);
+const paymentOptions = [
+  {
+    name: 'Cartão', value: 1
   },
-  setup() {
-    const username = ref();
-    const cpf = ref();
-    const birthdate = ref();
-    const email = ref();
-    const phone = ref();
-    const cep = ref();
-    const street = ref();
-    const number = ref();
-    const line2 = ref();
-    const state = ref();
-    const city = ref();
+  {
+    name: 'Boleto', value: 2
+  },
+  {
+    name: 'Pix', value: 3
+  },
+]
 
 
-    return { username, cpf, birthdate, email, phone, cep, street, number, line2, state, city }
-  }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -100,20 +120,21 @@ export default {
   }
 }
 
-.input-size{
+.input-size {
   padding: 2px;
 }
 
-.date-size{
+.date-size {
   width: 368px;
   height: 27.33px;
-}
-
-.field * {
-  display: block;
 }
 
 .full {
   width: 100%;
 }
+
+.button-payment {
+  margin-bottom: 2rem;
+}
+
 </style>

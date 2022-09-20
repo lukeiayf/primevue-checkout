@@ -16,7 +16,7 @@
         <img src="..\assets\logo.png" />
       </div>
       <ul class="list">
-        <li class="item-list" v-for="item in items" :bind="item.key"><strong>{{item.title}}</strong>: {{item.value}}
+        <li class="item-list" v-for="item in items" :bind="item.key"><strong>{{item.title}}</strong>: {{item?.currency }}{{item.value}}
         </li>
       </ul>
     </template>
@@ -25,19 +25,21 @@
 
 <script setup>
 import Card from 'primevue/card';
-
-const items = [
+  const valorPrincipal = 25.00;
+  const items = [
   {
     title: 'Adesão',
     value: 'Valor Adesão'
   },
   {
     title: 'Valor principal',
-    value: 'Valor principal'
+    value: valorPrincipal,
+    currency: 'R$ '
   },
   {
     title: 'Total',
     value: 'Total'
+    
   },
   {
     title: 'Periodicidade',
@@ -45,6 +47,8 @@ const items = [
   },
 
 ]
+
+
 </script>
 
 
@@ -58,7 +62,8 @@ const items = [
   border: #d4d9de solid 1px;
   border-radius: 3px;
   margin-bottom: 5px;
-  padding: 0.3rem;
+  padding: 0.2rem;
+  font-size: small;
 }
 
 .margin {
