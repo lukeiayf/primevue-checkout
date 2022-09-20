@@ -4,49 +4,49 @@
       <h5>Dados do Cliente</h5>
       <div class="input-area">
         <span class="p-float-label">
-          <InputText id="username" type="text" v-model="username" class="full" />
+          <InputText id="username" type="text" v-model="username" class="full input-size" />
           <label for="username">Nome</label>
         </span>
         <span class="p-float-label">
-          <InputText id="cpf" type="text" v-model="cpf" class="full" />
+          <InputText id="cpf" type="text" v-model="cpf" class="full input-size" />
           <label for="cpf">CPF</label>
         </span>
         <span class="p-float-label">
-          <Calendar inputId="birthdate" v-model="birthdate" autocomplete="off" class="full" dateFormat="dd/mm/yy" />
+          <Calendar inputId="birthdate" v-model="birthdate" autocomplete="off" class="full date-size" dateFormat="dd/mm/yy" />
           <label for="birthdate">Data de nascimento</label>
         </span>
         <span class="p-float-label">
-          <InputText id="email" type="text" v-model="email" class="full" />
+          <InputText id="email" type="text" v-model="email" class="full input-size" />
           <label for="email">Email</label>
         </span>
         <span class="p-float-label">
-          <InputMask id="phone" type="text" v-model="phone" mask="(99)99999-999?9" class="full" />
+          <InputMask id="phone" type="text" v-model="phone" mask="(99)99999-999?9" class="full input-size" />
           <label for="phone">Telefone</label>
         </span>
 
         <h5>Endereço</h5>
         <span class="p-float-label">
-          <InputText id="cep" type="text" v-model="cep" class="full" />
+          <InputText id="cep" type="text" v-model="cep" class="full input-size" />
           <label for="cep">CEP</label>
         </span>
         <span class="p-float-label">
-          <InputText id="street" type="text" v-model="street" class="full" />
+          <InputText id="street" type="text" v-model="street" class="full input-size" />
           <label for="street">Logradouro</label>
         </span>
         <span class="p-float-label">
-          <InputText id="number" type="text" v-model="number" class="full" />
+          <InputText id="number" type="text" v-model="number" class="full input-size" />
           <label for="number">Número</label>
         </span>
         <span class="p-float-label">
-          <InputText id="line2" type="text" v-model="line2" class="full" />
+          <InputText id="line2" type="text" v-model="line2" class="full input-size" />
           <label for="line2">Complemento</label>
         </span>
         <span class="p-float-label">
-          <InputText id="state" type="text" v-model="state" class="full" />
+          <InputText id="state" type="text" v-model="state" class="full input-size" />
           <label for="state">Estado</label>
         </span>
         <span class="p-float-label">
-          <InputText id="city" type="text" v-model="city" class="full" />
+          <InputText id="city" type="text" v-model="city" class="full input-size" />
           <label for="city">Cidade</label>
         </span>
 
@@ -100,6 +100,14 @@ export default {
   }
 }
 
+.input-size{
+  padding: 2px;
+}
+
+.date-size{
+  width: 368px;
+  height: 27.33px;
+}
 
 .field * {
   display: block;

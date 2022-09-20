@@ -3,11 +3,13 @@
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import HelloWorld from './components/HelloWorld.vue'
 import FormComponent from './components/FormComponent.vue';
+import SalesDetailComponent from './components/SalesDetailComponent.vue';
 
 </script>
 
 <template>
-  <div style="justify-content:center; display: flex;">
+  <div style="justify-content:center; display: flex; flex-direction: row; ">
+    <SalesDetailComponent style="margin-right: 1rem;"></SalesDetailComponent>
     <FormComponent></FormComponent>
   </div>
 </template>
