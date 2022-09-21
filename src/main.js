@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import PrimeVue from 'primevue/config';
 import Button from 'primevue/button';
+import Tooltip from 'primevue/tooltip';
 
 
 
@@ -21,5 +22,6 @@ app.use(PrimeVue, {
     }
 });
 app.component('Button', Button);
+app.directive('tooltip', Tooltip)
 
 app.mount('#app');

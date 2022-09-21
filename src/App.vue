@@ -4,6 +4,7 @@
 import FormComponent from './components/FormComponent.vue';
 import SalesDetailComponent from './components/SalesDetailComponent.vue';
 
+
 </script>
 
 <template>

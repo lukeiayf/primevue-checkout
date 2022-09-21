@@ -1,5 +1,5 @@
 <template>
-  <Card style="width: 25rem; margin-bottom: 2em; align-items: center;">
+  <Card style="width: 25rem; margin-bottom: 1.5em; margin-top: 1.5em; align-items: center;">
     <template #title>
       <div style="display: flex; justify-content:flex-start; flex-direction: column">
         <img style="width:150px; margin: 1rem" src="..\assets\bempaggo.png" />
@@ -10,13 +10,14 @@
         <h5>Detalhes da compra</h5>
       </div>
     </template>
-    <template #content >
+    <template #content>
 
-      <div style="display: flex; justify-content: center; background-color: antiquewhite;">
-        <img src="..\assets\logo.png" />
+      <div style="display: flex; justify-content: center; background-color: lightgrey;">
+        <img :src="imgSrc" style="width:150px;" />
       </div>
       <ul class="list">
-        <li class="item-list" v-for="item in items" :bind="item.key"><strong>{{item.title}}</strong>: {{item?.currency }}{{item.value}}
+        <li class="item-list" v-for="item in items" :bind="item.key"><strong>{{item.title}}</strong>: {{item?.currency
+        }}{{item.value}}
         </li>
       </ul>
     </template>
@@ -25,8 +26,10 @@
 
 <script setup>
 import Card from 'primevue/card';
-  const valorPrincipal = 25.00;
-  const items = [
+
+const imgSrc = "src/assets/logo.png"
+const valorPrincipal = 25.00;
+const items = [
   {
     title: 'Adesão',
     value: 'Valor Adesão'
@@ -39,7 +42,7 @@ import Card from 'primevue/card';
   {
     title: 'Total',
     value: 'Total'
-    
+
   },
   {
     title: 'Periodicidade',
@@ -68,6 +71,6 @@ import Card from 'primevue/card';
 
 .margin {
   margin-bottom: -30px;
-  color:#495057;
-  }
+  color: #495057;
+}
 </style>

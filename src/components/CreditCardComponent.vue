@@ -5,27 +5,32 @@
         option-label="name" class="full dropdown-size" />
       <label for="cardBrand">Bandeira</label>
     </span>
-    <span class="p-float-label">
+    <span class="p-float-label p-input-icon-right">
+      <i class="pi pi-credit-card"></i>
       <InputText id="cardNumber" type="text" v-model="cardNumber" class="full input-size" />
       <label for="cardNumber">Número do cartão</label>
     </span>
     <div style="display: flex; flex-direction: row; justify-content: space-between;">
       <span style="width: 45%;">
         <div class="field col-12 md:col-4">
-          <Calendar inputId="month" class="dropdown-size" v-model="month" view="month" dateFormat="mm/yy" placeholder="Mês" touchUI />
+          <Calendar inputId="month" class="dropdown-size" v-model="month" view="month" dateFormat="mm/yy"
+            placeholder="Vencimento" touchUI :showIcon="true" />
         </div>
       </span>
-      <span class="p-float-label" style="width: 45%;">
+      <span class="p-float-label p-input-icon-right" style="width: 45%;">
+        <i class="pi pi-lock"></i>
         <InputText id="securityCode" type="text" v-model="securityCode" class="input-size" style="width: 100%" />
         <label for="securityCode">CVV</label>
       </span>
     </div>
 
-    <span class="p-float-label">
+    <span class="p-float-label p-input-icon-right">
+      <i class="pi pi-user"></i>
       <InputText id="holderName" type="text" v-model="holderName" class="full input-size" />
       <label for="holderName">Nome do titular</label>
     </span>
-    <span class="p-float-label">
+    <span class="p-float-label p-input-icon-right">
+      <i class="pi pi-info-circle"></i>
       <InputText id="holderDocument" type="text" v-model="holderDocument" class="full input-size" />
       <label for="holderDocument">CPF do titular</label>
     </span>
