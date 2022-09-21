@@ -10,14 +10,9 @@
       <label for="cardNumber">Número do cartão</label>
     </span>
     <div style="display: flex; flex-direction: row; justify-content: space-between;">
-      <span style="width: 25%;">
+      <span style="width: 45%;">
         <div class="field col-12 md:col-4">
-          <Calendar inputId="month" class="dropdown-size" v-model="month" view="month" dateFormat="mm" placeholder="Mês" touchUI />
-        </div>
-      </span>
-      <span  style="width: 25%;">
-        <div class="field col-12 md:col-4 ">
-          <Calendar inputId="year" class="dropdown-size" v-model="year"  view="year" dateFormat="yy" placeholder="Ano"  touchUI />
+          <Calendar inputId="month" class="dropdown-size" v-model="month" view="month" dateFormat="mm/yy" placeholder="Mês" touchUI />
         </div>
       </span>
       <span class="p-float-label" style="width: 45%;">
