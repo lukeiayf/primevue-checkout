@@ -62,19 +62,21 @@
             <span class=" p-float-label p-input-icon-right">
               <i class="pi pi-building"></i>
               <InputText id="line2" type="text" v-model="line2" class="full input-size" />
-              <label for="line2">Complemento*</label>
+              <label for="line2">Complemento</label>
             </span>
           </div>
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
             <span class="p-float-label p-input-icon-right" style="width: 45%;">
               <i class="pi pi-flag"></i>
-              <InputText id="state" type="text" v-model="state" class="full input-size" />
-              <label for="state">Estado*</label>
+              <InputText id="state" type="text" v-model="v$.state.$model" class="full input-size"
+                :class="{'full input-size p-invalid':v$.state.$invalid && submitted}" />
+              <label for="number" :class="{'p-error':v$.state.$invalid && submitted}">Estado*</label>
             </span>
             <span class="p-float-label p-input-icon-right">
               <i class="pi pi-flag"></i>
-              <InputText id="city" type="text" v-model="city" class="full input-size" />
-              <label for="city">Cidade*</label>
+              <InputText id="city" type="text" v-model="v$.city.$model" class="full input-size"
+                :class="{'full input-size p-invalid':v$.city.$invalid && submitted}" />
+              <label for="number" :class="{'p-error':v$.city.$invalid && submitted}">Cidade*</label>
             </span>
           </div>
 
@@ -85,9 +87,10 @@
 
           <div style="display: flex; flex-wrap: nowrap; justify-content: center;">
             <span class="p-float-label">
-              <InputNumber v-model="installments" id="installments" showButtons mode="decimal" :min="1"
-                :max="maxInstallments" />
-              <label for="installments">Quantidade de parcelas</label>
+              <InputNumber v-model="v$.installments.$model" id="installments" showButtons mode="decimal" :min="1"
+                :max="maxInstallments" :class="{'full input-size p-invalid':v$.installments.$invalid && submitted}" />
+              <label for="number" :class="{'p-error':v$.installments.$invalid && submitted}">Quantidade de
+                parcelas*</label>
             </span>
           </div>
           <CreditCardComponent v-if="paymentMethod.value == 1"></CreditCardComponent>
@@ -115,11 +118,12 @@ import SelectButton from 'primevue/selectbutton';
 import CreditCardComponent from './CreditCardComponent.vue';
 import Button from 'primevue/button';
 
+
 const birthdate = ref();
 const phone = ref();
-const installments = ref();
 const maxInstallments = ref(12);
 const submitted = ref(false);
+const line2 = ref()
 
 const defaultState = reactive({
   username: '',
@@ -128,9 +132,9 @@ const defaultState = reactive({
   cep: '',
   street: '',
   number: '',
-  line2: '',
   state: '',
-  city: ''
+  city: '',
+  installments: 1
 });
 
 const rules = {
@@ -140,16 +144,15 @@ const rules = {
   cep: { required },
   street: { required },
   number: { required },
-  line2: { required },
   state: { required },
-  city: { required }
+  city: { required },
+  installments: { required }
 };
 
 const v$ = useVuelidate(rules, defaultState);
 
 const handleSubmit = (isFormValid) => {
   submitted.value = true;
-
   if (!isFormValid) {
     console.log('n passou')
   } else {
