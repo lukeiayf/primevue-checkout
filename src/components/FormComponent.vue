@@ -106,7 +106,7 @@
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-credit-card"></i>
                 <InputText id="cardNumber" type="text" v-model="v$.cardNumber.$model" class="full input-size"
-                  :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted}" />
+                  :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted}" @blur="verifyCard()" />
                 <label for="number" :class="{'p-error':v$.cardNumber.$invalid && submitted}">Número do cartão*</label>
               </span>
               <div style="display: flex; flex-direction: row; justify-content: space-between;">
@@ -169,7 +169,8 @@ const birthdate = ref();
 const phone = ref();
 const maxInstallments = ref(12);
 const submitted = ref(false);
-const line2 = ref()
+const line2 = ref();
+let brand = ref();
 
 const defaultState = reactive({
   username: '',
@@ -211,10 +212,13 @@ const rules = {
 const v$ = useVuelidate(rules, defaultState);
 
 const handleSubmit = (isFormValid) => {
+  // debugger
   submitted.value = true;
   if (!isFormValid) {
-    console.log('n passou')
-    console.log(v$.$errors)
+    console.log('n passou');
+    console.log(v$.value.cardNumber.$model);
+    // console.log(v$.value.cardNumber.$model.valueOf);
+    console.log(GetCardType(v$.value.cardNumber.$model));
   } else {
     console.log('passou')
   }
@@ -259,6 +263,95 @@ const brands = ref([
     id: 3
   }
 ]);
+
+function GetCardType(number) {
+  // Visa
+  var re = new RegExp("^4");
+  if (number.match(re) != null){
+    brand = "Visa";
+    return "Visa";
+  }
+  // Mastercard 
+  if (/^(5[1-5][0-9]{14}|2(22[1-9][0-9]{12}|2[3-9][0-9]{13}|[3-6][0-9]{14}|7[0-1][0-9]{13}|720[0-9]{12}))$/.test(number)){
+    brand = "Mastercard";
+    return "Mastercard";
+  }
+  // AMEX
+  re = new RegExp("^3[47]");
+  if (number.match(re) != null){
+    brand = "AMEX";
+    return "AMEX";
+  }
+  // Discover
+  re = new RegExp("^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)");
+  if (number.match(re) != null){
+    brand = "Discover";
+    return "Discover";
+  }
+  // Diners
+  re = new RegExp("^36");
+  if (number.match(re) != null){
+    brand = "Diners";
+    return "Diners";
+  }
+  // Diners - Carte Blanche
+  re = new RegExp("^30[0-5]");
+  if (number.match(re) != null){
+    brand = "Diners - Carte Blanche";
+    return "Diners - Carte Blanche";
+  }
+  // JCB
+  re = new RegExp("^35(2[89]|[3-8][0-9])");
+  if (number.match(re) != null){
+    brand = "JCB";
+    return "JCB";
+  }
+  // Visa Electron
+  re = new RegExp("^(4026|417500|4508|4844|491(3|7))");
+  if (number.match(re) != null){
+    brand = "Visa Electron";
+    return "Visa Electron";
+  }
+
+
+  // Elo
+  re = new RegeExp('/^((((636368)|(438935)|(504175)|(451416)|(636297))\d{0,10})|((5067)|(4576)|(4011))\d{0,12})$/')
+  if (number.match(re) != null) {
+    brand = "Elo";
+    return "Elo";
+  }
+  // Mastercard 2
+  re = new RegeExp('/^(5[1-5]\d{4}|677189)\d{10}$/')
+  if (number.match(re) != null) {
+    brand = "Mastercard";
+    return "Mastercard";
+  }
+  // Hipercard
+  re = new RegeExp('/^(606282\d{10}(\d{3})?)|(3841\d{15})$/')
+  if (number.match(re) != null) {
+    brand = "Hipercard";
+    return "Hipercard";
+  }
+  // Aura
+  re = new RegExp('/^((?!504175))^((?!5067))(^50[0-9])/')
+  if (number.match(re) != null) {
+    brand = "Aura";
+    return "Aura";
+  }
+  // Sorocred
+  re = new RegExp('^627892|^636414')
+  if (number.match(re) != null) {
+    brand = "Sorocred";
+    return "Sorocred";
+  }
+
+  brand = "Brand not found"
+  return "Brand not found";
+};
+
+function verifyCard(){
+  console.log(GetCardType(v$.value.cardNumber.$model));
+};
 
 
 </script>
