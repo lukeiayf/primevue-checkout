@@ -52,6 +52,8 @@ import InputText from 'primevue/inputtext'
 import Calendar from 'primevue/calendar'
 
 
+const submitted = ref(false);
+
 const brands = ref([
   {
     name: 'Mastercard',
@@ -66,15 +68,6 @@ const brands = ref([
     id: 3
   }
 ]);
-
-/* const validateCreditCard = isFormValid => {
-  if (!isFormValid) {
-
-    console.log('n passou')
-  } else {
-    console.log('passou')
-  }
-} */
 
 const defaultState = reactive({
   cardBrand: '',

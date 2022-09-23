@@ -93,7 +93,53 @@
                 parcelas*</label>
             </span>
           </div>
-          <CreditCardComponent v-if="paymentMethod.value == 1"></CreditCardComponent>
+          
+          <!-- <CreditCardComponent v-if="paymentMethod.value == 1"></CreditCardComponent> -->
+          <div v-if="paymentMethod.value == 1">
+            <div class="input-area">
+              <span class="p-float-label">
+                <Dropdown inputStyle="padding: 2px; padding-left: 6px" v-model="v$.cardBrand.$model" id="cardBrand"
+                  :options="brands" option-label="name" class="full dropdown-size"
+                  :class="{'full dropdown-size p-invalid':v$.cardBrand.$invalid && submitted}" />
+                <label for="number" :class="{'p-error':v$.cardBrand.$invalid && submitted}">Bandeira*</label>
+              </span>
+              <span class="p-float-label p-input-icon-right">
+                <i class="pi pi-credit-card"></i>
+                <InputText id="cardNumber" type="text" v-model="v$.cardNumber.$model" class="full input-size"
+                  :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted}" />
+                <label for="number" :class="{'p-error':v$.cardNumber.$invalid && submitted}">Número do cartão*</label>
+              </span>
+              <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <span style="width: 45%;">
+                  <div class="field col-12 md:col-4">
+                    <Calendar inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month" dateFormat="mm/yy"
+                      placeholder="Vencimento" touchUI :showIcon="true"
+                      :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted}" />
+                  </div>
+                </span>
+                <span class="p-float-label p-input-icon-right" style="width: 45%;">
+                  <i class="pi pi-lock"></i>
+                  <InputText id="securityCode" type="text" v-model="v$.securityCode.$model" class="full input-size" style="width: 100%"
+                    :class="{'full input-size p-invalid':v$.securityCode.$invalid && submitted}" />
+                  <label for="number" :class="{'p-error':v$.securityCode.$invalid && submitted}">CVV*</label>
+                </span>
+              </div>
+            
+              <span class="p-float-label p-input-icon-right">
+                <i class="pi pi-user"></i>
+                <InputText id="holderName" type="text" v-model="v$.holderName.$model" class="full input-size"
+                  :class="{'full input-size p-invalid':v$.holderName.$invalid && submitted}" />
+                <label for="number" :class="{'p-error':v$.holderName.$invalid && submitted}">Nome do titular*</label>
+              </span>
+              <span class="p-float-label p-input-icon-right">
+                <i class="pi pi-info-circle"></i>
+                <InputText id="holderDocument" type="text" v-model="v$.holderDocument.$model" class="full input-size"
+                  :class="{'full input-size p-invalid':v$.holderDocument.$invalid && submitted}" />
+                <label for="number" :class="{'p-error':v$.holderDocument.$invalid && submitted}">CPF do titular*</label>
+              </span>
+            </div>            
+          </div>
+
           <Button type="submit" label="Confirmar transação" class="full" v-if="paymentMethod.value == 1" />
           <Button type="submit" label="Confirmar transação" class="full" v-tooltip="'Será gerado um Boleto Bancário'"
             v-if="paymentMethod.value == 2" />
@@ -108,7 +154,7 @@
 <script setup>
 import { reactive, ref, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
-import { required, email } from '@vuelidate/validators';
+import { required, email, minLength, maxLength } from '@vuelidate/validators';
 import InputText from 'primevue/inputtext';
 import Card from 'primevue/card';
 import Calendar from 'primevue/calendar';
@@ -117,7 +163,7 @@ import InputNumber from 'primevue/inputnumber';
 import SelectButton from 'primevue/selectbutton';
 import CreditCardComponent from './CreditCardComponent.vue';
 import Button from 'primevue/button';
-
+import Dropdown from 'primevue/dropdown'
 
 const birthdate = ref();
 const phone = ref();
@@ -134,19 +180,32 @@ const defaultState = reactive({
   number: '',
   state: '',
   city: '',
-  installments: 1
+  installments: 1,
+  cardBrand: '',
+  cardNumber: '',
+  month: '',
+  securityCode: '',
+  holderName: '',
+  holderDocument: '',
+
 });
 
 const rules = {
   username: { required },
   email: { required, email },
-  cpf: { required },
-  cep: { required },
+  cpf: { required, minLengthValue: minLength(11) },
+  cep: { required, minLengthValue: minLength(8) },
   street: { required },
   number: { required },
   state: { required },
   city: { required },
-  installments: { required }
+  installments: { required },
+  cardBrand: { required },
+  cardNumber: { required, minLengthValue:minLength(13), maxLengthValue:maxLength(16) },
+  month: { required },
+  securityCode: { required, minLengthValue:minLength(3) },
+  holderName: { required },
+  holderDocument: { required, minLengthValue: minLength(11), maxLengthValue: maxLength(14) }
 };
 
 const v$ = useVuelidate(rules, defaultState);
@@ -155,6 +214,7 @@ const handleSubmit = (isFormValid) => {
   submitted.value = true;
   if (!isFormValid) {
     console.log('n passou')
+    console.log(v$.$errors)
   } else {
     console.log('passou')
   }
@@ -185,6 +245,21 @@ const paymentOptions = [
   }
 ];
 
+const brands = ref([
+  {
+    name: 'Mastercard',
+    id: 1
+  },
+  {
+    name: 'Rede',
+    id: 2
+  },
+  {
+    name: 'Elo',
+    id: 3
+  }
+]);
+
 
 </script>
 
@@ -213,5 +288,11 @@ const paymentOptions = [
 
 .button-payment {
   margin-bottom: 2rem;
+}
+
+.dropdown-size {
+  height: 27.33px;
+  padding: -2px;
+  padding-left: -6px;
 }
 </style>
