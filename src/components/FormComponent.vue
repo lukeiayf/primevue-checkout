@@ -15,10 +15,11 @@
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
             <span class="p-float-label p-input-icon-right" style="width:54%">
               <i class="pi pi-info-circle" />
-              <InputText id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
-                :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" />
-              <label for="cpf" :class="{'p-error':v$.cpf.$invalid && submitted}">CPF*</label>
+              <InputMask id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
+                :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" mask="999.999.999-99" @blur="validaCpf()" />
+              <label for="cpf">CPF*</label>
             </span>
+            <InlineMessage v-if="messages.length" />
             <span class="p-float-label">
               <Calendar inputId="birthdate" v-model="birthdate" autocomplete="off" class="full date-size"
                 dateFormat="dd/mm/yy" :showIcon="true" />
@@ -112,9 +113,9 @@
               <div style="display: flex; flex-direction: row; justify-content: space-between;">
                 <span style="width: 45%;">
                   <div class="field col-12 md:col-4">
-                    <Calendar inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month" :minDate="minDate"
-                      dateFormat="mm/yy" placeholder="Vencimento" touchUI :showIcon="true"
-                      :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted }"/>
+                    <Calendar inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month"
+                      :minDate="minDate" dateFormat="mm/yy" placeholder="Vencimento" touchUI :showIcon="true"
+                      :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted }" />
                   </div>
                 </span>
                 <span class="p-float-label p-input-icon-right" style="width: 45%;">
@@ -163,11 +164,11 @@ import InputNumber from 'primevue/inputnumber';
 import SelectButton from 'primevue/selectbutton';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
+import InlineMessage from 'primevue/inlinemessage';
 import creditCardType, {
   types as CardType,
 } from "credit-card-type";
 import type { Ref } from 'vue';
-import moment, { now } from 'moment';
 import 'moment/locale/pt-br';
 
 const birthdate: Ref<any> = ref('');
@@ -176,7 +177,13 @@ const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
 const line2: Ref<string> = ref('');
 const minDate: Ref<Date> = ref(new Date());
+const messages = ref([]);
 
+interface Message {
+  severity: string;
+  content: string;
+  id: number;
+}
 
 interface PaymentMethod {
   name: string,
@@ -329,6 +336,55 @@ function verifyCard() {
 
 
 }
+
+function validaCpf() {
+  console.log(v$.value.cpf.$model);
+  let soma = 0;
+  let resto;
+  let inputCPF = v$.value.cpf.$model;
+  let invalidCpf: string[] = ["00000000000", "11111111111", "22222222222", "3333333333", "44444444444", "55555555555", "66666666666", "77777777777", "88888888888", "99999999999"];
+
+  if (invalidCpf.indexOf(inputCPF) !== -1) { return false; }
+  // tslint:disable-next-line:radix
+  for (let i = 1; i <= 9; i++) {
+    soma = soma + parseInt(inputCPF.substring(i - 1, i)) * (11 - i);
+    resto = (soma * 10) % 11;
+  }
+
+  if ((resto === 10) || (resto === 11)) { resto = 0; }
+
+  // tslint:disable-next-line:radix
+  if (resto !== parseInt(inputCPF.substring(9, 10))) {
+    console.log('false')
+    return false;
+  }
+
+  soma = 0;
+  // tslint:disable-next-line:radix
+  for (let i = 1; i <= 10; i++) {
+    soma = soma + parseInt(inputCPF.substring(i - 1, i)) * (12 - i);
+    resto = (soma * 10) % 11;
+  }
+
+  if ((resto === 10) || (resto === 11)) { resto = 0; }
+
+  // tslint:disable-next-line:radix
+  if (resto !== parseInt(inputCPF.substring(10, 11))) {
+    console.log('false');
+    return false;
+  }
+  console.log('true');
+  return true;
+}
+
+/* function addMessages() {
+    messages.value = [{
+      severity: 'warn',
+      content: 'Documento inválido',
+      id: 1
+    }]
+    console.log(messages.value[0].severity)
+  } */
 
 </script> 
 
