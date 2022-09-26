@@ -93,7 +93,7 @@
                 parcelas*</label>
             </span>
           </div>
-          
+
           <!-- <CreditCardComponent v-if="paymentMethod.value == 1"></CreditCardComponent> -->
           <div v-if="paymentMethod.value == 1">
             <div class="input-area">
@@ -112,19 +112,19 @@
               <div style="display: flex; flex-direction: row; justify-content: space-between;">
                 <span style="width: 45%;">
                   <div class="field col-12 md:col-4">
-                    <Calendar inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month" dateFormat="mm/yy"
-                      placeholder="Vencimento" touchUI :showIcon="true"
+                    <Calendar inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month"
+                      dateFormat="mm/yy" placeholder="Vencimento" touchUI :showIcon="true"
                       :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted}" />
                   </div>
                 </span>
                 <span class="p-float-label p-input-icon-right" style="width: 45%;">
                   <i class="pi pi-lock"></i>
-                  <InputText id="securityCode" type="text" v-model="v$.securityCode.$model" class="full input-size" style="width: 100%"
-                    :class="{'full input-size p-invalid':v$.securityCode.$invalid && submitted}" />
+                  <InputText id="securityCode" type="text" v-model="v$.securityCode.$model" class="full input-size"
+                    style="width: 100%" :class="{'full input-size p-invalid':v$.securityCode.$invalid && submitted}" />
                   <label for="number" :class="{'p-error':v$.securityCode.$invalid && submitted}">CVV*</label>
                 </span>
               </div>
-            
+
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-user"></i>
                 <InputText id="holderName" type="text" v-model="v$.holderName.$model" class="full input-size"
@@ -137,7 +137,7 @@
                   :class="{'full input-size p-invalid':v$.holderDocument.$invalid && submitted}" />
                 <label for="number" :class="{'p-error':v$.holderDocument.$invalid && submitted}">CPF do titular*</label>
               </span>
-            </div>            
+            </div>
           </div>
 
           <Button type="submit" label="Confirmar transação" class="full" v-if="paymentMethod.value == 1" />
@@ -163,7 +163,11 @@ import InputNumber from 'primevue/inputnumber';
 import SelectButton from 'primevue/selectbutton';
 import CreditCardComponent from './CreditCardComponent.vue';
 import Button from 'primevue/button';
-import Dropdown from 'primevue/dropdown'
+import Dropdown from 'primevue/dropdown';
+import creditCardType, {
+  getTypeInfo,
+  types as CardType,
+} from "credit-card-type";
 
 const birthdate = ref();
 const phone = ref();
@@ -202,9 +206,9 @@ const rules = {
   city: { required },
   installments: { required },
   cardBrand: { required },
-  cardNumber: { required, minLengthValue:minLength(13), maxLengthValue:maxLength(16) },
+  cardNumber: { required, minLengthValue: minLength(13), maxLengthValue: maxLength(16) },
   month: { required },
-  securityCode: { required, minLengthValue:minLength(3) },
+  securityCode: { required, minLengthValue: minLength(3) },
   holderName: { required },
   holderDocument: { required, minLengthValue: minLength(11), maxLengthValue: maxLength(14) }
 };
@@ -249,66 +253,70 @@ const paymentOptions = [
   }
 ];
 
-const brands = ref([
+const brands = [
   {
     name: 'Mastercard',
     id: 1
   },
   {
-    name: 'Rede',
+    name: 'Hipercard',
     id: 2
   },
   {
     name: 'Elo',
     id: 3
+  },
+  {
+    name: 'Visa',
+    id: 4
   }
-]);
+];
 
 function GetCardType(number) {
   // Visa
   var re = new RegExp("^4");
-  if (number.match(re) != null){
+  if (number.match(re) != null) {
     brand = "Visa";
     return "Visa";
   }
   // Mastercard 
-  if (/^(5[1-5][0-9]{14}|2(22[1-9][0-9]{12}|2[3-9][0-9]{13}|[3-6][0-9]{14}|7[0-1][0-9]{13}|720[0-9]{12}))$/.test(number)){
+  if (/^(5[1-5][0-9]{14}|2(22[1-9][0-9]{12}|2[3-9][0-9]{13}|[3-6][0-9]{14}|7[0-1][0-9]{13}|720[0-9]{12}))$/.test(number)) {
     brand = "Mastercard";
     return "Mastercard";
   }
   // AMEX
   re = new RegExp("^3[47]");
-  if (number.match(re) != null){
+  if (number.match(re) != null) {
     brand = "AMEX";
     return "AMEX";
   }
   // Discover
   re = new RegExp("^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)");
-  if (number.match(re) != null){
+  if (number.match(re) != null) {
     brand = "Discover";
     return "Discover";
   }
   // Diners
   re = new RegExp("^36");
-  if (number.match(re) != null){
+  if (number.match(re) != null) {
     brand = "Diners";
     return "Diners";
   }
   // Diners - Carte Blanche
   re = new RegExp("^30[0-5]");
-  if (number.match(re) != null){
+  if (number.match(re) != null) {
     brand = "Diners - Carte Blanche";
     return "Diners - Carte Blanche";
   }
   // JCB
   re = new RegExp("^35(2[89]|[3-8][0-9])");
-  if (number.match(re) != null){
+  if (number.match(re) != null) {
     brand = "JCB";
     return "JCB";
   }
   // Visa Electron
   re = new RegExp("^(4026|417500|4508|4844|491(3|7))");
-  if (number.match(re) != null){
+  if (number.match(re) != null) {
     brand = "Visa Electron";
     return "Visa Electron";
   }
@@ -349,12 +357,42 @@ function GetCardType(number) {
   return "Brand not found";
 };
 
-function verifyCard(){
-  console.log(GetCardType(v$.value.cardNumber.$model));
-};
+function verifyCard() {
+  if( v$.value.cardNumber.$model != '')
+  console.log(v$.value.cardNumber.$model);
+  var visaCards = creditCardType(v$.value.cardNumber.$model);
+  var modelCardBrand = visaCards[0].type;
+  console.log(v$.value.cardBrand.$model)
+  console.log(brands.length)
+  for (let i=0; i<brands.length; i++) {
+    if(modelCardBrand.toLowerCase() == brands[i].name.toLowerCase()){
+      console.log("igual " + brands[i].name)
+      v$.value.cardBrand.$model = brands[i]
+    }
+    
+  }
+  
+
+}
 
 
-</script>
+function setCardBrand(number) {
+ /*  var visaCards = creditCardType(number);
+  var modelCardBrand = visaCards[0].type;
+  v$.value.cardBrand.$model = modelCardBrand; */
+  //console.log(v$.value.cardBrand.$model)
+  //console.log(JSON.stringify(this.brands) )
+  console.log(brands)
+  console.log(brands[0].name)
+  for (let i = 0; i < this.brands.lenght; i++) {
+    console.log(brands[i].name)
+  }
+
+}
+
+
+
+</script> 
 
 <style lang="scss" scoped>
 .input-area>* {
