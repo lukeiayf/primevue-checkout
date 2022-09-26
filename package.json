@@ -13,6 +13,7 @@
     "credit-card-type": "^9.1.0",
     "primeicons": "^5.0.0",
     "primevue": "^3.12.5",
+    "typescript": "^4.8.3",
     "vue": "^3.2.25",
     "vue-credit-card-validation": "^1.0.5"
   },
