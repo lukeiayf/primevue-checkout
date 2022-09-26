@@ -112,9 +112,9 @@
               <div style="display: flex; flex-direction: row; justify-content: space-between;">
                 <span style="width: 45%;">
                   <div class="field col-12 md:col-4">
-                    <Calendar inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month"
+                    <Calendar inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month" :minDate="minDate"
                       dateFormat="mm/yy" placeholder="Vencimento" touchUI :showIcon="true"
-                      :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted}" />
+                      :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted }"/>
                   </div>
                 </span>
                 <span class="p-float-label p-input-icon-right" style="width: 45%;">
@@ -166,13 +166,16 @@ import Dropdown from 'primevue/dropdown';
 import creditCardType, {
   types as CardType,
 } from "credit-card-type";
-import type { Ref } from 'vue'
+import type { Ref } from 'vue';
+import moment, { now } from 'moment';
+import 'moment/locale/pt-br';
 
 const birthdate: Ref<any> = ref('');
 const phone: Ref<string> = ref('');
 const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
 const line2: Ref<string> = ref('');
+const minDate: Ref<Date> = ref(new Date());
 
 
 interface PaymentMethod {
@@ -257,8 +260,6 @@ const handleSubmit = (isFormValid) => {
   }
 
 };
-
-
 
 const paymentMethod: Ref<PaymentMethod> = ref({
   name: 'Cartão',

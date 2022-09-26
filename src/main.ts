@@ -20,6 +20,5 @@ app.use(PrimeVue, {
 });
 app.use(VueCreditCardValidation);
 app.component('Button', Button);
-app.directive('tooltip', Tooltip)
-
+app.directive('tooltip', Tooltip);
 app.mount('#app');
