@@ -122,7 +122,7 @@
                   <i class="pi pi-lock"></i>
                   <InputText id="securityCode" type="text" v-model="v$.securityCode.$model" class="full input-size"
                     style="width: 100%" :class="{'full input-size p-invalid':v$.securityCode.$invalid && submitted}" />
-                  <label for="number" :class="{'p-error':v$.securityCode.$invalid && submitted}">CVV*</label>
+                  <label for="number" :class="{'p-error':v$.securityCode.$invalid && submitted}">Código de segurança*</label>
                 </span>
               </div>
 
@@ -136,7 +136,7 @@
                 <i class="pi pi-info-circle"></i>
                 <InputText id="holderDocument" type="text" v-model="v$.holderDocument.$model" class="full input-size"
                   :class="{'full input-size p-invalid':v$.holderDocument.$invalid && submitted}" />
-                <label for="number" :class="{'p-error':v$.holderDocument.$invalid && submitted}">CPF do titular*</label>
+                <label for="number" :class="{'p-error':v$.holderDocument.$invalid && submitted}">Documento do titular*</label>
               </span>
             </div>
           </div>
