@@ -1,5 +1,5 @@
 <template>
-  <Card style="width: 25rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;">
+  <Card style="width: 50rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;">
     <template #content>
       <form @submit.prevent="handleSubmit(!v$.$invalid)" class="p-fluid">
         <h5>Dados do Cliente</h5>
@@ -16,16 +16,16 @@
             <span class="p-float-label p-input-icon-right" style="width:54%">
               <i class="pi pi-info-circle" />
               <InputMask id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
-                :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" mask="999.999.999-99" @blur="validaCpf()" />
+                :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" mask="99999999999" @blur="validaCpf()" />
               <label for="cpf">CPF*</label>
             </span>
-            <InlineMessage v-if="messages.length" />
             <span class="p-float-label">
               <Calendar inputId="birthdate" v-model="birthdate" autocomplete="off" class="full date-size"
-                dateFormat="dd/mm/yy" :showIcon="true" />
+              dateFormat="dd/mm/yy" :showIcon="true" />
               <label for="birthdate">Data de nascimento</label>
             </span>
           </div>
+          <InlineMessage v-if="messages.length">{{messages[0]?.content}}</InlineMessage>
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
             <span class="p-float-label p-input-icon-right" style="width:83%">
               <i class="pi pi-at"></i>
@@ -177,7 +177,7 @@ const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
 const line2: Ref<string> = ref('');
 const minDate: Ref<Date> = ref(new Date());
-const messages = ref([]);
+let messages: Message[] = reactive([]);
 
 interface Message {
   severity: string;
@@ -339,12 +339,16 @@ function verifyCard() {
 
 function validaCpf() {
   console.log(v$.value.cpf.$model);
-  let soma = 0;
-  let resto;
-  let inputCPF = v$.value.cpf.$model;
+  let soma: number = 0;
+  let resto: number = 0;
+  let inputCPF: string = v$.value.cpf.$model;
   let invalidCpf: string[] = ["00000000000", "11111111111", "22222222222", "3333333333", "44444444444", "55555555555", "66666666666", "77777777777", "88888888888", "99999999999"];
 
-  if (invalidCpf.indexOf(inputCPF) !== -1) { return false; }
+  if (invalidCpf.indexOf(inputCPF) !== -1) { 
+    console.log('false');
+    addMessages('Cpf inválido')
+    return false; 
+  }
   // tslint:disable-next-line:radix
   for (let i = 1; i <= 9; i++) {
     soma = soma + parseInt(inputCPF.substring(i - 1, i)) * (11 - i);
@@ -374,17 +378,28 @@ function validaCpf() {
     return false;
   }
   console.log('true');
+  messages.pop();
   return true;
 }
 
-/* function addMessages() {
-    messages.value = [{
+function addMessages(text:string) {
+    messages.push({
       severity: 'warn',
-      content: 'Documento inválido',
+      content: text,
       id: 1
-    }]
-    console.log(messages.value[0].severity)
-  } */
+  })
+    console.log(messages[0].content);
+    console.log(messages.length);
+}
+
+function mostraTexto(){
+  if (messages.length){
+    return messages[0].content;
+  } else {
+    return ''
+  }
+}
+
 
 </script> 
 

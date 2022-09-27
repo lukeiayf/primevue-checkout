@@ -1,5 +1,5 @@
 <template>
-  <Card style="width: 25rem; margin-bottom: 1.5em; margin-top: 1.5em; align-items: center;">
+  <Card style="width: 30rem; margin-bottom: 1.5em; margin-top: 1.5em; align-items: center;">
     <template #title>
       <div style="display: flex; justify-content:flex-start; flex-direction: column">
         <img style="width:150px; margin: 1rem" src="..\assets\bempaggo.png" />
