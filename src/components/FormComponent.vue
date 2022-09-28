@@ -2,7 +2,7 @@
   <Card style="width: 50rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;">
     <template #content>
       <form @submit.prevent="handleSubmit(!v$.$invalid)" class="p-fluid">
-        <h5>Dados do Cliente</h5>
+        <h5>{{$t('teste.mensagem')}}</h5>
         <div class="input-area">
           <span class="p-float-label p-input-icon-right">
             <i class="pi pi-user" />
@@ -16,7 +16,7 @@
             <span class="p-float-label p-input-icon-right" style="width:54%">
               <i class="pi pi-info-circle" />
               <InputMask id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
-                :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" mask="99999999999" @blur="validaCpf()" />
+                :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" mask="99999999999" />
               <label for="cpf">CPF*</label>
             </span>
             <span class="p-float-label">
@@ -43,9 +43,9 @@
           <h5>Endereço</h5>
           <span class="p-float-label p-input-icon-right">
             <i class="pi pi-map-marker"></i>
-            <InputText id="cep" type="text" v-model="v$.cep.$model" class="full input-size"
-              :class="{'full input-size p-invalid':v$.cep.$invalid && submitted}" />
-            <label for="cep" :class="{'p-error':v$.cep.$invalid && submitted}">CEP*</label>
+            <InputText id="zipcode" type="text" v-model="v$.zipcode.$model" class="full input-size"
+              :class="{'full input-size p-invalid':v$.zipcode.$invalid && submitted}" />
+            <label for="zipcode" :class="{'p-error':v$.zipcode.$invalid && submitted}">CEP*</label>
           </span>
           <span class="p-float-label p-input-icon-right">
             <i class="pi pi-map"></i>
@@ -200,7 +200,7 @@ interface DefaultState {
   username: string,
   email: string,
   cpf: string,
-  cep: string,
+  zipcode: string,
   street: string,
   number: string,
   state: string,
@@ -218,7 +218,7 @@ const defaultState: DefaultState = reactive({
   username: '',
   email: '',
   cpf: '',
-  cep: '',
+  zipcode: '',
   street: '',
   number: '',
   state: '',
@@ -236,25 +236,101 @@ const defaultState: DefaultState = reactive({
 
 });
 
-const rules = {
-  username: { required },
-  email: { required, email },
-  cpf: { required, minLengthValue: minLength(11) },
-  cep: { required, minLengthValue: minLength(8) },
-  street: { required },
-  number: { required },
-  state: { required },
-  city: { required },
-  installments: { required },
-  cardBrand: { required },
-  cardNumber: { required, minLengthValue: minLength(13), maxLengthValue: maxLength(16) },
-  month: { required },
-  securityCode: { required, minLengthValue: minLength(3) },
-  holderName: { required },
-  holderDocument: { required, minLengthValue: minLength(11), maxLengthValue: maxLength(14) }
-};
 
-const v$ = useVuelidate(rules, defaultState);
+const validCpf = (inputCPF: any) => {
+  //console.log(v$.value.cpf.$model);
+  console.log('chamou validcpf');
+  inputCPF = inputCPF.replace(/[^\d]+/g, '');
+  let soma: number = 0;
+  let resto: number = 0;
+  let invalidCpf: string[] = ["00000000000", "11111111111", "22222222222", "3333333333", "44444444444", "55555555555", "66666666666", "77777777777", "88888888888", "99999999999"];
+
+  if (invalidCpf.indexOf(inputCPF) !== -1) {
+    //console.log('false');
+    addMessages("cpf invalido")
+    return false;
+  }
+  // tslint:disable-next-line:radix
+  for (let i = 1; i <= 9; i++) {
+    soma = soma + parseInt(inputCPF.substring(i - 1, i)) * (11 - i);
+    resto = (soma * 10) % 11;
+  }
+
+  if ((resto === 10) || (resto === 11)) { resto = 0; }
+
+  // tslint:disable-next-line:radix
+  if (resto !== parseInt(inputCPF.substring(9, 10))) {
+    //console.log('false')
+    return false;
+  }
+
+  soma = 0;
+  // tslint:disable-next-line:radix
+  for (let i = 1; i <= 10; i++) {
+    soma = soma + parseInt(inputCPF.substring(i - 1, i)) * (12 - i);
+    resto = (soma * 10) % 11;
+  }
+
+  if ((resto === 10) || (resto === 11)) { resto = 0; }
+
+  // tslint:disable-next-line:radix
+  if (resto !== parseInt(inputCPF.substring(10, 11))) {
+    //console.log('false');
+    return false;
+  }
+  // console.log('true');
+  messages.pop();
+  return true;
+}
+
+const validCnpj = (cnpj: any) => {
+  console.log("chamou valid cnpj");
+  //console.log(v$.value.holderDocument.$model);
+  //remove caracteres especiais
+  cnpj = cnpj.replace(/[^\d]+/g, '');
+  if (cnpj == '') return false;
+  if (cnpj.length != 14)
+    return false;
+  // Elimina CNPJs invalidos conhecidos
+  if (cnpj == "00000000000000" ||
+    cnpj == "11111111111111" ||
+    cnpj == "22222222222222" ||
+    cnpj == "33333333333333" ||
+    cnpj == "44444444444444" ||
+    cnpj == "55555555555555" ||
+    cnpj == "66666666666666" ||
+    cnpj == "77777777777777" ||
+    cnpj == "88888888888888" ||
+    cnpj == "99999999999999")
+    return false;
+  // Valida DVs
+  let tamanho = cnpj.length - 2
+  let numeros = cnpj.substring(0, tamanho);
+  let digitos = cnpj.substring(tamanho);
+  let soma = 0;
+  let pos = tamanho - 7;
+  for (let i = tamanho; i >= 1; i--) {
+    soma += numeros.charAt(tamanho - i) * pos--;
+    if (pos < 2)
+      pos = 9;
+  }
+  let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+  if (resultado != digitos.charAt(0))
+    return false;
+  tamanho = tamanho + 1;
+  numeros = cnpj.substring(0, tamanho);
+  soma = 0;
+  pos = tamanho - 7;
+  for (let i = tamanho; i >= 1; i--) {
+    soma += numeros.charAt(tamanho - i) * pos--;
+    if (pos < 2)
+      pos = 9;
+  }
+  resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+  if (resultado != digitos.charAt(1))
+    return false;
+  return true;
+}
 
 const handleSubmit = (isFormValid) => {
   // debugger
@@ -313,11 +389,12 @@ const brands: Brand[] = [
 
 function verifyCard() {
   var foundCardBrand: boolean = false;
-  if (v$.value.cardNumber.$model != '')
-    console.log(v$.value.cardNumber.$model);
-  var visaCards = creditCardType(v$.value.cardNumber.$model);
+  let cardNumber = v$.value.cardNumber.$model.replace(/[^\d]+/g, '');
+  if (cardNumber != '')
+    console.log(cardNumber);
+  var visaCards = creditCardType(cardNumber);
   var modelCardBrand = visaCards[0].type;
-  console.log(v$.value.cardBrand.$model)
+  console.log(cardNumber)
   console.log(brands.length)
   for (let i = 0; i < brands.length; i++) {
     if (modelCardBrand.toLowerCase() == brands[i].name.toLowerCase()) {
@@ -333,54 +410,13 @@ function verifyCard() {
       id: 0
     }
   }
-
-
 }
 
-function validaCpf() {
-  console.log(v$.value.cpf.$model);
-  let soma: number = 0;
-  let resto: number = 0;
-  let inputCPF: string = v$.value.cpf.$model;
-  let invalidCpf: string[] = ["00000000000", "11111111111", "22222222222", "3333333333", "44444444444", "55555555555", "66666666666", "77777777777", "88888888888", "99999999999"];
-
-  if (invalidCpf.indexOf(inputCPF) !== -1) { 
-    console.log('false');
-    addMessages('Cpf inválido')
-    return false; 
-  }
-  // tslint:disable-next-line:radix
-  for (let i = 1; i <= 9; i++) {
-    soma = soma + parseInt(inputCPF.substring(i - 1, i)) * (11 - i);
-    resto = (soma * 10) % 11;
-  }
-
-  if ((resto === 10) || (resto === 11)) { resto = 0; }
-
-  // tslint:disable-next-line:radix
-  if (resto !== parseInt(inputCPF.substring(9, 10))) {
-    console.log('false')
-    return false;
-  }
-
-  soma = 0;
-  // tslint:disable-next-line:radix
-  for (let i = 1; i <= 10; i++) {
-    soma = soma + parseInt(inputCPF.substring(i - 1, i)) * (12 - i);
-    resto = (soma * 10) % 11;
-  }
-
-  if ((resto === 10) || (resto === 11)) { resto = 0; }
-
-  // tslint:disable-next-line:radix
-  if (resto !== parseInt(inputCPF.substring(10, 11))) {
-    console.log('false');
-    return false;
-  }
-  console.log('true');
-  messages.pop();
-  return true;
-}
+const validDocument = (value) => {
+  console.log('chamou validdocument')
+  if (validCnpj(value) || validCpf(value))
+  return true
+} 
 
 function addMessages(text:string) {
     messages.push({
@@ -392,15 +428,25 @@ function addMessages(text:string) {
     console.log(messages.length);
 }
 
-function mostraTexto(){
-  if (messages.length){
-    return messages[0].content;
-  } else {
-    return ''
-  }
-}
+const rules = {
+  username: { required },
+  email: { required, email },
+  cpf: { required, minLengthValue: minLength(11), validCpf },
+  zipcode: { required, minLengthValue: minLength(8) },
+  street: { required },
+  number: { required },
+  state: { required },
+  city: { required },
+  installments: { required },
+  cardBrand: { required },
+  cardNumber: { required, minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
+  month: { required },
+  securityCode: { required, minLengthValue: minLength(3) },
+  holderName: { required },
+  holderDocument: { required, minLengthValue: minLength(11), maxLengthValue: maxLength(18), validDocument }
+};
 
-
+const v$ = useVuelidate(rules, defaultState);
 </script> 
 
 <style lang="scss" scoped>
