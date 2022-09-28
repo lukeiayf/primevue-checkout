@@ -81,23 +81,30 @@
             </span>
           </div>
 
-          <h5>Dados do Pagamento</h5>
-
-          <SelectButton class="button-payment" v-model="paymentMethod" :options="paymentOptions" optionLabel="name"
-            aria-labelledby="single" style="justify-content: center; display: flex;" />
-
-          <div style="display: flex; flex-wrap: nowrap; justify-content: center;">
-            <span class="p-float-label">
-              <InputNumber v-model="v$.installments.$model" id="installments" showButtons mode="decimal" :min="1"
-                :max="maxInstallments" :class="{'full input-size p-invalid':v$.installments.$invalid && submitted}" />
-              <label for="number" :class="{'p-error':v$.installments.$invalid && submitted}">Quantidade de
-                parcelas*</label>
-            </span>
+          <Button label="Enviar código de verificação" class="full" v-tooltip="'Será enviado um código para o e-mail e telefone informados'" @click="sendCode"/>
+          <div v-if="showFields">
+            <InputText id="verificationCode" type="text" v-model="verificationCode" class="full input-size" placeholder="Insira o código enviado"></InputText>
+            <Button type="button" label="Verificar código" class="full"/>
           </div>
+          
+          <div v-if="codeVerified && !showFields">
+            <h5>Dados do Pagamento</h5>
 
-          <!-- <CreditCardComponent v-if="paymentMethod.value == 1"></CreditCardComponent> -->
-          <div v-if="paymentMethod.value == 1">
-            <div class="input-area">
+            <SelectButton class="button-payment" v-model="paymentMethod" :options="paymentOptions" optionLabel="name"
+              aria-labelledby="single" style="justify-content: center; display: flex;" />
+
+            <div style="display: flex; flex-wrap: nowrap; justify-content: center;">
+              <span class="p-float-label">
+                <InputNumber v-model="v$.installments.$model" id="installments" showButtons mode="decimal" :min="1"
+                  :max="maxInstallments" :class="{'full input-size p-invalid':v$.installments.$invalid && submitted}" />
+                <label for="number" :class="{'p-error':v$.installments.$invalid && submitted}">Quantidade de
+                  parcelas*</label>
+              </span>
+            </div>
+
+
+            <!-- <CreditCardComponent v-if="paymentMethod.value == 1"></CreditCardComponent> -->
+            <div v-if="paymentMethod.value == 1" class="input-area">
               <span class="p-float-label">
                 <Dropdown inputStyle="padding: 2px; padding-left: 6px" v-model="v$.cardBrand.$model" id="cardBrand"
                   :options="brands" option-label="name" class="full dropdown-size"
@@ -141,11 +148,13 @@
             </div>
           </div>
 
-          <Button type="submit" label="Confirmar transação" class="full" v-if="paymentMethod.value == 1" />
-          <Button type="submit" label="Confirmar transação" class="full" v-tooltip="'Será gerado um Boleto Bancário'"
-            v-if="paymentMethod.value == 2" />
-          <Button type="submit" label="Confirmar transação" class="full" v-tooltip="'Será gerado um QR code'"
-            v-if="paymentMethod.value == 3" />
+          <div v-if="codeVerified && !showFields">
+            <Button type="submit" label="Confirmar transação" class="full" v-if="paymentMethod.value == 1" />
+            <Button type="submit" label="Confirmar transação" class="full" v-tooltip="'Será gerado um Boleto Bancário'"
+              v-if="paymentMethod.value == 2" />
+            <Button type="submit" label="Confirmar transação" class="full" v-tooltip="'Será gerado um QR code'"
+              v-if="paymentMethod.value == 3" />  
+          </div>
         </div>
       </form>
     </template>
@@ -178,6 +187,9 @@ const submitted: Ref<boolean> = ref(false);
 const line2: Ref<string> = ref('');
 const minDate: Ref<Date> = ref(new Date());
 let messages: Message[] = reactive([]);
+let showFields: Ref<boolean> = ref(false);
+let verificationCode: string = '';
+let codeVerified: boolean = false;
 
 interface Message {
   severity: string;
@@ -426,6 +438,13 @@ function addMessages(text:string) {
   })
     console.log(messages[0].content);
     console.log(messages.length);
+}
+
+function sendCode(){
+  showFields.value = true;
+  codeVerified = true;
+  console.log(showFields);
+  return showFields.value;
 }
 
 const rules = {
