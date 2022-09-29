@@ -81,10 +81,13 @@
             </span>
           </div>
 
-          <Button label="Enviar código de verificação" class="full" v-tooltip="'Será enviado um código para o e-mail e telefone informados'" @click="sendCode"/>
+          <Button v-if="!showFields" label="Enviar código de verificação" class="full" icon="pi pi-send" iconPos="left" v-tooltip="'Será enviado um código para o e-mail e telefone informados'" @click="sendCode"/>
           <div v-if="showFields">
             <InputText id="verificationCode" type="text" v-model="verificationCode" class="full input-size" placeholder="Insira o código enviado"></InputText>
-            <Button type="button" label="Verificar código" class="full"/>
+            <div class="p-buttonset">
+              <Button type="button" label="Reenviar código" class="half" icon="pi pi-refresh" iconPos="left" @click="sendCode()"/>
+              <Button type="button" label="Verificar código" class="half p-button-success" icon="pi pi-search" iconPos="left" @click="verifyCode()"/>
+            </div>
           </div>
           
           <div v-if="codeVerified && !showFields">
@@ -146,11 +149,11 @@
           </div>
 
           <div v-if="codeVerified && !showFields">
-            <Button type="submit" :label= "$t('botao.finalizarTransacao')" class="full" v-if="paymentMethod.value == 1" />
+            <Button type="submit" :label= "$t('botao.finalizarTransacao')" class="full" v-if="paymentMethod.value == 1" icon="pi pi-play" iconPos="left" />
             <Button type="submit" :label= "$t('botao.finalizarTransacao')" class="full" v-tooltip="'Será gerado um Boleto Bancário'"
-              v-if="paymentMethod.value == 2" />
+              v-if="paymentMethod.value == 2" icon="pi pi-play" iconPos="left"/>
             <Button type="submit" :label= "$t('botao.finalizarTransacao')" class="full" v-tooltip="'Será gerado um QR code'"
-              v-if="paymentMethod.value == 3" />  
+              v-if="paymentMethod.value == 3" icon="pi pi-play" iconPos="left" />  
           </div>
         </div>
       </form>
@@ -444,6 +447,11 @@ function sendCode(){
   return showFields.value;
 }
 
+function verifyCode(){
+  showFields.value = false;
+  codeVerified.value = true;
+}
+
 const rules = {
   username: { required },
   email: { required, email },
@@ -486,6 +494,10 @@ const v$ = useVuelidate(rules, defaultState);
 
 .full {
   width: 100%;
+}
+
+.half {
+  width: 50%;
 }
 
 .button-payment {
