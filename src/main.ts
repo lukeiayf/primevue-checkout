@@ -13,8 +13,8 @@ import pt  from "./i18n/pt.json"
 const app = createApp(App);
 const i18n = setupI18n({
     legacy: false,
-    locale: navigator.language,
-    fallbackLocale: "pt-br",
+    locale: "pt",
+    fallbackLocale: "pt",
     globalInjection: true,
     messages: {
         pt,
