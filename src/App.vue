@@ -27,7 +27,7 @@ body {
   background-image: linear-gradient(45deg, rgb(11, 73, 156), rgb(38, 162, 191));
   background-position-x: initial;
   background-position-y: initial;
-  background-size: cover;
+  background-size:100vw 100vh;
   background-attachment: initial;
   background-origin: initial;
   background-clip: initial;
