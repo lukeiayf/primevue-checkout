@@ -19,15 +19,18 @@ import SalesDetailComponent from './components/SalesDetailComponent.vue';
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
+  display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
 }
 
 body {
-  background: linear-gradient(45deg, #0b499c, #26a2bf);
+  /* background: linear-gradient(45deg, #0b499c, #26a2bf); */
   background-image: linear-gradient(45deg, rgb(11, 73, 156), rgb(38, 162, 191));
   background-position-x: initial;
   background-position-y: initial;
-  background-size:100vw 100vh;
+  background-size:100vw 150vh;
   background-attachment: initial;
   background-origin: initial;
   background-clip: initial;

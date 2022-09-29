@@ -9,11 +9,11 @@
     "outDir": "./built",
     "allowJs": true,
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["./*"]
     }
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*",
+    "./src/**/*.vue"
+  ]
 
 }

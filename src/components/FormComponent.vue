@@ -2,13 +2,13 @@
   <Card style="width: 50rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;">
     <template #content>
       <form @submit.prevent="handleSubmit(!v$.$invalid)" class="p-fluid">
-        <h5>{{$t('teste.mensagem')}}</h5>
+        <h5>{{$t('dadosCliente')}}</h5>
         <div class="input-area">
           <span class="p-float-label p-input-icon-right">
             <i class="pi pi-user" />
             <InputText id="username" type="text" v-model="v$.username.$model" class="full input-size"
               :class="{'full input-size p-invalid':v$.username.$invalid && submitted}" />
-            <label for="username" :class="{'p-error':v$.username.$invalid && submitted}">Nome*</label>
+            <label for="username" :class="{'p-error':v$.username.$invalid && submitted}">{{$t('cliente.nome')}}*</label>
             <!-- <small v-if="(v$.username.$invalid && submitted) || v$.username.$pending.$response"
               class="p-error">{{v$.username.required.$message.replace('Value', 'Nome')}}</small> -->
           </span>
@@ -17,12 +17,12 @@
               <i class="pi pi-info-circle" />
               <InputMask id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" mask="99999999999" />
-              <label for="cpf">CPF*</label>
+              <label for="cpf">{{$t('cliente.cpf')}}*</label>
             </span>
             <span class="p-float-label">
               <Calendar inputId="birthdate" v-model="birthdate" autocomplete="off" class="full date-size"
               dateFormat="dd/mm/yy" :showIcon="true" />
-              <label for="birthdate">Data de nascimento</label>
+              <label for="birthdate">{{$t('cliente.nascimento')}}</label>
             </span>
           </div>
           <InlineMessage v-if="messages.length">{{messages[0]?.content}}</InlineMessage>
@@ -31,39 +31,39 @@
               <i class="pi pi-at"></i>
               <InputText id="email" type="text" v-model="v$.email.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.email.$invalid && submitted}" />
-              <label for="email" :class="{'p-error':v$.email.$invalid && submitted}">Email*</label>
+              <label for="email" :class="{'p-error':v$.email.$invalid && submitted}">{{$t('cliente.email')}}*</label>
             </span>
             <span class="p-float-label p-input-icon-right">
               <i class="pi pi-phone"></i>
               <InputMask id="phone" type="text" v-model="phone" mask="(99)99999-999?9" class="full input-size" />
-              <label for="phone">Telefone</label>
+              <label for="phone">{{$t('cliente.telefone')}}</label>
             </span>
           </div>
 
-          <h5>Endereço</h5>
+          <h5>{{$t('dadosEndereco')}}</h5>
           <span class="p-float-label p-input-icon-right">
             <i class="pi pi-map-marker"></i>
             <InputText id="zipcode" type="text" v-model="v$.zipcode.$model" class="full input-size"
               :class="{'full input-size p-invalid':v$.zipcode.$invalid && submitted}" />
-            <label for="zipcode" :class="{'p-error':v$.zipcode.$invalid && submitted}">CEP*</label>
+            <label for="zipcode" :class="{'p-error':v$.zipcode.$invalid && submitted}">{{$t('endereco.cep')}}*</label>
           </span>
           <span class="p-float-label p-input-icon-right">
             <i class="pi pi-map"></i>
             <InputText id="street" type="text" v-model="v$.street.$model" class="full input-size"
               :class="{'full input-size p-invalid':v$.street.$invalid && submitted}" />
-            <label for="street" :class="{'p-error':v$.street.$invalid && submitted}">Logradouro*</label>
+            <label for="street" :class="{'p-error':v$.street.$invalid && submitted}">{{$t('endereco.logradouro')}}*</label>
           </span>
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
             <span class="p-float-label p-input-icon-right" style="width: 45%;">
               <i class="pi pi-home"></i>
               <InputText id="number" type="text" v-model="v$.number.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.number.$invalid && submitted}" />
-              <label for="number" :class="{'p-error':v$.number.$invalid && submitted}">Número*</label>
+              <label for="number" :class="{'p-error':v$.number.$invalid && submitted}">{{$t('endereco.numero')}}*</label>
             </span>
             <span class=" p-float-label p-input-icon-right">
               <i class="pi pi-building"></i>
               <InputText id="line2" type="text" v-model="line2" class="full input-size" />
-              <label for="line2">Complemento</label>
+              <label for="line2">{{$t('endereco.complemento')}}</label>
             </span>
           </div>
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
@@ -71,13 +71,13 @@
               <i class="pi pi-flag"></i>
               <InputText id="state" type="text" v-model="v$.state.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.state.$invalid && submitted}" />
-              <label for="number" :class="{'p-error':v$.state.$invalid && submitted}">Estado*</label>
+              <label for="number" :class="{'p-error':v$.state.$invalid && submitted}">{{$t('endereco.estado')}}*</label>
             </span>
             <span class="p-float-label p-input-icon-right">
               <i class="pi pi-flag"></i>
               <InputText id="city" type="text" v-model="v$.city.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.city.$invalid && submitted}" />
-              <label for="number" :class="{'p-error':v$.city.$invalid && submitted}">Cidade*</label>
+              <label for="number" :class="{'p-error':v$.city.$invalid && submitted}">{{$t('endereco.cidade')}}*</label>
             </span>
           </div>
 
@@ -88,7 +88,7 @@
           </div>
           
           <div v-if="codeVerified && !showFields">
-            <h5>Dados do Pagamento</h5>
+            <h5>{{$t('dadosPagamento')}}</h5>
 
             <SelectButton class="button-payment" v-model="paymentMethod" :options="paymentOptions" optionLabel="name"
               aria-labelledby="single" style="justify-content: center; display: flex;" />
@@ -97,25 +97,22 @@
               <span class="p-float-label">
                 <InputNumber v-model="v$.installments.$model" id="installments" showButtons mode="decimal" :min="1"
                   :max="maxInstallments" :class="{'full input-size p-invalid':v$.installments.$invalid && submitted}" />
-                <label for="number" :class="{'p-error':v$.installments.$invalid && submitted}">Quantidade de
-                  parcelas*</label>
+                <label for="number" :class="{'p-error':v$.installments.$invalid && submitted}">{{$t('quantidadeParcelas')}}*</label>
               </span>
             </div>
 
-
-            <!-- <CreditCardComponent v-if="paymentMethod.value == 1"></CreditCardComponent> -->
-            <div v-if="paymentMethod.value == 1" class="input-area">
+            <div v-if="paymentMethod.value == 1" class="input-area" style="margin-top: 25px">
               <span class="p-float-label">
                 <Dropdown inputStyle="padding: 2px; padding-left: 6px" v-model="v$.cardBrand.$model" id="cardBrand"
                   :options="brands" option-label="name" class="full dropdown-size"
                   :class="{'full dropdown-size p-invalid':v$.cardBrand.$invalid && submitted}" />
-                <label for="number" :class="{'p-error':v$.cardBrand.$invalid && submitted}">Bandeira*</label>
+                <label for="number" :class="{'p-error':v$.cardBrand.$invalid && submitted}">{{$t('cartao.bandeira')}}*</label>
               </span>
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-credit-card"></i>
                 <InputText id="cardNumber" type="text" v-model="v$.cardNumber.$model" class="full input-size"
                   :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted}" @blur="verifyCard()" />
-                <label for="number" :class="{'p-error':v$.cardNumber.$invalid && submitted}">Número do cartão*</label>
+                <label for="number" :class="{'p-error':v$.cardNumber.$invalid && submitted}">{{$t('cartao.numero')}}*</label>
               </span>
               <div style="display: flex; flex-direction: row; justify-content: space-between;">
                 <span style="width: 45%;">
@@ -129,7 +126,7 @@
                   <i class="pi pi-lock"></i>
                   <InputText id="securityCode" type="text" v-model="v$.securityCode.$model" class="full input-size"
                     style="width: 100%" :class="{'full input-size p-invalid':v$.securityCode.$invalid && submitted}" />
-                  <label for="number" :class="{'p-error':v$.securityCode.$invalid && submitted}">Código de segurança*</label>
+                  <label for="number" :class="{'p-error':v$.securityCode.$invalid && submitted}">{{$t('cartao.codigo')}}*</label>
                 </span>
               </div>
 
@@ -137,22 +134,22 @@
                 <i class="pi pi-user"></i>
                 <InputText id="holderName" type="text" v-model="v$.holderName.$model" class="full input-size"
                   :class="{'full input-size p-invalid':v$.holderName.$invalid && submitted}" />
-                <label for="number" :class="{'p-error':v$.holderName.$invalid && submitted}">Nome do titular*</label>
+                <label for="number" :class="{'p-error':v$.holderName.$invalid && submitted}">{{$t('cartao.nomeTitular')}}*</label>
               </span>
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-info-circle"></i>
                 <InputText id="holderDocument" type="text" v-model="v$.holderDocument.$model" class="full input-size"
                   :class="{'full input-size p-invalid':v$.holderDocument.$invalid && submitted}" />
-                <label for="number" :class="{'p-error':v$.holderDocument.$invalid && submitted}">Documento do titular*</label>
+                <label for="number" :class="{'p-error':v$.holderDocument.$invalid && submitted}">{{$t('cartao.documentoTitular')}}*</label>
               </span>
             </div>
           </div>
 
           <div v-if="codeVerified && !showFields">
-            <Button type="submit" label="Confirmar transação" class="full" v-if="paymentMethod.value == 1" />
-            <Button type="submit" label="Confirmar transação" class="full" v-tooltip="'Será gerado um Boleto Bancário'"
+            <Button type="submit" :label= "$t('botao.finalizarTransacao')" class="full" v-if="paymentMethod.value == 1" />
+            <Button type="submit" :label= "$t('botao.finalizarTransacao')" class="full" v-tooltip="'Será gerado um Boleto Bancário'"
               v-if="paymentMethod.value == 2" />
-            <Button type="submit" label="Confirmar transação" class="full" v-tooltip="'Será gerado um QR code'"
+            <Button type="submit" :label= "$t('botao.finalizarTransacao')" class="full" v-tooltip="'Será gerado um QR code'"
               v-if="paymentMethod.value == 3" />  
           </div>
         </div>
@@ -189,7 +186,7 @@ const minDate: Ref<Date> = ref(new Date());
 let messages: Message[] = reactive([]);
 let showFields: Ref<boolean> = ref(false);
 let verificationCode: string = '';
-let codeVerified: boolean = false;
+let codeVerified: Ref<boolean> = ref(false);
 
 interface Message {
   severity: string;
@@ -442,7 +439,7 @@ function addMessages(text:string) {
 
 function sendCode(){
   showFields.value = true;
-  codeVerified = true;
+  codeVerified.value = true;
   console.log(showFields);
   return showFields.value;
 }

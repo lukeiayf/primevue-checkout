@@ -7,7 +7,7 @@
     </template>
     <template #subtitle>
       <div class="margin" style="display: flex; justify-content: center; align-items: flex-start;">
-        <h5>Detalhes da compra</h5>
+        <h5>{{$t('detalhesCompra')}}</h5>
       </div>
     </template>
     <template #content>

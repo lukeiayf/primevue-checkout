@@ -1,6 +1,39 @@
-{
-    "teste":{
-        "mensagem": "Dados do cliente",
-        "mensagem2": "teste 2"
-    }
+{   
+    "dadosCliente":"Dados do Cliente", 
+    "cliente":{
+        "nome": "Nome",
+        "cpf": "CPF",
+        "nascimento": "Data de nascimento",
+        "email": "Email",
+        "telefone": "Telefone"
+    },
+    "dadosEndereco":"Endereço",
+    "endereco":{
+        "cep": "CEP",
+        "logradouro": "Logradouro",
+        "numero": "Número",
+        "complemento": "Complemento",
+        "estado": "Estado",
+        "cidade": "Cidade"
+    },
+    "dadosPagamento":"Dados do Pagamento",
+    "quantidadeParcelas": "Quantidade de parcelas",
+    "cartao":{
+        "bandeira":"Bandeira",
+        "numero":"Número",
+        "vencimento":"Vencimento",
+        "codigo":"Código de segurança",
+        "nomeTitular":"Nome do titular",
+        "documentoTitular":"Documento do titular"
+    },
+    "botao":{
+        "enviarCodigoVerificacao": "Enviar código de verificação",
+        "cartao": "Cartão",
+        "boleto": "Boleto",
+        "pix": "PIX",
+        "finalizarTransacao": "Finalizar transação"
+    },
+    "detalhesCompra": "Detalhes da compra"
+
+
 }
