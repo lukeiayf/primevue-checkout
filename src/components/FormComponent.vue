@@ -1,5 +1,6 @@
 <template>
-  <Card style="width: 50rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;">
+  <Card style="width: 50rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;"
+    v-show="!showTransactionSummary">
     <template #content>
       <form @submit.prevent="handleSubmit(!v$.$invalid)" class="p-fluid">
         <h5>{{$t('dadosCliente')}}</h5>
@@ -21,7 +22,7 @@
             </span>
             <span class="p-float-label">
               <Calendar inputId="birthdate" v-model="birthdate" autocomplete="off" class="full date-size"
-              dateFormat="dd/mm/yy" :showIcon="true" />
+                dateFormat="dd/mm/yy" :showIcon="true" />
               <label for="birthdate">{{$t('cliente.nascimento')}}</label>
             </span>
           </div>
@@ -51,14 +52,16 @@
             <i class="pi pi-map"></i>
             <InputText id="street" type="text" v-model="v$.street.$model" class="full input-size"
               :class="{'full input-size p-invalid':v$.street.$invalid && submitted}" />
-            <label for="street" :class="{'p-error':v$.street.$invalid && submitted}">{{$t('endereco.logradouro')}}*</label>
+            <label for="street"
+              :class="{'p-error':v$.street.$invalid && submitted}">{{$t('endereco.logradouro')}}*</label>
           </span>
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
             <span class="p-float-label p-input-icon-right" style="width: 45%;">
               <i class="pi pi-home"></i>
               <InputText id="number" type="text" v-model="v$.number.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.number.$invalid && submitted}" />
-              <label for="number" :class="{'p-error':v$.number.$invalid && submitted}">{{$t('endereco.numero')}}*</label>
+              <label for="number"
+                :class="{'p-error':v$.number.$invalid && submitted}">{{$t('endereco.numero')}}*</label>
             </span>
             <span class=" p-float-label p-input-icon-right">
               <i class="pi pi-building"></i>
@@ -81,15 +84,23 @@
             </span>
           </div>
 
-          <Button v-if="!showFields" label="Enviar código de verificação" class="full" icon="pi pi-send" iconPos="left" v-tooltip="'Será enviado um código para o e-mail e telefone informados'" @click="sendCode"/>
+          <Button v-if="!showFields && !codeVerified" label="Enviar código de verificação" class="full"
+            icon="pi pi-send" iconPos="left" v-tooltip="'Será enviado um código para o e-mail e telefone informados'"
+            @click="sendCode" />
           <div v-if="showFields">
-            <InputText id="verificationCode" type="text" v-model="verificationCode" class="full input-size" placeholder="Insira o código enviado"></InputText>
+            <span class="p-float-label p-input-icon-right code-input">
+              <InputText id="verificationCode" type="text" v-model="verificationCode" class="full input-size">
+              </InputText>
+              <label for="verificationCode">{{$t('inserirCodigo')}}*</label>
+            </span>
             <div class="p-buttonset">
-              <Button type="button" label="Reenviar código" class="half" icon="pi pi-refresh" iconPos="left" @click="sendCode()"/>
-              <Button type="button" label="Verificar código" class="half p-button-success" icon="pi pi-search" iconPos="left" @click="verifyCode()"/>
+              <Button type="button" label="Reenviar código" class="half" icon="pi pi-refresh" iconPos="left"
+                @click="sendCode()" />
+              <Button type="button" label="Verificar código" class="half p-button-success" icon="pi pi-search"
+                iconPos="left" @click="verifyCode()" />
             </div>
           </div>
-          
+
           <div v-if="codeVerified && !showFields">
             <h5>{{$t('dadosPagamento')}}</h5>
 
@@ -100,7 +111,8 @@
               <span class="p-float-label">
                 <InputNumber v-model="v$.installments.$model" id="installments" showButtons mode="decimal" :min="1"
                   :max="maxInstallments" :class="{'full input-size p-invalid':v$.installments.$invalid && submitted}" />
-                <label for="number" :class="{'p-error':v$.installments.$invalid && submitted}">{{$t('quantidadeParcelas')}}*</label>
+                <label for="number"
+                  :class="{'p-error':v$.installments.$invalid && submitted}">{{$t('quantidadeParcelas')}}*</label>
               </span>
             </div>
 
@@ -109,19 +121,21 @@
                 <Dropdown inputStyle="padding: 2px; padding-left: 6px" v-model="v$.cardBrand.$model" id="cardBrand"
                   :options="brands" option-label="name" class="full dropdown-size"
                   :class="{'full dropdown-size p-invalid':v$.cardBrand.$invalid && submitted}" />
-                <label for="number" :class="{'p-error':v$.cardBrand.$invalid && submitted}">{{$t('cartao.bandeira')}}*</label>
+                <label for="number"
+                  :class="{'p-error':v$.cardBrand.$invalid && submitted}">{{$t('cartao.bandeira')}}*</label>
               </span>
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-credit-card"></i>
                 <InputText id="cardNumber" type="text" v-model="v$.cardNumber.$model" class="full input-size"
                   :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted}" @blur="verifyCard()" />
-                <label for="number" :class="{'p-error':v$.cardNumber.$invalid && submitted}">{{$t('cartao.numero')}}*</label>
+                <label for="number"
+                  :class="{'p-error':v$.cardNumber.$invalid && submitted}">{{$t('cartao.numero')}}*</label>
               </span>
               <div style="display: flex; flex-direction: row; justify-content: space-between;">
                 <span style="width: 45%;">
                   <div class="field col-12 md:col-4">
                     <Calendar inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month"
-                      :minDate="minDate" dateFormat="mm/yy" placeholder="Vencimento" touchUI :showIcon="true"
+                      :minDate="minDate" dateFormat="mm/yy" placeholder="Vencimento" :showIcon="true"
                       :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted }" />
                   </div>
                 </span>
@@ -129,7 +143,8 @@
                   <i class="pi pi-lock"></i>
                   <InputText id="securityCode" type="text" v-model="v$.securityCode.$model" class="full input-size"
                     style="width: 100%" :class="{'full input-size p-invalid':v$.securityCode.$invalid && submitted}" />
-                  <label for="number" :class="{'p-error':v$.securityCode.$invalid && submitted}">{{$t('cartao.codigo')}}*</label>
+                  <label for="number"
+                    :class="{'p-error':v$.securityCode.$invalid && submitted}">{{$t('cartao.codigo')}}*</label>
                 </span>
               </div>
 
@@ -137,29 +152,38 @@
                 <i class="pi pi-user"></i>
                 <InputText id="holderName" type="text" v-model="v$.holderName.$model" class="full input-size"
                   :class="{'full input-size p-invalid':v$.holderName.$invalid && submitted}" />
-                <label for="number" :class="{'p-error':v$.holderName.$invalid && submitted}">{{$t('cartao.nomeTitular')}}*</label>
+                <label for="number"
+                  :class="{'p-error':v$.holderName.$invalid && submitted}">{{$t('cartao.nomeTitular')}}*</label>
               </span>
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-info-circle"></i>
                 <InputText id="holderDocument" type="text" v-model="v$.holderDocument.$model" class="full input-size"
                   :class="{'full input-size p-invalid':v$.holderDocument.$invalid && submitted}" />
-                <label for="number" :class="{'p-error':v$.holderDocument.$invalid && submitted}">{{$t('cartao.documentoTitular')}}*</label>
+                <label for="number"
+                  :class="{'p-error':v$.holderDocument.$invalid && submitted}">{{$t('cartao.documentoTitular')}}*</label>
               </span>
             </div>
           </div>
 
           <div v-if="codeVerified && !showFields">
-            <Button type="submit" :label= "$t('botao.finalizarTransacao')" class="full" v-if="paymentMethod.value == 1" icon="pi pi-play" iconPos="left" />
-            <Button type="submit" :label= "$t('botao.finalizarTransacao')" class="full" v-tooltip="'Será gerado um Boleto Bancário'"
-              v-if="paymentMethod.value == 2" icon="pi pi-play" iconPos="left"/>
-            <Button type="submit" :label= "$t('botao.finalizarTransacao')" class="full" v-tooltip="'Será gerado um QR code'"
-              v-if="paymentMethod.value == 3" icon="pi pi-play" iconPos="left" />  
+            <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full" v-if="paymentMethod.value == 1"
+              icon="pi pi-play" iconPos="left" />
+            <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
+              v-tooltip="'Será gerado um Boleto Bancário'" v-if="paymentMethod.value == 2" icon="pi pi-play"
+              iconPos="left" />
+            <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
+              v-tooltip="'Será gerado um QR code'" v-if="paymentMethod.value == 3" icon="pi pi-play" iconPos="left" />
           </div>
         </div>
+        <input value="Teste" label="asd" required minlength="" />
       </form>
     </template>
   </Card>
+  
+  <TransactionSummaryComponent :name="v$.username.$model" v-if="showTransactionSummary"></TransactionSummaryComponent>
+  
 </template>
+
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
@@ -179,6 +203,7 @@ import creditCardType, {
 } from "credit-card-type";
 import type { Ref } from 'vue';
 import 'moment/locale/pt-br';
+import TransactionSummaryComponent from './TransactionSummaryComponent.vue';
 
 const birthdate: Ref<any> = ref('');
 const phone: Ref<string> = ref('');
@@ -189,7 +214,9 @@ const minDate: Ref<Date> = ref(new Date());
 let messages: Message[] = reactive([]);
 let showFields: Ref<boolean> = ref(false);
 let verificationCode: string = '';
-let codeVerified: Ref<boolean> = ref(false);
+let codeVerified: Ref<boolean> = ref(true);
+let showTransactionSummary: Ref<boolean> = ref(false);
+let customerName: string;
 
 interface Message {
   severity: string;
@@ -351,7 +378,9 @@ const handleSubmit = (isFormValid) => {
     console.log('n passou');
     // console.log(v$.value.cardNumber.$model.valueOf);
   } else {
-    console.log('passou')
+    console.log('passou');
+    customerName = v$.value.username.$model;
+    showTransactionSummary.value = true;
   }
 
 };
@@ -427,27 +456,27 @@ function verifyCard() {
 const validDocument = (value) => {
   console.log('chamou validdocument')
   if (validCnpj(value) || validCpf(value))
-  return true
-} 
-
-function addMessages(text:string) {
-    messages.push({
-      severity: 'warn',
-      content: text,
-      id: 1
-  })
-    console.log(messages[0].content);
-    console.log(messages.length);
+    return true
 }
 
-function sendCode(){
+function addMessages(text: string) {
+  messages.push({
+    severity: 'warn',
+    content: text,
+    id: 1
+  })
+  console.log(messages[0].content);
+  console.log(messages.length);
+}
+
+function sendCode() {
   showFields.value = true;
   codeVerified.value = true;
-  console.log(showFields);
+  console.log(v$.value.username.$model);
   return showFields.value;
 }
 
-function verifyCode(){
+function verifyCode() {
   showFields.value = false;
   codeVerified.value = true;
 }
@@ -497,7 +526,12 @@ const v$ = useVuelidate(rules, defaultState);
 }
 
 .half {
+  margin: 0 1px !important;
   width: 50%;
+}
+
+.code-input {
+  margin-bottom: 10px;
 }
 
 .button-payment {

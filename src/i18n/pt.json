@@ -33,7 +33,8 @@
         "pix": "PIX",
         "finalizarTransacao": "Finalizar transação"
     },
-    "detalhesCompra": "Detalhes da compra"
+    "detalhesCompra": "Detalhes da compra",
+    "inserirCodigo": "Insira o código enviado"
 
 
 }
