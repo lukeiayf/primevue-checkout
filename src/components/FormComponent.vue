@@ -2,7 +2,7 @@
   <Card style="width: 50rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;"
     v-show="!showTransactionSummary">
     <template #content>
-      <form @submit.prevent="handleSubmit((!v$.$invalid && !v.$invalid) ? true : false)" class="p-fluid">
+      <form @submit.prevent="handleSubmit(!v$.$invalid && !v.$invalid)" class="p-fluid">
         <h5>{{$t('dadosCliente')}}</h5>
         <div class="input-area">
           <span class="p-float-label p-input-icon-right">
@@ -104,8 +104,8 @@
           <div v-if="codeVerified && !showFields">
             <h5>{{$t('dadosPagamento')}}</h5>
 
-            <SelectButton class="button-payment" v-model="paymentMethod" :options="paymentOptions" optionLabel="name"
-              aria-labelledby="single" style="justify-content: center; display: flex;" />
+            <SelectButton class="button-payment" v-model="v$.paymentMethod.$model" :options="paymentOptions" optionLabel="name"
+              aria-labelledby="single" style="justify-content: center; display: flex;"/>
 
             <div style="display: flex; flex-wrap: nowrap; justify-content: center;">
               <span class="p-float-label">
@@ -116,9 +116,9 @@
               </span>
             </div>
 
-            <div v-if="paymentMethod.value == 1" class="input-area" style="margin-top: 25px">
+            <div v-if="v$.paymentMethod.$model.value == 1" class="input-area" style="margin-top: 25px">
               <span class="p-float-label" v-if="v$.cardNumber.$model.length > 13">
-                <Dropdown inputStyle="padding: 2px; padding-left: 6px" v-model="v.cardBrand.$model" id="cardBrand"
+                <Dropdown required inputStyle="padding: 2px; padding-left: 6px" v-model="v.cardBrand.$model" id="cardBrand"
                   :options="brands" option-label="name" class="full dropdown-size"
                   :class="{'full dropdown-size p-invalid':v.cardBrand.$invalid && submitted}" />
                 <label for="number"
@@ -126,7 +126,7 @@
               </span>
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-credit-card"></i>
-                <InputText id="cardNumber" type="text" v-model="v$.cardNumber.$model" class="full input-size"
+                <InputText required id="cardNumber" type="text" v-model="v$.cardNumber.$model" class="full input-size"
                   :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted}" @blur="verifyCard(v$.cardNumber.$model)" />
                 <label for="number"
                   :class="{'p-error':v$.cardNumber.$invalid && submitted}">{{$t('cartao.numero')}}*</label>
@@ -134,14 +134,14 @@
               <div style="display: flex; flex-direction: row; justify-content: space-between;">
                 <span style="width: 45%;">
                   <div class="field col-12 md:col-4">
-                    <Calendar inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month"
+                    <Calendar required inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month"
                       :minDate="minDate" dateFormat="mm/yy" placeholder="Vencimento" :showIcon="true"
                       :class="{'full input-size p-invalid':v$.cardNumber.$invalid && submitted }" />
                   </div>
                 </span>
                 <span class="p-float-label p-input-icon-right" style="width: 45%;">
                   <i class="pi pi-lock"></i>
-                  <InputText id="securityCode" type="text" v-model="v$.securityCode.$model" class="full input-size"
+                  <InputText required id="securityCode"  v-model="v$.securityCode.$model" class="full input-size"
                     style="width: 100%" :class="{'full input-size p-invalid':v$.securityCode.$invalid && submitted}" />
                   <label for="number"
                     :class="{'p-error':v$.securityCode.$invalid && submitted}">{{$t('cartao.codigo')}}*</label>
@@ -150,15 +150,15 @@
 
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-user"></i>
-                <InputText id="holderName" type="text" v-model="v$.holderName.$model" class="full input-size"
+                <InputText required id="holderName" type="text" v-model="v$.holderName.$model" class="full input-size"
                   :class="{'full input-size p-invalid':v$.holderName.$invalid && submitted}" />
                 <label for="number"
                   :class="{'p-error':v$.holderName.$invalid && submitted}">{{$t('cartao.nomeTitular')}}*</label>
               </span>
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-info-circle"></i>
-                <InputText id="holderDocument" type="text" v-model="v$.holderDocument.$model" class="full input-size"
-                  :class="{'full input-size p-invalid':v$.holderDocument.$invalid && submitted}" />
+                <InputText required id="holderDocument" type="text" v-model="v$.holderDocument.$model" class="full input-size"
+                  :class="{'full input-size p-invalid':v$.holderDocument.$invalid && submitted}" @Change="validDocument(v$.holderDocument.$model)"/>
                 <label for="number"
                   :class="{'p-error':v$.holderDocument.$invalid && submitted}">{{$t('cartao.documentoTitular')}}*</label>
               </span>
@@ -166,13 +166,13 @@
           </div>
 
           <div v-if="codeVerified && !showFields">
-            <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full" v-if="paymentMethod.value == 1"
+            <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full" v-if="v$.paymentMethod.$model.value == 1"
               icon="pi pi-play" iconPos="left" />
             <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
-              v-tooltip="'Será gerado um Boleto Bancário'" v-if="paymentMethod.value == 2" icon="pi pi-play"
+              v-tooltip="'Será gerado um Boleto Bancário'" v-if="v$.paymentMethod.$model.value == 2" icon="pi pi-play"
               iconPos="left" />
             <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
-              v-tooltip="'Será gerado um QR code'" v-if="paymentMethod.value == 3" icon="pi pi-play" iconPos="left" />
+              v-tooltip="'Será gerado um QR code'" v-if="v$.paymentMethod.$model.value == 3" icon="pi pi-play" iconPos="left" />
           </div>
         </div>
       </form>
@@ -187,7 +187,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength, maxLength } from '@vuelidate/validators';
+import { required, email, minLength, maxLength, requiredIf, helpers } from '@vuelidate/validators';
 import InputText from 'primevue/inputtext';
 import Card from 'primevue/card';
 import Calendar from 'primevue/calendar';
@@ -197,15 +197,15 @@ import SelectButton from 'primevue/selectbutton';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
 import InlineMessage from 'primevue/inlinemessage';
-import creditCardType, {
-  types as CardType,
-} from "credit-card-type";
 import type { Ref } from 'vue';
 import 'moment/locale/pt-br';
 import TransactionSummaryComponent from './TransactionSummaryComponent.vue';
 import { validCpf, messages } from '../helpers/cpfValidator';
 import { validCnpj } from '../helpers/cnpjValidator';
-import { Brand, brands, verifyCard, v } from '../helpers/verifyCard';
+import { brands, verifyCard, v } from '../helpers/verifyCard';
+import { defaultState } from '../models/defaultState.model';
+import { paymentOptions } from '../models/paymentMethod.model';
+import { useMainStore}  from '../store/index'
 
 const birthdate: Ref<any> = ref('');
 const phone: Ref<string> = ref('');
@@ -213,106 +213,49 @@ const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
 const line2: Ref<string> = ref('');
 const minDate: Ref<Date> = ref(new Date());
+const store = useMainStore();
 
 let showFields: Ref<boolean> = ref(false);
 let verificationCode: string = '';
-let codeVerified: Ref<boolean> = ref(true);
+let codeVerified: Ref<boolean> = ref(false);
 let showTransactionSummary: Ref<boolean> = ref(false);
 let customerName: string;
 
+let isCard: Ref<boolean> = ref(false);
 
-
-interface PaymentMethod {
-  name: string,
-  value: number,
-  message: string,
-}
-
-interface DefaultState {
-  username: string,
-  email: string,
-  cpf: string,
-  zipcode: string,
-  street: string,
-  number: string,
-  state: string,
-  city: string,
-  installments: number,
-  cardBrand: Brand,
-  cardNumber: string,
-  month: any,
-  securityCode: string,
-  holderName: string,
-  holderDocument: string,
-}
-
-const defaultState: DefaultState = reactive({
-  username: '',
-  email: '',
-  cpf: '',
-  zipcode: '',
-  street: '',
-  number: '',
-  state: '',
-  city: '',
-  installments: 1,
-  cardNumber: '',
-  month: '',
-  securityCode: '',
-  holderName: '',
-  holderDocument: '',
-  cardBrand: {
-    name: '',
-    id: 0
-  }
-
-});
-
-
-const handleSubmit = (isFormValid:boolean) => {
-  // debugger
-  console.log(v.value.cardBrand.$invalid)
-  submitted.value = true;
-  if (!isFormValid) {
-    console.log('n passou');
-    // console.log(v$.value.cardNumber.$model.valueOf);
+function validDocument(value): boolean{
+  //debugger
+  console.log('chamou validdocument')
+  if (validCnpj(value) || validCpf(value)) {
+    console.log('documento valido')
+    return true;
   } else {
-    console.log('passou');
-    customerName = v$.value.username.$model;
-    showTransactionSummary.value = true;
+    console.log('documento invalido')
+    return false;
   }
+}
 
+const rules = {
+  username: { required },
+  email: { required, email },
+  cpf: { required, minLengthValue: minLength(11), validCpf },
+  zipcode: { required, minLengthValue: minLength(8) },
+  street: { required },
+  number: { required },
+  state: { required },
+  city: { required },
+  paymentMethod: { required },
+  installments: { required },
+
+  cardBrand: { required: requiredIf(isCard) },
+  cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
+  month: { required: requiredIf(isCard) },
+  securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
+  holderName: { required: requiredIf(isCard) },
+  holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
 };
 
-const paymentMethod: Ref<PaymentMethod> = ref({
-  name: 'Cartão',
-  value: 1,
-  message: ''
-});
-
-const paymentOptions: PaymentMethod[] = [
-  {
-    name: 'Cartão',
-    value: 1,
-    message: ''
-  },
-  {
-    name: 'Boleto',
-    value: 2,
-    message: 'Ao selecionar essa opção, será gerado um boleto bancário.'
-  },
-  {
-    name: 'Pix',
-    value: 3,
-    message: 'Ao selecionar essa opção, será gerado um QR code.'
-  }
-];
-
-const validDocument = (value) => {
-  console.log('chamou validdocument')
-  if (validCnpj(value) || validCpf(value))
-    return true
-}
+const v$ = useVuelidate(rules, defaultState);
 
 function sendCode() {
   showFields.value = true;
@@ -326,25 +269,26 @@ function verifyCode() {
   codeVerified.value = true;
 }
 
-const rules = {
-  username: { required },
-  email: { required, email },
-  cpf: { required, minLengthValue: minLength(11), validCpf },
-  zipcode: { required, minLengthValue: minLength(8) },
-  street: { required },
-  number: { required },
-  state: { required },
-  city: { required },
-  installments: { required },
-  cardBrand: { required },
-  cardNumber: { required, minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
-  month: { required },
-  securityCode: { required, minLengthValue: minLength(3) },
-  holderName: { required },
-  holderDocument: { required, minLengthValue: minLength(11), maxLengthValue: maxLength(18), validDocument }
+const handleSubmit = (isFormValid: boolean) => {
+  //console.log(isCard);
+  //console.log(v$.value.paymentMethod.$model.value);
+  console.log(validDocument(v$.value.holderDocument.$model));
+  submitted.value = true;
+  if (v$.value.paymentMethod.$model.value == 1 && !validDocument(v$.value.holderDocument.$model)){
+    isFormValid = false;
+  }
+  if (!isFormValid) {
+    console.log('n passou');
+  } else {
+    console.log('passou');
+    customerName = v$.value.username.$model;
+    showTransactionSummary.value = true;
+    store.createNewForm(defaultState);
+  }
+
 };
 
-const v$ = useVuelidate(rules, defaultState);
+
 </script> 
 
 <style lang="scss" scoped>

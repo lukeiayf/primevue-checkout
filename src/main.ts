@@ -9,8 +9,10 @@ import 'primeicons/primeicons.css';
 import VueCreditCardValidation from 'vue-credit-card-validation';
 import { setupI18n } from "./i18n"
 import pt  from "./i18n/pt.json"
+import { createPinia } from 'pinia';
 
 const app = createApp(App);
+const pinia = createPinia();
 const i18n = setupI18n({
     legacy: false,
     locale: "pt",
@@ -32,6 +34,7 @@ app.use(PrimeVue, {
 });
 app.use(VueCreditCardValidation);
 app.use(i18n);
+app.use(pinia);
 app.component('Button', Button);
 app.directive('tooltip', Tooltip);
 app.mount('#app');

@@ -1,11 +1,33 @@
 <template>
   <Card style="width: 50rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;">
       <template #title>
-      <div style="display: flex; justify-content:flex-start; flex-direction: column">
-        <h5>Resumo da compra</h5>
-      </div>
-      {{localStorageVar}}
-    </template>
+        <div style="display: flex; justify-content:flex-start; flex-direction: column">
+          <h5>Resumo da compra</h5>
+        </div>
+      </template>
+      <template #content>
+        <h5>Dados do cliente</h5>
+        <ul class="list">
+          <li>
+              Nome: {{store.defaultForms[0].username}}
+          </li>
+          <li>
+            Email: {{store.defaultForms[0].email}}
+          </li>
+        </ul>
+        <h5>Dados de pagamento</h5>
+        <ul>
+          <li>
+            Metodo de pagamento: {{store.defaultForms[0].paymentMethod.name}}
+          </li>
+          <li v-if="store.defaultForms[0].paymentMethod.value == 3">
+            Data de expiração: Apenas para QRCODE
+          </li>
+          <li v-if="store.defaultForms[0].paymentMethod.value == 2">
+            Data de vencimento: Apenas para BOLETO
+          </li>
+        </ul>
+      </template>
   </Card>
 </template>
 
@@ -19,6 +41,7 @@ import creditCardType, {
 } from "credit-card-type";
 import type { Ref } from 'vue';
 import 'moment/locale/pt-br';
+import { useMainStore } from '../store';
 
 const birthdate: Ref<any> = ref('');
 const phone: Ref<string> = ref('');
@@ -26,6 +49,8 @@ const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
 const line2: Ref<string> = ref('');
 const minDate: Ref<Date> = ref(new Date());
+const store = useMainStore();
+
 let messages: Message[] = reactive([]);
 let showFields: Ref<boolean> = ref(false);
 let verificationCode: string = '';
