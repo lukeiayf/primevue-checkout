@@ -11,6 +11,7 @@ import { setupI18n } from "./i18n"
 import pt  from "./i18n/pt.json"
 import { createPinia } from 'pinia';
 
+
 const app = createApp(App);
 const pinia = createPinia();
 const i18n = setupI18n({

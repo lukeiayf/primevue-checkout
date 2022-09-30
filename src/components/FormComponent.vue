@@ -42,10 +42,13 @@
           </div>
 
           <h5>{{$t('dadosEndereco')}}</h5>
+          <transition-group name="p-message" tag="div">
+            <Message v-for="msg of messagesList" :severity="msg.severity" :key="msg.id">{{msg.content}}</Message>
+          </transition-group>
           <span class="p-float-label p-input-icon-right">
             <i class="pi pi-map-marker"></i>
             <InputText id="zipcode" type="text" v-model="v$.zipcode.$model" class="full input-size"
-              :class="{'full input-size p-invalid':v$.zipcode.$invalid && submitted}" />
+              :class="{'full input-size p-invalid':v$.zipcode.$invalid && submitted}" @blur="validateCep(v$.zipcode.$model)" />
             <label for="zipcode" :class="{'p-error':v$.zipcode.$invalid && submitted}">{{$t('endereco.cep')}}*</label>
           </span>
           <span class="p-float-label p-input-icon-right">
@@ -205,7 +208,9 @@ import { validCnpj } from '../helpers/cnpjValidator';
 import { brands, verifyCard, v } from '../helpers/verifyCard';
 import { defaultState } from '../models/defaultState.model';
 import { paymentOptions } from '../models/paymentMethod.model';
-import { useMainStore}  from '../store/index'
+import { useMainStore}  from '../store/index';
+import cep from 'cep-promise';
+import Message from 'primevue/message';
 
 const birthdate: Ref<any> = ref('');
 const phone: Ref<string> = ref('');
@@ -214,6 +219,8 @@ const submitted: Ref<boolean> = ref(false);
 const line2: Ref<string> = ref('');
 const minDate: Ref<Date> = ref(new Date());
 const store = useMainStore();
+const messagesList: any = ref([]);
+const count = ref(0);
 
 let showFields: Ref<boolean> = ref(false);
 let verificationCode: string = '';
@@ -267,6 +274,23 @@ function sendCode() {
 function verifyCode() {
   showFields.value = false;
   codeVerified.value = true;
+}
+
+function validateCep(inputCep: string) {
+  cep(inputCep).then(
+    (address) => {
+      v$.value.street.$model = address.street;
+      v$.value.city.$model = address.city;
+      v$.value.state.$model = address.state;
+      messagesList.value.pop();
+    }
+  ).catch(err => {
+    console.log(err);
+    messagesList.value = [
+      { severity: 'error', content: 'Cep não encontrado', id: count.value++ },
+    ]
+  } 
+  );
 }
 
 const handleSubmit = (isFormValid: boolean) => {
