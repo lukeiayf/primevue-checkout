@@ -14,7 +14,6 @@ import { reactive, ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, maxLength } from '@vuelidate/validators';
 import Card from 'primevue/card';
-import { defineProps } from 'vue';
 import creditCardType, {
   types as CardType,
 } from "credit-card-type";
@@ -42,7 +41,6 @@ let localStorageVar = localStorage.getItem('Nome')
 
 const props = defineProps({
   name: String
-  
 })
 
 console.log(props.name)
