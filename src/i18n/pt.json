@@ -18,6 +18,11 @@
     },
     "dadosPagamento":"Dados do Pagamento",
     "quantidadeParcelas": "Quantidade de parcelas",
+    "metodoPagamento": "Método de pagamento",
+    "detalhesPagamento":{
+        "dataExpiracao": "Data de expiração",
+        "dataVencimento": "Data de vencimento"
+    },
     "cartao":{
         "bandeira":"Bandeira",
         "numero":"Número",
@@ -34,7 +39,7 @@
         "finalizarTransacao": "Finalizar transação"
     },
     "detalhesCompra": "Detalhes da compra",
-    "inserirCodigo": "Insira o código enviado"
-
+    "inserirCodigo": "Insira o código enviado",
+    "sumarioTransacao": "Resumo da compra"
 
 }
