@@ -7,7 +7,7 @@
         <div class="input-area">
           <span class="p-float-label p-input-icon-right">
             <i class="pi pi-user" />
-            <InputText id="username" type="text" v-model="v$.username.$model" class="full input-size"
+            <InputText required id="username" type="text" v-model="v$.username.$model" class="full input-size"
               :class="{'full input-size p-invalid':v$.username.$invalid && submitted}" />
             <label for="username" :class="{'p-error':v$.username.$invalid && submitted}">{{$t('cliente.nome')}}*</label>
             <!-- <small v-if="(v$.username.$invalid && submitted) || v$.username.$pending.$response"
@@ -16,7 +16,7 @@
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
             <span class="p-float-label p-input-icon-right" style="width:54%">
               <i class="pi pi-info-circle" />
-              <InputMask id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
+              <InputMask required id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" mask="99999999999" />
               <label for="cpf">{{$t('cliente.cpf')}}*</label>
             </span>
@@ -30,7 +30,7 @@
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
             <span class="p-float-label p-input-icon-right" style="width:83%">
               <i class="pi pi-at"></i>
-              <InputText id="email" type="text" v-model="v$.email.$model" class="full input-size"
+              <InputText required id="email" type="text" v-model="v$.email.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.email.$invalid && submitted}" />
               <label for="email" :class="{'p-error':v$.email.$invalid && submitted}">{{$t('cliente.email')}}*</label>
             </span>
@@ -47,13 +47,13 @@
           </transition-group>
           <span class="p-float-label p-input-icon-right">
             <i class="pi pi-map-marker"></i>
-            <InputText id="zipcode" type="text" v-model="v$.zipcode.$model" class="full input-size"
+            <InputText required id="zipcode" type="text" v-model="v$.zipcode.$model" class="full input-size"
               :class="{'full input-size p-invalid':v$.zipcode.$invalid && submitted}" @blur="validateCep(v$.zipcode.$model)" />
             <label for="zipcode" :class="{'p-error':v$.zipcode.$invalid && submitted}">{{$t('endereco.cep')}}*</label>
           </span>
           <span class="p-float-label p-input-icon-right">
             <i class="pi pi-map"></i>
-            <InputText id="street" type="text" v-model="v$.street.$model" class="full input-size"
+            <InputText required id="street" type="text" v-model="v$.street.$model" class="full input-size"
               :class="{'full input-size p-invalid':v$.street.$invalid && submitted}" />
             <label for="street"
               :class="{'p-error':v$.street.$invalid && submitted}">{{$t('endereco.logradouro')}}*</label>
@@ -61,7 +61,7 @@
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
             <span class="p-float-label p-input-icon-right" style="width: 45%;">
               <i class="pi pi-home"></i>
-              <InputText id="number" type="text" v-model="v$.number.$model" class="full input-size"
+              <InputText required  id="number" type="text" v-model="v$.number.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.number.$invalid && submitted}" />
               <label for="number"
                 :class="{'p-error':v$.number.$invalid && submitted}">{{$t('endereco.numero')}}*</label>
@@ -75,13 +75,13 @@
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
             <span class="p-float-label p-input-icon-right" style="width: 45%;">
               <i class="pi pi-flag"></i>
-              <InputText id="state" type="text" v-model="v$.state.$model" class="full input-size"
+              <InputText required id="state" type="text" v-model="v$.state.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.state.$invalid && submitted}" />
               <label for="number" :class="{'p-error':v$.state.$invalid && submitted}">{{$t('endereco.estado')}}*</label>
             </span>
             <span class="p-float-label p-input-icon-right">
               <i class="pi pi-flag"></i>
-              <InputText id="city" type="text" v-model="v$.city.$model" class="full input-size"
+              <InputText required id="city" type="text" v-model="v$.city.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.city.$invalid && submitted}" />
               <label for="number" :class="{'p-error':v$.city.$invalid && submitted}">{{$t('endereco.cidade')}}*</label>
             </span>
