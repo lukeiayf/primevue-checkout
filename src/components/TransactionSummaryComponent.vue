@@ -9,28 +9,31 @@
         <h5>{{$t('dadosCliente')}}</h5>
         <ul class="list">
           <li class="item-list">
-              <strong>{{$t('cliente.nome')}}</strong>: {{store.defaultForms[0].username}}
+              <strong>{{$t('cliente.nome')}}</strong>: {{store.defaultForms.username}}
           </li>
           <li class="item-list">
-          <strong>{{$t('cliente.email')}}</strong>: {{store.defaultForms[0].email}}
+          <strong>{{$t('cliente.email')}}</strong>: {{store.defaultForms.email}}
           </li>
         </ul>
         <h5>{{$t('dadosPagamento')}}</h5>
         <ul class="list">
           <li class="item-list">
-            <strong>{{$t('metodoPagamento')}}</strong>: {{store.defaultForms[0].paymentMethod.name}}
+            <strong>{{$t('metodoPagamento')}}</strong>: {{store.defaultForms.paymentMethod.name}}
           </li>
-          <li v-if="store.defaultForms[0].paymentMethod.value == 3" class="item-list">
+          <li class="item-list">
+            <strong>{{$t('quantidadeParcelas')}}</strong>: {{store.defaultForms.installments}}
+          </li>
+          <li v-if="store.defaultForms.paymentMethod.value == 3" class="item-list">
             <strong>{{$t('detalhesPagamento.dataExpiracao')}}</strong>: Apenas para QRCODE
           </li>
-          <li v-if="store.defaultForms[0].paymentMethod.value == 2" class="item-list">
+          <li v-if="store.defaultForms.paymentMethod.value == 2" class="item-list">
             <strong>{{$t('detalhesPagamento.dataVencimento')}}</strong>: Apenas para BOLETO
           </li>
         </ul>
-        <div v-if="store.defaultForms[0].paymentMethod.value == 2" style="display: flex; justify-content: center;">
+        <div v-if="store.defaultForms.paymentMethod.value == 2" style="display: flex; justify-content: center;">
           <img :src="imgSrcBankslip" style="width:400px;" alt="Boleto"/>
         </div>
-        <div v-if="store.defaultForms[0].paymentMethod.value == 3" style="display: flex; justify-content: center;">
+        <div v-if="store.defaultForms.paymentMethod.value == 3" style="display: flex; justify-content: center;">
           <img :src="imgSrcPix" style="width:200px;" alt="PIX"/>
         </div>
       </template>

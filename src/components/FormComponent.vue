@@ -230,7 +230,7 @@ let customerName: string;
 
 let isCard: Ref<boolean> = ref(false);
 
-function validDocument(value): boolean{
+function validDocument(value: any): boolean{
   //debugger
   console.log('chamou validdocument')
   if (validCnpj(value) || validCpf(value)) {

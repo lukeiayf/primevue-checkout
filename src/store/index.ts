@@ -2,21 +2,21 @@ import { defineStore } from "pinia";
 import { DefaultState, defaultState as defaultForm } from "../models/defaultState.model";
 
 export type RootState = {
-    defaultForms: DefaultState[];
+    defaultForms: DefaultState;
 };
 
 export const useMainStore = defineStore({
     id: "mainStore",
     state: () =>
     ({
-        defaultForms: [],
+        defaultForms: {},
     } as RootState),
 
     actions: {
         createNewForm(defaultForm:DefaultState) {
             if (!defaultForm) return;
 
-            this.defaultForms.push(defaultForm);
+            this.defaultForms = defaultForm;
         },
 
         updateForm(id: string, payload: DefaultState) {
@@ -25,7 +25,7 @@ export const useMainStore = defineStore({
             const index = this.findIndexById(id);
 
             if (index !== -1) {
-                this.defaultForms[index] = createNewForm();
+                this.defaultForms = createNewForm();
             }
         },
 
