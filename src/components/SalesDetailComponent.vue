@@ -21,7 +21,9 @@
         </li>
       </ul>
     </template>
+
   </Card>
+
 </template>
 
 <script setup>
@@ -47,6 +49,18 @@ const items = [
   {
     title: 'Periodicidade',
     value: 'Periodicidade'
+  },
+  {
+    title: 'Nome do plano',
+    value: 'Nome do plano'
+  },
+  {
+    title: 'Loja',
+    value: 'Nome da loja'
+  },
+  {
+    title: 'Descrição',
+    value: 'Descrição'
   },
 
 ]

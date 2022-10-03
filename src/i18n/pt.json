@@ -1,14 +1,15 @@
-{   
-    "dadosCliente":"Dados do Cliente", 
-    "cliente":{
+{
+    "dadosCliente": "Dados do Cliente",
+    "cliente": {
         "nome": "Nome",
         "cpf": "CPF",
         "nascimento": "Data de nascimento",
         "email": "Email",
-        "telefone": "Telefone"
+        "telefone": "Telefone",
+        "confirmacaoEmail": "Confirme seu email"
     },
-    "dadosEndereco":"Endereço",
-    "endereco":{
+    "dadosEndereco": "Endereço",
+    "endereco": {
         "cep": "CEP",
         "logradouro": "Logradouro",
         "numero": "Número",
@@ -16,22 +17,22 @@
         "estado": "Estado",
         "cidade": "Cidade"
     },
-    "dadosPagamento":"Dados do Pagamento",
+    "dadosPagamento": "Dados do Pagamento",
     "quantidadeParcelas": "Quantidade de parcelas",
     "metodoPagamento": "Método de pagamento",
-    "detalhesPagamento":{
+    "detalhesPagamento": {
         "dataExpiracao": "Data de expiração",
         "dataVencimento": "Data de vencimento"
     },
-    "cartao":{
-        "bandeira":"Bandeira",
-        "numero":"Número",
-        "vencimento":"Vencimento",
-        "codigo":"Código de segurança",
-        "nomeTitular":"Nome do titular",
-        "documentoTitular":"Documento do titular"
+    "cartao": {
+        "bandeira": "Bandeira",
+        "numero": "Número",
+        "vencimento": "Vencimento",
+        "codigo": "Código de segurança",
+        "nomeTitular": "Nome do titular",
+        "documentoTitular": "Documento do titular"
     },
-    "botao":{
+    "botao": {
         "enviarCodigoVerificacao": "Enviar código de verificação",
         "cartao": "Cartão",
         "boleto": "Boleto",
@@ -40,5 +41,29 @@
     },
     "detalhesCompra": "Detalhes da compra",
     "inserirCodigo": "Insira o código enviado",
-    "sumarioTransacao": "Resumo da compra"
+    "sumarioTransacao": "Resumo da compra",
+    "erros": {
+        "cliente": {
+            "nomeRequerido": "O campo nome deve ser preenchido.",
+            "cpfRequerido": "O campo CPF deve ser preenchido.",
+            "emailRequerido": "O campo email deve ser preenchido.",
+            "emailConfirmacao": "Os emails devem coincidir."
+        },
+        "endereco":{
+            "cepRequerido": "O campo cep deve ser preenchido.",
+            "logradouroRequerido": "O campo logradouro deve ser preenchido.",
+            "numeroRequerido": "O campo número deve ser preenchido.",
+            "cidadeRequerida": "O campo cidade deve ser preenchido.",
+            "estadoRequerido": "O campo estado deve ser preenchido."
+        },
+        "cartao":{
+            "bandeiraRequerida": "O campo bandeira deve ser preenchido.",
+            "numeroRequerido": "O campo número deve ser preenchido.",
+            "documentoRequerido": "O campo documento do titular deve ser preenchido.",
+            "nomeRequerido": "O campo nome do titular deve ser preenchido.",
+            "validadeRequerida": "O campo validade deve ser preenchido.",
+            "codigoRequerido": "O campo código de segurança deve ser preenchido."
+        }
+        
+    }
 }
