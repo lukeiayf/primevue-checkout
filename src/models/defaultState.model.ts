@@ -8,7 +8,7 @@ export interface DefaultState {
     email: string,
     emailConfirmation: string,
     cpf: string,
-    birthdate: Date;
+    birthdate: any;
     phone: string,
     zipcode: string,
     street: string,
@@ -32,7 +32,7 @@ export const defaultState: DefaultState = reactive({
     email: '',
     emailConfirmation: '',  
     cpf: '',
-    birthdate: new Date(),
+    birthdate: '',
     phone: '',
     zipcode: '',
     street: '',

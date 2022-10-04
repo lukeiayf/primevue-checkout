@@ -299,8 +299,10 @@ import { CustomerRequest } from '../models/request/customerRequest';
 import { CardRequest } from '../models/request/cardRequest';
 import { PaymentRequest } from '../models/request/paymentRequest';
 import { AddressRequest } from '../models/request/addressRequest';
-import { PaymentPageResponse } from '../models/response/paymentPageResponse'
-import { CustomerResponse } from '../models/response/customerResponse'
+import { PaymentPageResponse } from '../models/response/paymentPageResponse';
+import { CustomerResponse } from '../models/response/customerResponse';
+import { PagePayService } from '../services/pagepay.services'
+
 
 
 const maxInstallments: Ref<number> = ref(12);
@@ -310,6 +312,8 @@ const today: Ref<Date> = ref(new Date());
 const store = useMainStore();
 const messagesList: any = ref([]);
 const count = ref(0);
+const pagePayService = new PagePayService();
+
 
 let showFields: Ref<boolean> = ref(false);
 let verificationCode: string = '';
@@ -365,20 +369,17 @@ const rules = {
 
 const v$ = useVuelidate(rules, defaultState);
 
-/*getPaymentPage
- paymentPage = result
- */
 
-/* getCustomer
-  if (status == 200) {
-    paymentPageCustomer = result;
-    v$.value.username.$model = paymentPageCustomer.name;
-    v$.value.cpf.$model = paymentPageCustomer.cpf;
-    v$.value.birthdate.$model = paymentPageCustomer.birthdate;
-    v$.value.phone.$model = paymentPageCustomer.phone;
-    v$.value.email.$model = paymentPageCustomer.email;
-  }
-*/
+// function loadCustomer(){
+//   let paymentPageCustomer = pagePayService.getPaymentPageCustomer();
+
+//     v$.value.username.$model = paymentPageCustomer.name;
+//     v$.value.cpf.$model = paymentPageCustomer.cpf;
+//     v$.value.birthdate.$model = paymentPageCustomer.birthdate;
+//     v$.value.phone.$model = paymentPageCustomer.phone;
+//     v$.value.email.$model = paymentPageCustomer.email;
+// }
+
 
 function sendCode() {
   showFields.value = true;
@@ -455,9 +456,6 @@ const handleSubmit = (isFormValid: boolean) => {
       //getCardIdByUri
       payment.profileId = profileId;
     }
-
-
-
 
     console.log(customer);
     showTransactionSummary.value = true;

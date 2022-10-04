@@ -39,7 +39,7 @@
         "pix": "PIX",
         "finalizarTransacao": "Finalizar transação"
     },
-    "detalhesCompra": "Detalhes da compra",
+    "detalhesCompraTitulo": "Detalhes da compra",
     "inserirCodigo": "Insira o código enviado",
     "sumarioTransacao": "Resumo da compra",
     "erros": {
@@ -63,7 +63,16 @@
             "nomeRequerido": "O campo nome do titular deve ser preenchido.",
             "validadeRequerida": "O campo validade deve ser preenchido.",
             "codigoRequerido": "O campo código de segurança deve ser preenchido."
-        }
-        
+        } 
+    },
+    "detalhesCompra": {
+        "adesao": "Adesão",
+        "valorPrincipal":"Valor principal",
+        "valorPlano":"Valor principal",
+        "total": "Total",
+        "periodicidade": "Periodicidade",
+        "nomePlano": "Nome do plano",
+        "loja": "Loja",
+        "descricao": "Descrição"
     }
 }
