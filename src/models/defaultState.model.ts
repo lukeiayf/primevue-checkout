@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 import { Brand } from '../helpers/verifyCard';
-import { PaymentMethod } from './paymentMethod.model';
+import { PaymentMethod } from './paymentMethodResponse';
 
 export interface DefaultState {
     id: string,
@@ -8,16 +8,19 @@ export interface DefaultState {
     email: string,
     emailConfirmation: string,
     cpf: string,
+    birthdate: Date;
+    phone: string,
     zipcode: string,
     street: string,
     number: string,
+    lineTwo: string,
     state: string,
     city: string,
     paymentMethod: PaymentMethod,
     installments: number,
     cardBrand: Brand,
     cardNumber: string,
-    month: any,
+    dueDate: any,
     securityCode: string,
     holderName: string,
     holderDocument: string,
@@ -29,9 +32,12 @@ export const defaultState: DefaultState = reactive({
     email: '',
     emailConfirmation: '',  
     cpf: '',
+    birthdate: new Date(),
+    phone: '',
     zipcode: '',
     street: '',
     number: '',
+    lineTwo: '',
     state: '',
     city: '',
     paymentMethod: {
@@ -41,7 +47,7 @@ export const defaultState: DefaultState = reactive({
     },
     installments: 1,
     cardNumber: '',
-    month: '',
+    dueDate: '',
     securityCode: '',
     holderName: '',
     holderDocument: '',

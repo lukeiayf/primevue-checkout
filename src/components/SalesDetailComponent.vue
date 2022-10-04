@@ -28,13 +28,15 @@
 
 <script setup>
 import Card from 'primevue/card';
+import { paymentPage } from './FormComponent.vue'
+import { PaymentPageResponse } from '../models/response/paymentPageResponse';
 
 const imgSrc = "src/assets/logo.png"
 const valorPrincipal = 25.00;
 const items = [
   {
     title: 'Adesão',
-    value: 'Valor Adesão'
+    value: '10'
   },
   {
     title: 'Valor principal',

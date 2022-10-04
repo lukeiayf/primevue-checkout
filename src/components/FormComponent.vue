@@ -8,7 +8,7 @@
           <div>
             <span class="p-float-label p-input-icon-right">
               <i class="pi pi-user" />
-              <InputText  id="username" type="text" v-model="v$.username.$model" class="full input-size"
+              <InputText id="username" type="text" v-model="v$.username.$model" class="full input-size"
                 :class="{'full input-size p-invalid':v$.username.$invalid && submitted}" />
               <label for="username"
                 :class="{' full p-inputtext-sm p-error':v$.username.$invalid && submitted}">{{$t('cliente.nome')}}*</label>
@@ -29,7 +29,7 @@
             </div>
             <div style="width: 45%;">
               <span class="p-float-label">
-                <Calendar inputId="birthdate" v-model="birthdate" autocomplete="off" class="full date-size"
+                <Calendar inputId="birthdate" v-model="v$.birthdate.$model" autocomplete="off" class="full date-size"
                   dateFormat="dd/mm/yy" :showIcon="true" />
                 <label for="birthdate">{{$t('cliente.nascimento')}}</label>
               </span>
@@ -51,19 +51,19 @@
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-at"></i>
                 <InputText required id="emailConfirmation" type="text" v-model="v$.emailConfirmation.$model"
-                  class="full input-size"
-                  :class="{'full input-size p-invalid': !equalsToEmail}" @blur="verifyEmail(v$.email.$model, v$.emailConfirmation.$model)" />
+                  class="full input-size" :class="{'full input-size p-invalid': !equalsToEmail}"
+                  @blur="verifyEmail(v$.email.$model, v$.emailConfirmation.$model)" />
                 <label for="emailConfirmation"
                   :class="{'p-error':!equalsToEmail}">{{$t('cliente.confirmacaoEmail')}}*</label>
               </span>
-              <small v-if="(!equalsToEmail)"
-                class="p-error">{{$t('erros.cliente.emailConfirmacao')}}</small>
+              <small v-if="(!equalsToEmail)" class="p-error">{{$t('erros.cliente.emailConfirmacao')}}</small>
             </div>
           </div>
-          <div>
+          <div style="width: 45%;">
             <span class="p-float-label p-input-icon-right">
               <i class="pi pi-phone"></i>
-              <InputMask id="phone" type="text" v-model="phone" mask="(99)99999-999?9" class="full input-size" />
+              <InputMask id="phone" type="text" v-model="v$.phone.$model" mask="(99)99999-999?9"
+                class="full input-size" />
               <label for="phone">{{$t('cliente.telefone')}}</label>
             </span>
           </div>
@@ -81,6 +81,30 @@
             </span>
             <small v-if="(v$.zipcode.$invalid && submitted) || v$.zipcode.$pending"
               class="p-error">{{$t('erros.endereco.cepRequerido')}}</small>
+          </div>
+          <div style="display: flex; flex-direction: row; justify-content: space-between;">
+            <div style="width: 45%;">
+              <span class="p-float-label p-input-icon-right">
+                <i class="pi pi-flag"></i>
+                <InputText required id="state" type="text" v-model="v$.state.$model" class="full input-size"
+                  :class="{'full input-size p-invalid':v$.state.$invalid && submitted}" />
+                <label for="number"
+                  :class="{'p-error':v$.state.$invalid && submitted}">{{$t('endereco.estado')}}*</label>
+              </span>
+              <small v-if="(v$.state.$invalid && submitted) || v$.state.$pending"
+                class="p-error">{{$t('erros.endereco.estadoRequerido')}}</small>
+            </div>
+            <div style="width: 45%;">
+              <span class="p-float-label p-input-icon-right">
+                <i class="pi pi-flag"></i>
+                <InputText required id="city" type="text" v-model="v$.city.$model" class="full input-size"
+                  :class="{'full input-size p-invalid':v$.city.$invalid && submitted}" />
+                <label for="number"
+                  :class="{'p-error':v$.city.$invalid && submitted}">{{$t('endereco.cidade')}}*</label>
+              </span>
+              <small v-if="(v$.city.$invalid && submitted) || v$.city.$pending"
+                class="p-error">{{$t('erros.endereco.cidadeRequerida')}}</small>
+            </div>
           </div>
           <div>
             <span class="p-float-label p-input-icon-right">
@@ -113,30 +137,7 @@
               </span>
             </div>
           </div>
-          <div style="display: flex; flex-direction: row; justify-content: space-between;">
-            <div style="width: 45%;">
-              <span class="p-float-label p-input-icon-right">
-                <i class="pi pi-flag"></i>
-                <InputText required id="state" type="text" v-model="v$.state.$model" class="full input-size"
-                  :class="{'full input-size p-invalid':v$.state.$invalid && submitted}" />
-                <label for="number"
-                  :class="{'p-error':v$.state.$invalid && submitted}">{{$t('endereco.estado')}}*</label>
-              </span>
-              <small v-if="(v$.state.$invalid && submitted) || v$.state.$pending"
-                class="p-error">{{$t('erros.endereco.estadoRequerido')}}</small>
-            </div>
-            <div style="width: 45%;">
-              <span class="p-float-label p-input-icon-right">
-                <i class="pi pi-flag"></i>
-                <InputText required id="city" type="text" v-model="v$.city.$model" class="full input-size"
-                  :class="{'full input-size p-invalid':v$.city.$invalid && submitted}" />
-                <label for="number"
-                  :class="{'p-error':v$.city.$invalid && submitted}">{{$t('endereco.cidade')}}*</label>
-              </span>
-              <small v-if="(v$.city.$invalid && submitted) || v$.city.$pending"
-                class="p-error">{{$t('erros.endereco.cidadeRequerida')}}</small>
-            </div>
-          </div>
+
 
           <Button v-if="!showFields && !codeVerified" label="Enviar código de verificação" class="full"
             icon="pi pi-send" iconPos="left" v-tooltip="'Será enviado um código para o e-mail e telefone informados'"
@@ -198,12 +199,12 @@
                 <div style="width: 45%;">
                   <span>
                     <div class="field col-12 md:col-4">
-                      <Calendar required inputId="month" class="dropdown-size" v-model="v$.month.$model" view="month"
-                        :minDate="minDate" dateFormat="mm/yy" placeholder="Vencimento" :showIcon="true"
-                        :class="{'full input-size p-invalid':v$.month.$invalid && submitted }" />
+                      <Calendar required inputId="dueDate" class="dropdown-size" v-model="v$.dueDate.$model"
+                        view="month" :minDate="today" dateFormat="mm/yy" placeholder="Vencimento" :showIcon="true"
+                        :class="{'full input-size p-invalid':v$.dueDate.$invalid && submitted }" />
                     </div>
                   </span>
-                  <small v-if="(v$.month.$invalid && submitted) || v$.month.$pending"
+                  <small v-if="(v$.dueDate.$invalid && submitted) || v$.dueDate.$pending"
                     class="p-error">{{$t('erros.cartao.validadeRequerida')}}</small>
                 </div>
                 <div style="width: 45%;">
@@ -241,7 +242,7 @@
                     :class="{'p-error':v$.holderDocument.$invalid && submitted}">{{$t('cartao.documentoTitular')}}*</label>
                 </span>
                 <small v-if="(v$.holderDocument.$invalid && submitted) || v$.holderDocument.$pending"
-                    class="p-error">{{$t('erros.cartao.documentoRequerido')}}</small>
+                  class="p-error">{{$t('erros.cartao.documentoRequerido')}}</small>
               </div>
             </div>
           </div>
@@ -289,18 +290,23 @@ import { validCpf, messages } from '../helpers/cpfValidator';
 import { validCnpj } from '../helpers/cnpjValidator';
 import { brands, verifyCard, v } from '../helpers/verifyCard';
 import { defaultState } from '../models/defaultState.model';
-import { paymentOptions } from '../models/paymentMethod.model';
+import { paymentOptions } from '../models/paymentMethodResponse';
 import { useMainStore } from '../store/index';
 import cep from 'cep-promise';
 import Message from 'primevue/message';
 import { verifyEmail, equalsToEmail } from '../helpers/validateEmail';
+import { CustomerRequest } from '../models/request/customerRequest';
+import { CardRequest } from '../models/request/cardRequest';
+import { PaymentRequest } from '../models/request/paymentRequest';
+import { AddressRequest } from '../models/request/addressRequest';
+import { PaymentPageResponse } from '../models/response/paymentPageResponse'
+import { CustomerResponse } from '../models/response/customerResponse'
 
-const birthdate: Ref<any> = ref('');
-const phone: Ref<string> = ref('');
+
 const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
 const line2: Ref<string> = ref('');
-const minDate: Ref<Date> = ref(new Date());
+const today: Ref<Date> = ref(new Date());
 const store = useMainStore();
 const messagesList: any = ref([]);
 const count = ref(0);
@@ -309,10 +315,15 @@ let showFields: Ref<boolean> = ref(false);
 let verificationCode: string = '';
 let codeVerified: Ref<boolean> = ref(false);
 let showTransactionSummary: Ref<boolean> = ref(false);
-let customerName: string;
-
-let isCard: Ref<boolean> = ref(true);
-
+let customerId: number;
+let customer: CustomerRequest;
+let address: AddressRequest;
+let card: CardRequest;
+let payment: PaymentRequest;
+let paymentPage: PaymentPageResponse;
+let paymentPageCustomer: CustomerResponse;
+let profileId: number;
+let isCard: Ref<boolean> = ref(false);
 
 
 function validDocument(value: any): boolean {
@@ -327,13 +338,17 @@ function validDocument(value: any): boolean {
   }
 }
 
+
 const rules = {
   username: { required },
   email: { required, email },
   emailConfirmation: { required },
   cpf: { required, minLengthValue: minLength(11), validCpf },
+  birthdate: {},
+  phone: {},
   zipcode: { required, minLengthValue: minLength(8) },
   street: { required },
+  lineTwo: {},
   number: { required },
   state: { required },
   city: { required },
@@ -342,13 +357,28 @@ const rules = {
 
   cardBrand: { required: requiredIf(isCard) },
   cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
-  month: { required: requiredIf(isCard) },
+  dueDate: { required: requiredIf(isCard) },
   securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
   holderName: { required: requiredIf(isCard) },
   holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
 };
 
 const v$ = useVuelidate(rules, defaultState);
+
+/*getPaymentPage
+ paymentPage = result
+ */
+
+/* getCustomer
+  if (status == 200) {
+    paymentPageCustomer = result;
+    v$.value.username.$model = paymentPageCustomer.name;
+    v$.value.cpf.$model = paymentPageCustomer.cpf;
+    v$.value.birthdate.$model = paymentPageCustomer.birthdate;
+    v$.value.phone.$model = paymentPageCustomer.phone;
+    v$.value.email.$model = paymentPageCustomer.email;
+  }
+*/
 
 function sendCode() {
   showFields.value = true;
@@ -380,9 +410,6 @@ function validateCep(inputCep: string) {
 }
 
 const handleSubmit = (isFormValid: boolean) => {
-  //console.log(isCard);
-  //console.log(v$.value.paymentMethod.$model.value);
-  console.log(validDocument(v$.value.holderDocument.$model));
   submitted.value = true;
   if (v$.value.paymentMethod.$model.value == 1 && !validDocument(v$.value.holderDocument.$model)) {
     isFormValid = false;
@@ -391,9 +418,49 @@ const handleSubmit = (isFormValid: boolean) => {
     console.log('n passou');
   } else {
     console.log('passou');
-    customerName = v$.value.username.$model;
-    showTransactionSummary.value = true;
     store.createNewForm(defaultState);
+    customer = {
+      name: store.defaultForms.username,
+      cpf: store.defaultForms.cpf,
+      email: store.defaultForms.email,
+      birthdate: store.defaultForms.birthdate.getTime(),
+      phone: store.defaultForms.phone
+    }
+    //getClientIdByDocument
+    address = {
+      street: store.defaultForms.street,
+      number: store.defaultForms.number,
+      lineTwo: store.defaultForms.lineTwo,
+      state: store.defaultForms.state,
+      city: store.defaultForms.city,
+      zipCode: store.defaultForms.zipcode
+    }
+    payment = {
+      uuid: paymentPage.uuid,
+      customerId: customerId,
+      paymentType: store.defaultForms.paymentMethod.name,
+      installments: store.defaultForms.installments,
+    }
+    //postAddress
+    if (store.defaultForms.paymentMethod.name == 'CREDIT_CARD') {
+      card = {
+        cardBrand: store.defaultForms.cardBrand.name,
+        cardNumber: store.defaultForms.cardNumber,
+        securityCode: parseInt(store.defaultForms.securityCode),
+        holderName: store.defaultForms.holderName,
+        holderDocument: store.defaultForms.holderDocument,
+        dueDate: store.defaultForms.dueDate.getTime()
+      }
+      //postCard
+      //getCardIdByUri
+      payment.profileId = profileId;
+    }
+
+
+
+
+    console.log(customer);
+    showTransactionSummary.value = true;
   }
 
 };
