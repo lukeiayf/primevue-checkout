@@ -371,14 +371,23 @@ const v$ = useVuelidate(rules, defaultState);
 
 
 // function loadCustomer(){
-//   let paymentPageCustomer = pagePayService.getPaymentPageCustomer();
-
-//     v$.value.username.$model = paymentPageCustomer.name;
-//     v$.value.cpf.$model = paymentPageCustomer.cpf;
-//     v$.value.birthdate.$model = paymentPageCustomer.birthdate;
-//     v$.value.phone.$model = paymentPageCustomer.phone;
-//     v$.value.email.$model = paymentPageCustomer.email;
-// }
+//   pagePayService.getPaymentPageCustomer().then((result) => {
+//     let customerId = result.id;
+//     v$.value.username.$model = result.name;
+//     v$.value.cpf.$model = result.cpf;
+//     v$.value.birthdate.$model = result.birthdate;
+//     v$.value.phone.$model = result.phone;
+//     v$.value.email.$model = result.email;
+//     pagePayService.getCustomerAddress(customerId).then((result)=>{
+//       v$.value.street.$model = result.street;
+//       v$.value.number.$model = result.number;
+//       v$.value.line2.$model = result.lineTwo;
+//       v$.value.zipcode.$model = result.zipCode;
+//       v$.value.state.$model = result.state;
+//       v$.value.city.$model = result.city;
+//     });
+//   })
+// };
 
 
 function sendCode() {
@@ -386,12 +395,12 @@ function sendCode() {
   codeVerified.value = true;
   console.log(v$.value.username.$model);
   return showFields.value;
-}
+};
 
 function verifyCode() {
   showFields.value = false;
   codeVerified.value = true;
-}
+};
 
 function validateCep(inputCep: string) {
   cep(inputCep).then(
@@ -408,7 +417,7 @@ function validateCep(inputCep: string) {
     ]
   }
   );
-}
+};
 
 const handleSubmit = (isFormValid: boolean) => {
   submitted.value = true;
@@ -427,7 +436,6 @@ const handleSubmit = (isFormValid: boolean) => {
       birthdate: store.defaultForms.birthdate.getTime(),
       phone: store.defaultForms.phone
     }
-    //getClientIdByDocument
     address = {
       street: store.defaultForms.street,
       number: store.defaultForms.number,
@@ -436,25 +444,38 @@ const handleSubmit = (isFormValid: boolean) => {
       city: store.defaultForms.city,
       zipCode: store.defaultForms.zipcode
     }
+    // pagePayService.getCustomerIdByDocument(customer.cpf).then((result) => {
+    //   if(result == '404'){
+    //     pagePayService.postCustomer(customer).then((data) => {
+    //       //pegar a location e retorna um customerId
+    //       pagePayService.postAddress(customerId, address)
+    //     });
+    //   } else {
+    //     customerId = result.customerId;
+    //     pagePayService.putCustomer(customerId, customer);
+    //     pagePayService.putAddress(customerId, address);
+    //   }
+    // })
     payment = {
       uuid: paymentPage.uuid,
       customerId: customerId,
       paymentType: store.defaultForms.paymentMethod.name,
       installments: store.defaultForms.installments,
     }
-    //postAddress
     if (store.defaultForms.paymentMethod.name == 'CREDIT_CARD') {
       card = {
         cardBrand: store.defaultForms.cardBrand.name,
         cardNumber: store.defaultForms.cardNumber,
-        securityCode: parseInt(store.defaultForms.securityCode),
-        holderName: store.defaultForms.holderName,
         holderDocument: store.defaultForms.holderDocument,
-        dueDate: store.defaultForms.dueDate.getTime()
+        holderName: store.defaultForms.holderName,
+        dueDate: store.defaultForms.dueDate.getTime(),
+        securityCode: parseInt(store.defaultForms.securityCode),
       }
-      //postCard
-      //getCardIdByUri
       payment.profileId = profileId;
+      //postCard
+      // pagePayService.postCard(customerId, card);
+      //getCardIdByUri
+      //pagePayService.getCardByUri(customerId, profileId);
     }
 
     console.log(customer);
