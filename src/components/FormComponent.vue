@@ -288,6 +288,7 @@ import 'moment/locale/pt-br';
 import TransactionSummaryComponent from './TransactionSummaryComponent.vue';
 import { validCpf, messages } from '../helpers/cpfValidator';
 import { validCnpj } from '../helpers/cnpjValidator';
+import { validDocument } from '../helpers/validDocument';
 import { brands, verifyCard, v } from '../helpers/verifyCard';
 import { defaultState } from '../models/defaultState.model';
 import { paymentOptions } from '../models/paymentMethodResponse';
@@ -330,17 +331,6 @@ let profileId: number;
 let isCard: Ref<boolean> = ref(false);
 
 
-function validDocument(value: any): boolean {
-  //debugger
-  console.log('chamou validdocument')
-  if (validCnpj(value) || validCpf(value)) {
-    console.log('documento valido')
-    return true;
-  } else {
-    console.log('documento invalido')
-    return false;
-  }
-}
 
 
 const rules = {
@@ -457,7 +447,8 @@ const handleSubmit = (isFormValid: boolean) => {
     //   }
     // })
     payment = {
-      uuid: paymentPage.uuid,
+      //uuid: paymentPage.uuid,
+      uuid: 'testeuuid',
       customerId: customerId,
       paymentType: store.defaultForms.paymentMethod.name,
       installments: store.defaultForms.installments,
