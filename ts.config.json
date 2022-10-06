@@ -10,7 +10,10 @@
     "allowJs": true,
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "types": [
+      "vitest/globals"
+    ]
   },
   "include": ["./src/**/*",
     "./src/**/*.vue"

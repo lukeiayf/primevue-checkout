@@ -331,8 +331,6 @@ let profileId: number;
 let isCard: Ref<boolean> = ref(false);
 
 
-
-
 const rules = {
   username: { required },
   email: { required, email },
