@@ -271,7 +271,7 @@
 
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, maxLength, requiredIf, sameAs } from '@vuelidate/validators';
 import InputText from 'primevue/inputtext';
@@ -287,7 +287,6 @@ import type { Ref } from 'vue';
 import 'moment/locale/pt-br';
 import TransactionSummaryComponent from './TransactionSummaryComponent.vue';
 import { validCpf, messages } from '../helpers/cpfValidator';
-import { validCnpj } from '../helpers/cnpjValidator';
 import { validDocument } from '../helpers/validDocument';
 import { brands, verifyCard, v } from '../helpers/verifyCard';
 import { defaultState } from '../models/defaultState.model';

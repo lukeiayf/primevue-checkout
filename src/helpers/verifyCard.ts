@@ -52,8 +52,8 @@ export function verifyCard(card) {
     let cardNumber = card.replace(/[^\d]+/g, '');
     if (cardNumber != '')
         console.log(cardNumber);
-    var visaCards = creditCardType(cardNumber);
-    var modelCardBrand = visaCards[0].type;
+    var cardType = creditCardType(cardNumber);
+    var modelCardBrand = cardType[0].type;
     console.log(cardNumber)
     console.log(brands.length)
     for (let i = 0; i < brands.length; i++) {
@@ -70,4 +70,5 @@ export function verifyCard(card) {
             id: 0
         }
     }
+    return foundCardBrand;
 }
