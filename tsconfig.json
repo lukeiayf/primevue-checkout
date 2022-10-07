@@ -8,14 +8,27 @@
     "noEmit": true,
     "outDir": "./built",
     "allowJs": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "src/*"
+      ]
     },
     "types": [
       "vitest/globals"
     ]
   },
-  "include": ["./src/**/*",
-    "./src/**/*.vue"
+  "include":[
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
   ]
 }
