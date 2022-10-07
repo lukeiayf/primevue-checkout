@@ -290,7 +290,7 @@ import { validCpf, messages } from '../helpers/cpfValidator';
 import { validDocument } from '../helpers/validDocument';
 import { brands, verifyCard, v } from '../helpers/verifyCard';
 import { defaultState } from '../models/defaultState.model';
-import { paymentOptions } from '../models/paymentMethodResponse';
+import { paymentOptions } from '../models/response/paymentMethodResponse';
 import { useMainStore } from '../store/index';
 import cep from 'cep-promise';
 import Message from 'primevue/message';

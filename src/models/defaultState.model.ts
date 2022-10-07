@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 import { Brand } from '../helpers/verifyCard';
-import { PaymentMethod } from './paymentMethodResponse';
+import { PaymentMethod } from './response/paymentMethodResponse';
 
 export interface DefaultState {
     id: string,
