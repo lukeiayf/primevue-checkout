@@ -4,7 +4,7 @@ import type { Ref } from 'vue';
 
 export let cepReturn: Ref<any> = ref({});
 
-export function validateCep(inputCep: string){
+export async function validateCep(inputCep: string){
     cep(inputCep).then(
         (address) => {
             console.log(address);
@@ -12,4 +12,5 @@ export function validateCep(inputCep: string){
             return address;
         }
     )
+    return cep(inputCep);
 }
