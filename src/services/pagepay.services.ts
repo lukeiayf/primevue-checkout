@@ -1,15 +1,16 @@
-import { CustomerResponse } from '../models/response/customerResponse';
 import { CustomerRequest } from '../models/request/customerRequest';
 import { AddressRequest } from '../models/request/addressRequest';
 import { CardRequest } from '../models/request/cardRequest';
 
 
+
 export class PagePayService {
 
-    public async getPaymentPage() {
-        const url = 'https://apisandbox.bempaggo.io/api/v2/checkout/pagepays';
+    public async getPaymentPage(companyId: number) {
+        const url = `${process.env.VITE_APP_NAME}/api/v2/checkout/companies/${companyId}/pagepays`;
+        console.log(url)
 
-        try {
+        /* try {
             let response = await fetch(url, {method:'GET'});
             if (response.ok) {
                 return await response.json();
@@ -18,7 +19,7 @@ export class PagePayService {
             }
         } catch (error) {
             return Error(error);
-        }
+        } */
     }
 
     public async getPaymentPageCustomer() {

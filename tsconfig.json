@@ -18,7 +18,8 @@
     },
     "types": [
       "vitest/globals"
-    ]
+    ],
+    "jsx": "preserve"
   },
   "include":[
     "src/**/*.ts",

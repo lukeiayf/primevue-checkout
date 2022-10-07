@@ -13,8 +13,8 @@
 </template>
 
 <script setup>
-import { onMounted, defineProps, ref } from 'vue';
-import RadioButton from 'primevue/radiobutton';
+import { defineProps, ref } from 'vue';
+
 
 defineProps([
   "testeProps",

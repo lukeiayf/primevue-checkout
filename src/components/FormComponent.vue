@@ -302,6 +302,7 @@ import { AddressRequest } from '../models/request/addressRequest';
 import { PaymentPageResponse } from '../models/response/paymentPageResponse';
 import { CustomerResponse } from '../models/response/customerResponse';
 import { PagePayService } from '../services/pagepay.services'
+import { pauseTracking } from '@vue/reactivity';
 
 
 
@@ -329,6 +330,7 @@ let paymentPageCustomer: CustomerResponse;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
 
+pagePayService.getPaymentPage(1);
 
 const rules = {
   username: { required },

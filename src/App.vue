@@ -2,12 +2,18 @@
 import FormComponent from './components/FormComponent.vue';
 import SalesDetailComponent from './components/SalesDetailComponent.vue';
 
+console.log(import.meta.env.VITE_APP_NAME);
+
+let url = `${import.meta.env.VITE_APP_NAME}/api/v2/checkout/companies/pagepays`
+
+
 </script>
 
 <template>
   <div style="justify-content:center; display: flex; flex-direction: row; ">
     <SalesDetailComponent style="margin-right: 1rem;"></SalesDetailComponent>
     <FormComponent></FormComponent>
+    {{url}}
   </div>
 </template>
 
