@@ -7,9 +7,8 @@ import { CardRequest } from '../models/request/cardRequest';
 export class PagePayService {
 
     public async getPaymentPage(companyId: number) {
-        const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays`;
-        console.log(url)
-
+        const url = "/api/v2/checkout/companies/1/pagepays"
+        //const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays`;
          try {
             let response = await fetch(url, {method:'GET'});
             if (response.ok) {
@@ -175,4 +174,19 @@ export class PagePayService {
 
     }
 
+    public async getUsers(){
+        let users = [];
+        let serverError = null;
+
+        fetch("/api/pagepay")
+            .then((res) => res.json())
+            .then((json) => {
+                
+                if (json.error) {
+                    serverError = json.error;
+                } else {
+                    users = json.users;
+                }
+            })
+    }
 }

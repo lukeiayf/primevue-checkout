@@ -28,7 +28,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/server.js"  ],
   "exclude": [
     "node_modules",
     "dist"

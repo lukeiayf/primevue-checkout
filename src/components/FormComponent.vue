@@ -312,6 +312,7 @@ const store = useMainStore();
 const customerStore = useCustomerStore();
 const messagesList: any = ref([]);
 const count = ref(0);
+const pagePayService = new PagePayService();
 
 let showFields: Ref<boolean> = ref(false);
 let verificationCode: string = '';
@@ -323,7 +324,7 @@ let paymentPage: PaymentPageResponse;
 let paymentPageCustomer: CustomerResponse;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
-
+  
 const rules = {
   username: { required },
   email: { required, email },
@@ -350,6 +351,7 @@ const rules = {
 
 const v$ = useVuelidate(rules, defaultState);
 
+pagePayService.getPaymentPage(1);
 
 // function loadCustomer(){
 //   pagePayService.getPaymentPageCustomer().then((result) => {
@@ -397,7 +399,7 @@ function sendCode() {
 function verifyCode() {
   showFields.value = false;
   codeVerified.value = true;
-  // pagePayService.postVerifyAuthCode(customerId, verificationCode);
+  pagePayService.postVerifyAuthCode(customerId, verificationCode);
 };
 
 function validateCep(inputCep: string) {
