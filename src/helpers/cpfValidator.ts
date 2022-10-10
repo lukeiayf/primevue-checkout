@@ -9,8 +9,8 @@ export interface Message {
 }
 
 export const validCpf = (inputCPF: any) => {
-    console.log(inputCPF);
-    console.log('chamou validcpf para testar' + inputCPF);
+    // console.log(inputCPF);
+    // console.log('chamou validcpf para testar' + inputCPF);
     inputCPF = inputCPF.replace(/[^\d]+/g, '');
     let soma: number = 0;
     let resto: number = 0;

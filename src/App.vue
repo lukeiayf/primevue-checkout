@@ -13,7 +13,6 @@ let url = `${import.meta.env.VITE_APP_NAME}/api/v2/checkout/companies/pagepays`
   <div style="justify-content:center; display: flex; flex-direction: row; ">
     <SalesDetailComponent style="margin-right: 1rem;"></SalesDetailComponent>
     <FormComponent></FormComponent>
-    {{url}}
   </div>
 </template>
 

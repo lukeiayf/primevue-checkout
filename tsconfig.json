@@ -17,7 +17,8 @@
       ]
     },
     "types": [
-      "vitest/globals"
+      "vitest/globals",
+       "vite/client"
     ],
     "jsx": "preserve"
   },

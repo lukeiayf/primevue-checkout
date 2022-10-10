@@ -292,6 +292,8 @@ import { brands, verifyCard, v } from '../helpers/verifyCard';
 import { defaultState } from '../models/defaultState.model';
 import { paymentOptions } from '../models/response/paymentMethodResponse';
 import { useMainStore } from '../store/index';
+import { useCustomerStore } from '../store/customerStore';
+import { customerState, ICustomerState } from '../models/customerState.model';
 import cep from 'cep-promise';
 import Message from 'primevue/message';
 import { verifyEmail, equalsToEmail } from '../helpers/validateEmail';
@@ -301,36 +303,29 @@ import { PaymentRequest } from '../models/request/paymentRequest';
 import { AddressRequest } from '../models/request/addressRequest';
 import { PaymentPageResponse } from '../models/response/paymentPageResponse';
 import { CustomerResponse } from '../models/response/customerResponse';
-import { PagePayService } from '../services/pagepay.services'
-import { pauseTracking } from '@vue/reactivity';
-
-
+import { PagePayService } from '../services/pagepay.services';
+import { verifyCustomer, customerId, newCustomer, newAddress } from '../helpers/verifyCustomer'
 
 const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
 const line2: Ref<string> = ref('');
 const today: Ref<Date> = ref(new Date());
 const store = useMainStore();
+const customerStore = useCustomerStore();
 const messagesList: any = ref([]);
 const count = ref(0);
 const pagePayService = new PagePayService();
-
 
 let showFields: Ref<boolean> = ref(false);
 let verificationCode: string = '';
 let codeVerified: Ref<boolean> = ref(false);
 let showTransactionSummary: Ref<boolean> = ref(false);
-let customerId: number;
-let customer: CustomerRequest;
-let address: AddressRequest;
 let card: CardRequest;
 let payment: PaymentRequest;
 let paymentPage: PaymentPageResponse;
 let paymentPageCustomer: CustomerResponse;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
-
-pagePayService.getPaymentPage(1);
 
 const rules = {
   username: { required },
@@ -382,13 +377,30 @@ const v$ = useVuelidate(rules, defaultState);
 function sendCode() {
   showFields.value = true;
   codeVerified.value = true;
-  console.log(v$.value.username.$model);
-  return showFields.value;
+  //pagePayService.postAuthCode();
+  const customerState: ICustomerState = {
+    username: v$.value.username.$model,
+    email: v$.value.email.$model,
+    emailConfirmation: v$.value.emailConfirmation.$model,
+    cpf: v$.value.cpf.$model,
+    birthdate: v$.value.birthdate.$model,
+    phone: v$.value.phone.$model,
+    zipcode: v$.value.zipcode.$model,
+    street: v$.value.street.$model,
+    number: v$.value.number.$model,
+    lineTwo: line2,
+    state: v$.value.state.$model,
+    city: v$.value.city.$model
+  };
+  customerStore.createNewForm(customerState);
+  verifyCustomer();
+  
 };
 
 function verifyCode() {
   showFields.value = false;
   codeVerified.value = true;
+  // pagePayService.postVerifyAuthCode(customerId, verificationCode);
 };
 
 function validateCep(inputCep: string) {
@@ -418,33 +430,6 @@ const handleSubmit = (isFormValid: boolean) => {
   } else {
     console.log('passou');
     store.createNewForm(defaultState);
-    customer = {
-      name: store.defaultForms.username,
-      cpf: store.defaultForms.cpf,
-      email: store.defaultForms.email,
-      birthdate: store.defaultForms.birthdate.getTime(),
-      phone: store.defaultForms.phone
-    }
-    address = {
-      street: store.defaultForms.street,
-      number: store.defaultForms.number,
-      lineTwo: store.defaultForms.lineTwo,
-      state: store.defaultForms.state,
-      city: store.defaultForms.city,
-      zipCode: store.defaultForms.zipcode
-    }
-    // pagePayService.getCustomerIdByDocument(customer.cpf).then((result) => {
-    //   if(result == '404'){
-    //     pagePayService.postCustomer(customer).then((data) => {
-    //       //pegar a location e retorna um customerId
-    //       pagePayService.postAddress(customerId, address)
-    //     });
-    //   } else {
-    //     customerId = result.customerId;
-    //     pagePayService.putCustomer(customerId, customer);
-    //     pagePayService.putAddress(customerId, address);
-    //   }
-    // })
     payment = {
       //uuid: paymentPage.uuid,
       uuid: 'testeuuid',
@@ -463,12 +448,12 @@ const handleSubmit = (isFormValid: boolean) => {
       }
       payment.profileId = profileId;
       //postCard
-      // pagePayService.postCard(customerId, card);
+      //pagePayService.postCard(customerId, card);
       //getCardIdByUri
       //pagePayService.getCardByUri(customerId, profileId);
     }
 
-    console.log(customer);
+    console.log(newCustomer);
     showTransactionSummary.value = true;
   }
 
