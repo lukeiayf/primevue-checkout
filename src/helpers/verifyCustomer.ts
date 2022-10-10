@@ -27,19 +27,19 @@ export async function verifyCustomer() {
         city: customerStore.customerState.city,
         zipCode: customerStore.customerState.zipcode
     }
-    await pagePayService.getCustomerIdByDocument(customerStore.customerState.cpf).then((result) => {
-        if (result == '404') {
-            pagePayService.postCustomer(newCustomer).then((data) => {
-                //pegar a location e retorna um customerId
-                pagePayService.postAddress(customerId, newAddress)
-            });
-        } else {
-            customerId = result.customerId;
-            pagePayService.putCustomer(customerId, newCustomer);
-            pagePayService.putAddress(customerId, newAddress);
-            pagePayService.postAuthCode(customerId);
-        }
-    })
+    // await pagePayService.getCustomerIdByDocument(customerStore.customerState.cpf).then((result) => {
+    //     if (result == '404') {
+    //         pagePayService.postCustomer(newCustomer).then((data) => {
+    //             //pegar a location e retorna um customerId
+    //             pagePayService.postAddress(customerId, newAddress)
+    //         });
+    //     } else {
+    //         customerId = result.customerId;
+    //         pagePayService.putCustomer(customerId, newCustomer);
+    //         pagePayService.putAddress(customerId, newAddress);
+    //         pagePayService.postAuthCode(customerId);
+    //     }
+    // })
 
     console.log(newAddress);
     console.log(newCustomer);

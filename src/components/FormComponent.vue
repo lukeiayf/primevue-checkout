@@ -273,7 +273,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength, maxLength, requiredIf, sameAs } from '@vuelidate/validators';
+import { required, email, minLength, maxLength, requiredIf } from '@vuelidate/validators';
 import InputText from 'primevue/inputtext';
 import Card from 'primevue/card';
 import Calendar from 'primevue/calendar';
@@ -293,14 +293,12 @@ import { defaultState } from '../models/defaultState.model';
 import { paymentOptions } from '../models/response/paymentMethodResponse';
 import { useMainStore } from '../store/index';
 import { useCustomerStore } from '../store/customerStore';
-import { customerState, ICustomerState } from '../models/customerState.model';
+import { ICustomerState } from '../models/customerState.model';
 import cep from 'cep-promise';
 import Message from 'primevue/message';
 import { verifyEmail, equalsToEmail } from '../helpers/validateEmail';
-import { CustomerRequest } from '../models/request/customerRequest';
 import { CardRequest } from '../models/request/cardRequest';
 import { PaymentRequest } from '../models/request/paymentRequest';
-import { AddressRequest } from '../models/request/addressRequest';
 import { PaymentPageResponse } from '../models/response/paymentPageResponse';
 import { CustomerResponse } from '../models/response/customerResponse';
 import { PagePayService } from '../services/pagepay.services';
@@ -314,7 +312,6 @@ const store = useMainStore();
 const customerStore = useCustomerStore();
 const messagesList: any = ref([]);
 const count = ref(0);
-const pagePayService = new PagePayService();
 
 let showFields: Ref<boolean> = ref(false);
 let verificationCode: string = '';
