@@ -101,10 +101,26 @@ export class PagePayService {
             return '404';        
         }
     }
+    public async getPagePayPaymentInfo(){
+        const url =  `api/v2/checkout/pagepays`
+        //const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/document/${customerDocument}`;
+
+        try {
+            let response = await fetch(url, { method: 'GET' });
+            if (response.ok) {
+                return await response.json();
+            } else {
+                throw new Error();
+            }
+        } catch(error) {
+            return '404';        
+        }
+    }
 
     
     public async postCustomer(customer:CustomerRequest){
-        const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/new`;
+        const url = 'api/v2/checkout/pagepays/customer/new'
+        //const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/new`;
 
         try {
             let data = await fetch(url, { method: 'POST', body: JSON.stringify({customer}) });
@@ -135,7 +151,8 @@ export class PagePayService {
     }
 
     public async postAddress(customerId: number,address: AddressRequest){
-        const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/customer/${customerId}/address/new`
+        const url = 'api/v2/customer/1/address/new'
+        //const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/customer/${customerId}/address/new`
 
         try {
             let data = await fetch(url, { method: 'POST', body: JSON.stringify({ address }) });
@@ -150,7 +167,8 @@ export class PagePayService {
     }
 
     public async postCard(customerId: number, card: CardRequest){
-        const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customerId}/card`
+        const url = "api/v2/checkout/pagepays/customer/1/card"
+        //const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customerId}/card`
 
         try {
             let data = await fetch(url, { method: 'POST', body: JSON.stringify({ card }) });
@@ -165,8 +183,8 @@ export class PagePayService {
     }
 
     public async putCustomer(customerId: number, customer: CustomerRequest){
-        const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customerId}`;
-
+        const url = 'api/v2/checkout/pagepays/customer/20'
+        //const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customerId}`;
         try {
             let data = await fetch(url, { method: 'PUT', body: JSON.stringify({customer}) });
             if (data.ok) {

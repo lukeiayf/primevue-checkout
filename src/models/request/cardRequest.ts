@@ -4,5 +4,5 @@ export class CardRequest{
     holderDocument: string;
     holderName: string;
     dueDate: number;
-    securityCode: number;
+    securityCode?: number;
 }

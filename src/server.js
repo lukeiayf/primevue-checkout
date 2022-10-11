@@ -1,16 +1,7 @@
 import { createServer, Model } from "miragejs"
 
 export function makeServer({ environment = "development" } = {}) {
-    let postPaymentInfo = {
 
-        uuid: '900000000-34dc-4a26-a333-22fab585ff5d',
-        customerId: 2,
-        paymentType: 'CREDIT_CARD',
-        installments: 3,
-        profileId: 3
-        
-
-    }
     let server = createServer({
         environment,
 
@@ -80,13 +71,7 @@ export function makeServer({ environment = "development" } = {}) {
                 code: "1235465421646545121",
                 date: 1665168260
             })
-            /* server.create("postPaymentInfo", {
-                uuid: '90076629-34dc-4a26-a333-22fab585ff5d',
-                customerId: 20,
-                paymentType: 'CREDIT_CARD',
-                installments: 2,
-                profileId: 2
-            }) */
+
 
         },
 
@@ -115,9 +100,27 @@ export function makeServer({ environment = "development" } = {}) {
             this.get("/v2/checkout/pagepays/paymentmethod/BANKSLIP", (schema) => {
                 return schema.paymentInfos.all()
             })
-            this.post("v2/checkout/pagepays", (schema, postPaymentInfo) => {
-                let body = JSON.parse(postPaymentInfo.requestBody);
-                return schema.postPaymentInfo.create(body)
+
+            this.post("v2/checkout/pagepays", (schema, request) => {
+                let body = JSON.parse(request.requestBody);
+                return {pagepay: body}
+            })
+            this.post("v2/checkout/pagepays/customer/new", (schema, request) => {
+                let body = JSON.parse(request.requestBody);
+                return {customer: body}
+            })
+            this.post("v2/customer/1/address/new", (schema, request) => {
+                let body = JSON.parse(request.requestBody);
+                return {address: body}
+            })
+            this.post("v2/checkout/pagepays/customer/1/card", (schema, request) => {
+                let body = JSON.parse(request.requestBody);
+                return {card: body}
+            })
+            this.put("/v2/checkout/pagepays/customer/20", function (schema, request){
+
+                let body = JSON.parse(request.requestBody);
+                return schema.customers.find(20).update(body);
             })
         },
     })
