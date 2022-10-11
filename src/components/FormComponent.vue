@@ -324,7 +324,7 @@ let paymentPage: PaymentPageResponse;
 let paymentPageCustomer: CustomerResponse;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
-  
+
 const rules = {
   username: { required },
   email: { required, email },
@@ -352,6 +352,20 @@ const rules = {
 const v$ = useVuelidate(rules, defaultState);
 
 pagePayService.getPaymentPage(1);
+pagePayService.getPaymentPageAddress(1);
+pagePayService.getPaymentPageCustomer();
+pagePayService.getCustomerIdByDocument('88328309068');
+pagePayService.getCardByUri(2, 2)
+pagePayService.getPaymentInfo('BANKSLIP')
+let postPaymentInfo: PaymentRequest = {
+  uuid: '900000000-34dc-4a26-a333-22fab585ff5d',
+  customerId: 2,
+  paymentType: 'CREDIT_CARD',
+  installments: 3,
+  profileId: 3
+}
+pagePayService.postPaymentInfo(postPaymentInfo)
+
 
 // function loadCustomer(){
 //   pagePayService.getPaymentPageCustomer().then((result) => {
@@ -393,7 +407,7 @@ function sendCode() {
   };
   customerStore.createNewForm(customerState);
   verifyCustomer();
-  
+
 };
 
 function verifyCode() {
@@ -450,6 +464,7 @@ const handleSubmit = (isFormValid: boolean) => {
       //pagePayService.postCard(customerId, card);
       //getCardIdByUri
       //pagePayService.getCardByUri(customerId, profileId);
+      //postPaymentInfo
     }
 
     console.log(newCustomer);
