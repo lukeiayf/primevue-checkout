@@ -303,9 +303,9 @@ import { PaymentPageResponse } from '../models/response/paymentPageResponse';
 import { CustomerResponse } from '../models/response/customerResponse';
 import { PagePayService } from '../services/pagepay.services';
 import { verifyCustomer, customerId, newCustomer, newAddress } from '../helpers/verifyCustomer'
-import { CustomerRequest } from '@/models/request/customerRequest';
-import { AddressRequest } from '@/models/request/addressRequest';
-import { requestsMirage } from '@/helpers/requestsMirage';
+import { CustomerRequest } from '../models/request/customerRequest';
+import { AddressRequest } from '../models/request/addressRequest';
+import { requestsMirage } from '../helpers/requestsMirage';
 
 const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);

@@ -1,8 +1,8 @@
-import { AddressRequest } from "@/models/request/addressRequest";
-import { CardRequest } from "@/models/request/cardRequest";
-import { CustomerRequest } from "@/models/request/customerRequest";
-import { PaymentRequest } from "@/models/request/paymentRequest";
-import { PagePayService } from "@/services/pagepay.services";
+import { AddressRequest } from "../models/request/addressRequest";
+import { CardRequest } from "../models/request/cardRequest";
+import { CustomerRequest } from "../models/request/customerRequest";
+import { PaymentRequest } from "../models/request/paymentRequest";
+import { PagePayService } from "../services/pagepay.services";
 
 
 let pagePayService = new PagePayService();
