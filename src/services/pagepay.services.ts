@@ -2,13 +2,10 @@ import { CustomerRequest } from '../models/request/customerRequest';
 import { AddressRequest } from '../models/request/addressRequest';
 import { CardRequest } from '../models/request/cardRequest';
 import { PaymentRequest } from '../models/request/paymentRequest';
-
-
-
 export class PagePayService {
 
-    public async getPaymentPage(companyId: number) {
-        const url = "/api/v2/checkout/companies/1/pagepays"
+    private async getPaymentPage(companyId: number) {
+        const url = "http://localhost:8080/api/v2/checkout/companies/1/pagepays"
         //const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays`;
          try {
             let response = await fetch(url, {method:'GET'});
