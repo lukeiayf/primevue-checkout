@@ -4,7 +4,7 @@ import { CardRequest } from '../models/request/cardRequest';
 import { PaymentRequest } from '../models/request/paymentRequest';
 export class PagePayService {
 
-    private async getPaymentPage(companyId: number) {
+    public async getPaymentPage(companyId: number) {
         const url = "http://localhost:8080/api/v2/checkout/companies/1/pagepays"
         //const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays`;
          try {
