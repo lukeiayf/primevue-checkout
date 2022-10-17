@@ -138,25 +138,7 @@
             </div>
           </div>
 
-
-          <Button v-if="!showFields && !codeVerified" label="Enviar código de verificação" class="full"
-            icon="pi pi-send" iconPos="left" v-tooltip="'Será enviado um código para o e-mail e telefone informados'"
-            @click="sendCode" />
-          <div v-if="showFields">
-            <span class="p-float-label p-input-icon-right code-input">
-              <InputText id="verificationCode" type="text" v-model="verificationCode" class="full input-size">
-              </InputText>
-              <label for="verificationCode">{{$t('inserirCodigo')}}*</label>
-            </span>
-            <div class="p-buttonset">
-              <Button type="button" label="Reenviar código" class="half" icon="pi pi-refresh" iconPos="left"
-                @click="sendCode()" />
-              <Button type="button" label="Verificar código" class="half p-button-success" icon="pi pi-search"
-                iconPos="left" @click="verifyCode()" />
-            </div>
-          </div>
-
-          <div v-if="codeVerified && !showFields">
+          <div>
             <h5>{{$t('dadosPagamento')}}</h5>
 
             <SelectButton class="button-payment" v-model="v$.paymentMethod.$model" :options="paymentOptions"
@@ -247,7 +229,7 @@
             </div>
           </div>
 
-          <div v-if="codeVerified && !showFields">
+          <div>
             <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
               v-if="v$.paymentMethod.$model.value == 1" icon="pi pi-play" iconPos="left" />
             <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
@@ -299,13 +281,8 @@ import Message from "primevue/message";
 import { verifyEmail, equalsToEmail } from "../helpers/validateEmail";
 import { CardRequest } from "../models/request/cardRequest";
 import { PaymentRequest } from "../models/request/paymentRequest";
-import { PaymentPageResponse } from "../models/response/paymentPageResponse";
-import { CustomerResponse } from "../models/response/customerResponse";
-import { PagePayService } from "../services/pagepay.services";
-import { verifyCustomer, customerId, newCustomer} from "../helpers/verifyCustomer";
-import { CustomerRequest } from "../models/request/customerRequest";
-import { AddressRequest } from "../models/request/addressRequest";
-import { requestsMirage } from "../helpers/requestsMirage";
+//import { PaymentPageResponse } from "../models/response/paymentPageResponse";
+import { customerId, newCustomer} from "../helpers/verifyCustomer";
 
 const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
@@ -315,21 +292,14 @@ const store = useMainStore();
 const customerStore = useCustomerStore();
 const messagesList: any = ref([]);
 const count = ref(0);
-const pagePayService = new PagePayService();
 
-let showFields: Ref<boolean> = ref(false);
-let verificationCode = "";
-let codeVerified: Ref<boolean> = ref(false);
+
 let showTransactionSummary: Ref<boolean> = ref(false);
-let card: CardRequest;
+let card = new CardRequest();
 let payment: PaymentRequest;
-let paymentPage: PaymentPageResponse;
-let paymentPageCustomer: CustomerResponse;
+//let paymentPage: PaymentPageResponse;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
-
-
-requestsMirage();
 
 const rules = {
 	username: { required },
@@ -357,106 +327,6 @@ const rules = {
 
 const v$ = useVuelidate(rules, defaultState);
 
-pagePayService.getPaymentPage(1);
-pagePayService.getPaymentPageAddress(1);
-pagePayService.getPaymentPageCustomer();
-pagePayService.getCustomerIdByDocument("88328309068");
-pagePayService.getCardByUri(2, 2);
-pagePayService.getPaymentInfo("BANKSLIP");
-let postPaymentInfo: PaymentRequest = {
-	"uuid":"900000000-34dc-4a26-a333-22fab585ff5d",
-	"customerId":2,
-	"paymentType":"CREDIT_CARD",
-	"installments":3,
-	"profileId":3
-};
-pagePayService.postPaymentInfo(postPaymentInfo);
-let customer: CustomerRequest = {
-	"name":"Yasmin",
-	"cpf":"07451131920",
-	"email":"yasmin.tullio@bempaggo.com.br",
-	"birthdate":1665511815,
-	"phone":"4545454554"
-};
-pagePayService.postCustomer(customer);
-let address: AddressRequest = {
-	"street":"Rua 1",
-	"number":"1",
-	"lineTwo":"Apto 2",
-	"zipCode":"84010010",
-	"city":"Ponta Grossa",
-	"state":"PR"
-};
-pagePayService.postAddress(1, address);
-let cardRequest: CardRequest = {
-	"cardBrand":"Mastercard",
-	"cardNumber":"5448280000000007",
-	"holderDocument":"69183691057",
-	"holderName":"Yasmin",
-	"dueDate":1670782215,
-	"securityCode":123
-};
-pagePayService.postCard(1, cardRequest);
-let customerUpdate: CustomerRequest = {
-	"name":"Joana",
-	"cpf":"07451131920",
-	"email":"yasmin.tullio@bempaggo.com.br",
-	"birthdate":1665511815,
-	"phone":"4545454554"
-};
-pagePayService.putCustomer(20, customerUpdate);
-
-
-
-
-// function loadCustomer(){
-//   pagePayService.getPaymentPageCustomer().then((result) => {
-//     let customerId = result.id;
-//     v$.value.username.$model = result.name;
-//     v$.value.cpf.$model = result.cpf;
-//     v$.value.birthdate.$model = result.birthdate;
-//     v$.value.phone.$model = result.phone;
-//     v$.value.email.$model = result.email;
-//     pagePayService.getCustomerAddress(customerId).then((result)=>{
-//       v$.value.street.$model = result.street;
-//       v$.value.number.$model = result.number;
-//       v$.value.line2.$model = result.lineTwo;
-//       v$.value.zipcode.$model = result.zipCode;
-//       v$.value.state.$model = result.state;
-//       v$.value.city.$model = result.city;
-//     });
-//   })
-// };
-
-
-function sendCode() {
-	showFields.value = true;
-	codeVerified.value = true;
-	//pagePayService.postAuthCode();
-	const customerState: ICustomerState = {
-		username: v$.value.username.$model,
-		email: v$.value.email.$model,
-		emailConfirmation: v$.value.emailConfirmation.$model,
-		cpf: v$.value.cpf.$model,
-		birthdate: v$.value.birthdate.$model,
-		phone: v$.value.phone.$model,
-		zipcode: v$.value.zipcode.$model,
-		street: v$.value.street.$model,
-		number: v$.value.number.$model,
-		lineTwo: line2,
-		state: v$.value.state.$model,
-		city: v$.value.city.$model
-	};
-	customerStore.createNewForm(customerState);
-	verifyCustomer();
-
-}
-
-function verifyCode() {
-	showFields.value = false;
-	codeVerified.value = true;
-	pagePayService.postVerifyAuthCode(customerId, verificationCode);
-}
 
 function validateCep(inputCep: string) {
 	cep(inputCep).then(
@@ -485,6 +355,21 @@ const handleSubmit = (isFormValid: boolean) => {
 	} else {
 		console.log("passou");
 		store.createNewForm(defaultState);
+		const customerState: ICustomerState = {
+			username: v$.value.username.$model,
+			email: v$.value.email.$model,
+			emailConfirmation: v$.value.emailConfirmation.$model,
+			cpf: v$.value.cpf.$model,
+			birthdate: v$.value.birthdate.$model,
+			phone: v$.value.phone.$model,
+			zipcode: v$.value.zipcode.$model,
+			street: v$.value.street.$model,
+			number: v$.value.number.$model,
+			lineTwo: line2,
+			state: v$.value.state.$model,
+			city: v$.value.city.$model
+		};
+		customerStore.createNewForm(customerState);
 		payment = {
 			//uuid: paymentPage.uuid,
 			uuid: "testeuuid",
@@ -502,11 +387,6 @@ const handleSubmit = (isFormValid: boolean) => {
 				securityCode: parseInt(store.defaultForms.securityCode),
 			};
 			payment.profileId = profileId;
-			//postCard
-			//pagePayService.postCard(customerId, card);
-			//getCardIdByUri
-			//pagePayService.getCardByUri(customerId, profileId);
-			//postPaymentInfo
 		}
 
 		console.log(newCustomer);

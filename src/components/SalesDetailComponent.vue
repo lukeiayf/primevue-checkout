@@ -15,11 +15,6 @@
       <div style="display: flex; justify-content: center; background-color: lightgrey;">
         <img :src="imgSrc" style="width:150px;" />
       </div>
-      <!-- <ul class="list">
-        <li class="item-list" v-for="item in items" :bind="item.key"><strong>{{item.title}}</strong>: {{item?.currency
-        }}{{item.value}}
-        </li>
-      </ul> -->
       <ul class="list">
         <li class = item-list v-if="detailStore.saleDetailsStore.plan.accessionValue">
           <strong>{{$t('detalhesCompra.adesao')}}</strong>: {{detailStore.saleDetailsStore.plan.accessionValue}}
@@ -53,14 +48,10 @@
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
 import Card from "primevue/card";
 import { useSalesDetailsStore } from "../store/saleDetailsStore";
-import { PagePayService } from "../services/pagepay.services";
 
 const imgSrc = "src/assets/logo.png";
-const valorPrincipal = 25.00;
-const pagePayService = new PagePayService();
 const detailStore = useSalesDetailsStore();
 const fakeData = {
 	uuid: "90076629-34dc-4a26-a333-22fab585ff5d",
@@ -93,46 +84,12 @@ const fakeData = {
 
 
 function loadSaleDetails(){
-	//let paymentPageResponse = pagePayService.getPaymentPage();
 	detailStore.createNewSalesDetail(fakeData);
 	//detailStore.createNewSalesDetail(paymentPageResponse);
-	//chamar o services =>getpaymentpage=>usar a store no retun
 }
 
 loadSaleDetails();
-const items = [
-	{
-		title: "Adesão",
-		value: "10"
-	},
-	{
-		title: "Valor principal",
-		value: valorPrincipal,
-		currency: "R$ "
-	},
-	{
-		title: "Total",
-		value: "Total"
 
-	},
-	{
-		title: "Periodicidade",
-		value: "Periodicidade"
-	},
-	{
-		title: "Nome do plano",
-		value: "Nome do plano"
-	},
-	{
-		title: "Loja",
-		value: "Nome da loja"
-	},
-	{
-		title: "Descrição",
-		value: "Descrição"
-	},
-
-];
 
 
 </script>
