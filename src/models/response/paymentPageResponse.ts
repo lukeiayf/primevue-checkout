@@ -1,15 +1,16 @@
-
 import { AffiliateMinimalResponse } from "./affiliateMinimalResponse";
 import { PlanResponse } from "./planResponse";
-
-export class PaymentPageResponse{
+export class PaymentPageResponse {
 	uuid: string;
-	value: number;
 	plan?: PlanResponse;
 	image?: string;
-	looseMaxInstallments?: number;
-	saleDescription?: string;
+	description?: string;
 	paymentMethods: string[];
-	installmentType: string;
+	installmentType?: string;
 	affiliate: AffiliateMinimalResponse;
+	loose?: LooseResponse;
+}
+export class LooseResponse {
+	value: number;
+	maxInstallments: number;
 }

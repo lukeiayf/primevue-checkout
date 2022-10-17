@@ -9,7 +9,7 @@ import VueCreditCardValidation from "vue-credit-card-validation";
 import { setupI18n } from "./i18n";
 import pt  from "./i18n/pt.json";
 import { createPinia } from "pinia";
-import { makeServer } from "./server";
+
 
 
 const app = createApp(App);
@@ -23,11 +23,6 @@ const i18n = setupI18n({
 		pt,
 	}
 });
-
-if (process.env.NODE_ENV === "development") {
-	makeServer();
-}
-
 
 app.use(PrimeVue, {
 	locale: {

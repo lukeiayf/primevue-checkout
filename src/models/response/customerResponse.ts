@@ -3,6 +3,6 @@ export class CustomerResponse{
 	name: string;
 	cpf: string;
 	email: string;
-	birthdate: number;
-	phone: string;
+	birthdate?: number;
+	phone?: string;
 }

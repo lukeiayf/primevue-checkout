@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { validateCep, cepReturn } from "../helpers/cepValidator";
+import { validateCep } from "../helpers/cepValidator";
 
 describe("cep", () => {
 	test("cepValidationOK", async () => {

@@ -295,7 +295,7 @@ const count = ref(0);
 
 
 let showTransactionSummary: Ref<boolean> = ref(false);
-let card = new CardRequest();
+let card: CardRequest;
 let payment: PaymentRequest;
 //let paymentPage: PaymentPageResponse;
 let profileId: number;
