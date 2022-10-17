@@ -330,6 +330,7 @@ let isCard: Ref<boolean> = ref(false);
 
 
 //requestsMirage();
+console.log(process.env.NODE_ENV);
 
 
 const rules = {

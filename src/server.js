@@ -78,6 +78,7 @@ export function makeServer({ environment = "development" } = {}) {
 
 
         routes() {
+            this.urlPrefix = 'http://localhost:8080'
             this.namespace = "api"
 
             this.get("/v2/checkout/companies/1/pagepays", (schema) => {
