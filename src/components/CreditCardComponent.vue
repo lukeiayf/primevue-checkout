@@ -44,47 +44,47 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
-import { useVuelidate } from '@vuelidate/core'
-import { required } from '@vuelidate/validators';
-import Dropdown from 'primevue/dropdown'
-import InputText from 'primevue/inputtext'
-import Calendar from 'primevue/calendar'
+import { reactive, ref } from "vue";
+import { useVuelidate } from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
+import Dropdown from "primevue/dropdown";
+import InputText from "primevue/inputtext";
+import Calendar from "primevue/calendar";
 
 
 const submitted = ref(false);
 
 const brands = ref([
-  {
-    name: 'Mastercard',
-    id: 1
-  },
-  {
-    name: 'Rede',
-    id: 2
-  },
-  {
-    name: 'Elo',
-    id: 3
-  }
+	{
+		name: "Mastercard",
+		id: 1
+	},
+	{
+		name: "Rede",
+		id: 2
+	},
+	{
+		name: "Elo",
+		id: 3
+	}
 ]);
 
 const defaultState = reactive({
-  cardBrand: '',
-  cardNumber: '',
-  month: '',
-  securityCode: '',
-  holderName: '',
-  holderDocument: '',
+	cardBrand: "",
+	cardNumber: "",
+	month: "",
+	securityCode: "",
+	holderName: "",
+	holderDocument: "",
 });
 
 const rules = {
-  cardBrand: { required },
-  cardNumber: { required },
-  month: { required },
-  securityCode: { required },
-  holderName: { required },
-  holderDocument: { required },
+	cardBrand: { required },
+	cardNumber: { required },
+	month: { required },
+	securityCode: { required },
+	holderName: { required },
+	holderDocument: { required },
 };
 
 const v$ = useVuelidate(rules, defaultState);

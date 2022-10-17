@@ -1,4 +1,4 @@
-import { reactive, Ref} from 'vue';
+import { reactive, Ref} from "vue";
 
 export interface ICustomerState {
     username: string,
@@ -16,17 +16,17 @@ export interface ICustomerState {
 }
 
 export const customerState: ICustomerState = reactive({
-    username: '',
-    email: '',
-    emailConfirmation: '',  
-    cpf: '',
-    birthdate: '',
-    phone: '',
-    zipcode: '',
-    street: '',
-    number: '',
-    lineTwo: '',
-    state: '',
-    city: ''
+	username: "",
+	email: "",
+	emailConfirmation: "",  
+	cpf: "",
+	birthdate: "",
+	phone: "",
+	zipcode: "",
+	street: "",
+	number: "",
+	lineTwo: "",
+	state: "",
+	city: ""
 
 });

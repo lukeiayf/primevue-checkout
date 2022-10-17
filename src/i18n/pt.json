@@ -1,78 +1,78 @@
 {
-    "dadosCliente": "Dados do Cliente",
-    "cliente": {
-        "nome": "Nome",
-        "cpf": "CPF",
-        "nascimento": "Data de nascimento",
-        "email": "Email",
-        "telefone": "Telefone",
-        "confirmacaoEmail": "Confirme seu email"
-    },
-    "dadosEndereco": "Endereço",
-    "endereco": {
-        "cep": "CEP",
-        "logradouro": "Logradouro",
-        "numero": "Número",
-        "complemento": "Complemento",
-        "estado": "Estado",
-        "cidade": "Cidade"
-    },
-    "dadosPagamento": "Dados do Pagamento",
-    "quantidadeParcelas": "Quantidade de parcelas",
-    "metodoPagamento": "Método de pagamento",
-    "detalhesPagamento": {
-        "dataExpiracao": "Data de expiração",
-        "dataVencimento": "Data de vencimento"
-    },
-    "cartao": {
-        "bandeira": "Bandeira",
-        "numero": "Número",
-        "vencimento": "Vencimento",
-        "codigo": "Código de segurança",
-        "nomeTitular": "Nome do titular",
-        "documentoTitular": "Documento do titular"
-    },
-    "botao": {
-        "enviarCodigoVerificacao": "Enviar código de verificação",
-        "cartao": "Cartão",
-        "boleto": "Boleto",
-        "pix": "PIX",
-        "finalizarTransacao": "Finalizar transação"
-    },
-    "detalhesCompraTitulo": "Detalhes da compra",
-    "inserirCodigo": "Insira o código enviado",
-    "sumarioTransacao": "Resumo da compra",
-    "erros": {
-        "cliente": {
-            "nomeRequerido": "O campo nome deve ser preenchido.",
-            "cpfRequerido": "O campo CPF deve ser preenchido.",
-            "emailRequerido": "O campo email deve ser preenchido.",
-            "emailConfirmacao": "Os emails devem coincidir."
-        },
-        "endereco":{
-            "cepRequerido": "O campo cep deve ser preenchido.",
-            "logradouroRequerido": "O campo logradouro deve ser preenchido.",
-            "numeroRequerido": "O campo número deve ser preenchido.",
-            "cidadeRequerida": "O campo cidade deve ser preenchido.",
-            "estadoRequerido": "O campo estado deve ser preenchido."
-        },
-        "cartao":{
-            "bandeiraRequerida": "O campo bandeira deve ser preenchido.",
-            "numeroRequerido": "O campo número deve ser preenchido.",
-            "documentoRequerido": "O campo documento do titular deve ser preenchido.",
-            "nomeRequerido": "O campo nome do titular deve ser preenchido.",
-            "validadeRequerida": "O campo validade deve ser preenchido.",
-            "codigoRequerido": "O campo código de segurança deve ser preenchido."
-        } 
-    },
-    "detalhesCompra": {
-        "adesao": "Adesão",
-        "valorPrincipal":"Valor principal",
-        "valorPlano":"Valor principal",
-        "total": "Total",
-        "periodicidade": "Periodicidade",
-        "nomePlano": "Nome do plano",
-        "loja": "Loja",
-        "descricao": "Descrição"
-    }
+	"dadosCliente": "Dados do Cliente",
+	"cliente": {
+		"nome": "Nome",
+		"cpf": "CPF",
+		"nascimento": "Data de nascimento",
+		"email": "Email",
+		"telefone": "Telefone",
+		"confirmacaoEmail": "Confirme seu email"
+	},
+	"dadosEndereco": "Endereço",
+	"endereco": {
+		"cep": "CEP",
+		"logradouro": "Logradouro",
+		"numero": "Número",
+		"complemento": "Complemento",
+		"estado": "Estado",
+		"cidade": "Cidade"
+	},
+	"dadosPagamento": "Dados do Pagamento",
+	"quantidadeParcelas": "Quantidade de parcelas",
+	"metodoPagamento": "Método de pagamento",
+	"detalhesPagamento": {
+		"dataExpiracao": "Data de expiração",
+		"dataVencimento": "Data de vencimento"
+	},
+	"cartao": {
+		"bandeira": "Bandeira",
+		"numero": "Número",
+		"vencimento": "Vencimento",
+		"codigo": "Código de segurança",
+		"nomeTitular": "Nome do titular",
+		"documentoTitular": "Documento do titular"
+	},
+	"botao": {
+		"enviarCodigoVerificacao": "Enviar código de verificação",
+		"cartao": "Cartão",
+		"boleto": "Boleto",
+		"pix": "PIX",
+		"finalizarTransacao": "Finalizar transação"
+	},
+	"detalhesCompraTitulo": "Detalhes da compra",
+	"inserirCodigo": "Insira o código enviado",
+	"sumarioTransacao": "Resumo da compra",
+	"erros": {
+		"cliente": {
+			"nomeRequerido": "O campo nome deve ser preenchido.",
+			"cpfRequerido": "O campo CPF deve ser preenchido.",
+			"emailRequerido": "O campo email deve ser preenchido.",
+			"emailConfirmacao": "Os emails devem coincidir."
+		},
+		"endereco":{
+			"cepRequerido": "O campo cep deve ser preenchido.",
+			"logradouroRequerido": "O campo logradouro deve ser preenchido.",
+			"numeroRequerido": "O campo número deve ser preenchido.",
+			"cidadeRequerida": "O campo cidade deve ser preenchido.",
+			"estadoRequerido": "O campo estado deve ser preenchido."
+		},
+		"cartao":{
+			"bandeiraRequerida": "O campo bandeira deve ser preenchido.",
+			"numeroRequerido": "O campo número deve ser preenchido.",
+			"documentoRequerido": "O campo documento do titular deve ser preenchido.",
+			"nomeRequerido": "O campo nome do titular deve ser preenchido.",
+			"validadeRequerida": "O campo validade deve ser preenchido.",
+			"codigoRequerido": "O campo código de segurança deve ser preenchido."
+		} 
+	},
+	"detalhesCompra": {
+		"adesao": "Adesão",
+		"valorPrincipal":"Valor principal",
+		"valorPlano":"Valor principal",
+		"total": "Total",
+		"periodicidade": "Periodicidade",
+		"nomePlano": "Nome do plano",
+		"loja": "Loja",
+		"descricao": "Descrição"
+	}
 }

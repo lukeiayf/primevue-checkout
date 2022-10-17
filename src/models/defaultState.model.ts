@@ -1,6 +1,6 @@
-import { reactive } from 'vue';
-import { Brand } from '../helpers/verifyCard';
-import { PaymentMethod } from './response/paymentMethodResponse';
+import { reactive } from "vue";
+import { Brand } from "../helpers/verifyCard";
+import { PaymentMethod } from "./response/paymentMethodResponse";
 
 export interface DefaultState {
     id: string,
@@ -27,33 +27,33 @@ export interface DefaultState {
 }
 
 export const defaultState: DefaultState = reactive({
-    id: '',
-    username: '',
-    email: '',
-    emailConfirmation: '',  
-    cpf: '',
-    birthdate: '',
-    phone: '',
-    zipcode: '',
-    street: '',
-    number: '',
-    lineTwo: '',
-    state: '',
-    city: '',
-    paymentMethod: {
-        name: 'Cartão',
-        value: 1,
-        message: '' 
-    },
-    installments: 1,
-    cardNumber: '',
-    dueDate: '',
-    securityCode: '',
-    holderName: '',
-    holderDocument: '',
-    cardBrand: {
-        name: '',
-        id: 0
-    }
+	id: "",
+	username: "",
+	email: "",
+	emailConfirmation: "",  
+	cpf: "",
+	birthdate: "",
+	phone: "",
+	zipcode: "",
+	street: "",
+	number: "",
+	lineTwo: "",
+	state: "",
+	city: "",
+	paymentMethod: {
+		name: "Cartão",
+		value: 1,
+		message: "" 
+	},
+	installments: 1,
+	cardNumber: "",
+	dueDate: "",
+	securityCode: "",
+	holderName: "",
+	holderDocument: "",
+	cardBrand: {
+		name: "",
+		id: 0
+	}
 
 });

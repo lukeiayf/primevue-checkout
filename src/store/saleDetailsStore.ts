@@ -8,17 +8,17 @@ export type RootState = {
 const paymentPage: PaymentPageResponse = new PaymentPageResponse;
 
 export const useSalesDetailsStore = defineStore({
-    id: "saleDetailsStore",
-    state: () =>
-    ({
-        saleDetailsStore: {},
-    } as RootState),
+	id: "saleDetailsStore",
+	state: () =>
+		({
+			saleDetailsStore: {},
+		} as RootState),
 
-    actions: {
-        createNewSalesDetail(paymentPage :PaymentPageResponse) {
-            if (!paymentPage) return;
+	actions: {
+		createNewSalesDetail(paymentPage :PaymentPageResponse) {
+			if (!paymentPage) return;
 
-            this.saleDetailsStore = paymentPage;
-        },
-    },
+			this.saleDetailsStore = paymentPage;
+		},
+	},
 });

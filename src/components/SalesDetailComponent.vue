@@ -53,86 +53,86 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia';
-import Card from 'primevue/card';
-import { useSalesDetailsStore } from '../store/saleDetailsStore';
-import { PagePayService } from '../services/pagepay.services'
+import { storeToRefs } from "pinia";
+import Card from "primevue/card";
+import { useSalesDetailsStore } from "../store/saleDetailsStore";
+import { PagePayService } from "../services/pagepay.services";
 
-const imgSrc = "src/assets/logo.png"
+const imgSrc = "src/assets/logo.png";
 const valorPrincipal = 25.00;
 const pagePayService = new PagePayService();
 const detailStore = useSalesDetailsStore();
 const fakeData = {
-  uuid: "90076629-34dc-4a26-a333-22fab585ff5d",
-  value: 10.50,
-  plan: {
-    name: "Plano Pro",
-    id: 1,
-    maxInstallments: 1,
-    accessionValue: 1,
-    value: 10.50,
-    description: "Descrição",
-    frequency: "mensal",
-    trialDays: 15
-  },
-  image: "https://image.io/product.jpeg",
-  looseMaxInstallments: 2,
-  saleDescription: "Descrição",
-  paymentMethods: [
-    "CREDIT_CARD",
-    "PIX",
-    "BANKSLIP"
-  ],
-  installmentType: "CARD_INSTALLMENT",
-  affiliate: {
-    id: 1,
-    name: "netflix",
-    businessName: "netflix nome"
-  }
-}
+	uuid: "90076629-34dc-4a26-a333-22fab585ff5d",
+	value: 10.50,
+	plan: {
+		name: "Plano Pro",
+		id: 1,
+		maxInstallments: 1,
+		accessionValue: 1,
+		value: 10.50,
+		description: "Descrição",
+		frequency: "mensal",
+		trialDays: 15
+	},
+	image: "https://image.io/product.jpeg",
+	looseMaxInstallments: 2,
+	saleDescription: "Descrição",
+	paymentMethods: [
+		"CREDIT_CARD",
+		"PIX",
+		"BANKSLIP"
+	],
+	installmentType: "CARD_INSTALLMENT",
+	affiliate: {
+		id: 1,
+		name: "netflix",
+		businessName: "netflix nome"
+	}
+};
 
 
 function loadSaleDetails(){
-  //let paymentPageResponse = pagePayService.getPaymentPage();
-  detailStore.createNewSalesDetail(fakeData);
-  //detailStore.createNewSalesDetail(paymentPageResponse);
-  //chamar o services =>getpaymentpage=>usar a store no retun
+	//let paymentPageResponse = pagePayService.getPaymentPage();
+	detailStore.createNewSalesDetail(fakeData);
+	//detailStore.createNewSalesDetail(paymentPageResponse);
+	//chamar o services =>getpaymentpage=>usar a store no retun
 }
 
 loadSaleDetails();
 const items = [
-  {
-    title: 'Adesão',
-    value: '10'
-  },
-  {
-    title: 'Valor principal',
-    value: valorPrincipal,
-    currency: 'R$ '
-  },
-  {
-    title: 'Total',
-    value: 'Total'
+	{
+		title: "Adesão",
+		value: "10"
+	},
+	{
+		title: "Valor principal",
+		value: valorPrincipal,
+		currency: "R$ "
+	},
+	{
+		title: "Total",
+		value: "Total"
 
-  },
-  {
-    title: 'Periodicidade',
-    value: 'Periodicidade'
-  },
-  {
-    title: 'Nome do plano',
-    value: 'Nome do plano'
-  },
-  {
-    title: 'Loja',
-    value: 'Nome da loja'
-  },
-  {
-    title: 'Descrição',
-    value: 'Descrição'
-  },
+	},
+	{
+		title: "Periodicidade",
+		value: "Periodicidade"
+	},
+	{
+		title: "Nome do plano",
+		value: "Nome do plano"
+	},
+	{
+		title: "Loja",
+		value: "Nome da loja"
+	},
+	{
+		title: "Descrição",
+		value: "Descrição"
+	},
 
-]
+];
 
 
 </script>

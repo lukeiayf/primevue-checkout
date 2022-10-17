@@ -271,45 +271,45 @@
 
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength, maxLength, requiredIf } from '@vuelidate/validators';
-import InputText from 'primevue/inputtext';
-import Card from 'primevue/card';
-import Calendar from 'primevue/calendar';
-import InputMask from 'primevue/inputmask';
-import InputNumber from 'primevue/inputnumber';
-import SelectButton from 'primevue/selectbutton';
-import Button from 'primevue/button';
-import Dropdown from 'primevue/dropdown';
-import InlineMessage from 'primevue/inlinemessage';
-import type { Ref } from 'vue';
-import 'moment/locale/pt-br';
-import TransactionSummaryComponent from './TransactionSummaryComponent.vue';
-import { validCpf, messages } from '../helpers/cpfValidator';
-import { validDocument } from '../helpers/validDocument';
-import { brands, verifyCard, v } from '../helpers/verifyCard';
-import { defaultState } from '../models/defaultState.model';
-import { paymentOptions } from '../models/response/paymentMethodResponse';
-import { useMainStore } from '../store/index';
-import { useCustomerStore } from '../store/customerStore';
-import { ICustomerState } from '../models/customerState.model';
-import cep from 'cep-promise';
-import Message from 'primevue/message';
-import { verifyEmail, equalsToEmail } from '../helpers/validateEmail';
-import { CardRequest } from '../models/request/cardRequest';
-import { PaymentRequest } from '../models/request/paymentRequest';
-import { PaymentPageResponse } from '../models/response/paymentPageResponse';
-import { CustomerResponse } from '../models/response/customerResponse';
-import { PagePayService } from '../services/pagepay.services';
-import { verifyCustomer, customerId, newCustomer, newAddress } from '../helpers/verifyCustomer'
-import { CustomerRequest } from '../models/request/customerRequest';
-import { AddressRequest } from '../models/request/addressRequest';
-import { requestsMirage } from '../helpers/requestsMirage';
+import { ref } from "vue";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, minLength, maxLength, requiredIf } from "@vuelidate/validators";
+import InputText from "primevue/inputtext";
+import Card from "primevue/card";
+import Calendar from "primevue/calendar";
+import InputMask from "primevue/inputmask";
+import InputNumber from "primevue/inputnumber";
+import SelectButton from "primevue/selectbutton";
+import Button from "primevue/button";
+import Dropdown from "primevue/dropdown";
+import InlineMessage from "primevue/inlinemessage";
+import type { Ref } from "vue";
+import "moment/locale/pt-br";
+import TransactionSummaryComponent from "./TransactionSummaryComponent.vue";
+import { validCpf, messages } from "../helpers/cpfValidator";
+import { validDocument } from "../helpers/validDocument";
+import { brands, verifyCard, v } from "../helpers/verifyCard";
+import { defaultState } from "../models/defaultState.model";
+import { paymentOptions } from "../models/response/paymentMethodResponse";
+import { useMainStore } from "../store/index";
+import { useCustomerStore } from "../store/customerStore";
+import { ICustomerState } from "../models/customerState.model";
+import cep from "cep-promise";
+import Message from "primevue/message";
+import { verifyEmail, equalsToEmail } from "../helpers/validateEmail";
+import { CardRequest } from "../models/request/cardRequest";
+import { PaymentRequest } from "../models/request/paymentRequest";
+import { PaymentPageResponse } from "../models/response/paymentPageResponse";
+import { CustomerResponse } from "../models/response/customerResponse";
+import { PagePayService } from "../services/pagepay.services";
+import { verifyCustomer, customerId, newCustomer} from "../helpers/verifyCustomer";
+import { CustomerRequest } from "../models/request/customerRequest";
+import { AddressRequest } from "../models/request/addressRequest";
+import { requestsMirage } from "../helpers/requestsMirage";
 
 const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
-const line2: Ref<string> = ref('');
+const line2: Ref<string> = ref("");
 const today: Ref<Date> = ref(new Date());
 const store = useMainStore();
 const customerStore = useCustomerStore();
@@ -318,7 +318,7 @@ const count = ref(0);
 const pagePayService = new PagePayService();
 
 let showFields: Ref<boolean> = ref(false);
-let verificationCode: string = '';
+let verificationCode = "";
 let codeVerified: Ref<boolean> = ref(false);
 let showTransactionSummary: Ref<boolean> = ref(false);
 let card: CardRequest;
@@ -329,32 +329,30 @@ let profileId: number;
 let isCard: Ref<boolean> = ref(false);
 
 
-//requestsMirage();
-console.log(process.env.NODE_ENV);
-
+requestsMirage();
 
 const rules = {
-  username: { required },
-  email: { required, email },
-  emailConfirmation: { required },
-  cpf: { required, minLengthValue: minLength(11), validCpf },
-  birthdate: {},
-  phone: {},
-  zipcode: { required, minLengthValue: minLength(8) },
-  street: { required },
-  lineTwo: {},
-  number: { required },
-  state: { required },
-  city: { required },
-  paymentMethod: { required },
-  installments: { required },
+	username: { required },
+	email: { required, email },
+	emailConfirmation: { required },
+	cpf: { required, minLengthValue: minLength(11), validCpf },
+	birthdate: {},
+	phone: {},
+	zipcode: { required, minLengthValue: minLength(8) },
+	street: { required },
+	lineTwo: {},
+	number: { required },
+	state: { required },
+	city: { required },
+	paymentMethod: { required },
+	installments: { required },
 
-  cardBrand: { required: requiredIf(isCard) },
-  cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
-  dueDate: { required: requiredIf(isCard) },
-  securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
-  holderName: { required: requiredIf(isCard) },
-  holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
+	cardBrand: { required: requiredIf(isCard) },
+	cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
+	dueDate: { required: requiredIf(isCard) },
+	securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
+	holderName: { required: requiredIf(isCard) },
+	holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
 };
 
 const v$ = useVuelidate(rules, defaultState);
@@ -362,51 +360,51 @@ const v$ = useVuelidate(rules, defaultState);
 pagePayService.getPaymentPage(1);
 pagePayService.getPaymentPageAddress(1);
 pagePayService.getPaymentPageCustomer();
-pagePayService.getCustomerIdByDocument('88328309068');
+pagePayService.getCustomerIdByDocument("88328309068");
 pagePayService.getCardByUri(2, 2);
-pagePayService.getPaymentInfo('BANKSLIP');
+pagePayService.getPaymentInfo("BANKSLIP");
 let postPaymentInfo: PaymentRequest = {
-   "uuid":"900000000-34dc-4a26-a333-22fab585ff5d",
-   "customerId":2,
-   "paymentType":"CREDIT_CARD",
-   "installments":3,
-   "profileId":3
+	"uuid":"900000000-34dc-4a26-a333-22fab585ff5d",
+	"customerId":2,
+	"paymentType":"CREDIT_CARD",
+	"installments":3,
+	"profileId":3
 };
 pagePayService.postPaymentInfo(postPaymentInfo);
 let customer: CustomerRequest = {
-  "name":"Yasmin",
-  "cpf":"07451131920",
-  "email":"yasmin.tullio@bempaggo.com.br",
-  "birthdate":1665511815,
-  "phone":"4545454554"
+	"name":"Yasmin",
+	"cpf":"07451131920",
+	"email":"yasmin.tullio@bempaggo.com.br",
+	"birthdate":1665511815,
+	"phone":"4545454554"
 };
 pagePayService.postCustomer(customer);
 let address: AddressRequest = {
-  "street":"Rua 1",
-  "number":"1",
-  "lineTwo":"Apto 2",
-  "zipCode":"84010010",
-  "city":"Ponta Grossa",
-  "state":"PR"
+	"street":"Rua 1",
+	"number":"1",
+	"lineTwo":"Apto 2",
+	"zipCode":"84010010",
+	"city":"Ponta Grossa",
+	"state":"PR"
 };
 pagePayService.postAddress(1, address);
 let cardRequest: CardRequest = {
-  "cardBrand":"Mastercard",
-  "cardNumber":"5448280000000007",
-  "holderDocument":"69183691057",
-  "holderName":"Yasmin",
-  "dueDate":1670782215,
-  "securityCode":123
-}
+	"cardBrand":"Mastercard",
+	"cardNumber":"5448280000000007",
+	"holderDocument":"69183691057",
+	"holderName":"Yasmin",
+	"dueDate":1670782215,
+	"securityCode":123
+};
 pagePayService.postCard(1, cardRequest);
 let customerUpdate: CustomerRequest = {
-  "name":"Joana",
-  "cpf":"07451131920",
-  "email":"yasmin.tullio@bempaggo.com.br",
-  "birthdate":1665511815,
-  "phone":"4545454554"
+	"name":"Joana",
+	"cpf":"07451131920",
+	"email":"yasmin.tullio@bempaggo.com.br",
+	"birthdate":1665511815,
+	"phone":"4545454554"
 };
-pagePayService.putCustomer(20, customerUpdate)
+pagePayService.putCustomer(20, customerUpdate);
 
 
 
@@ -432,88 +430,88 @@ pagePayService.putCustomer(20, customerUpdate)
 
 
 function sendCode() {
-  showFields.value = true;
-  codeVerified.value = true;
-  //pagePayService.postAuthCode();
-  const customerState: ICustomerState = {
-    username: v$.value.username.$model,
-    email: v$.value.email.$model,
-    emailConfirmation: v$.value.emailConfirmation.$model,
-    cpf: v$.value.cpf.$model,
-    birthdate: v$.value.birthdate.$model,
-    phone: v$.value.phone.$model,
-    zipcode: v$.value.zipcode.$model,
-    street: v$.value.street.$model,
-    number: v$.value.number.$model,
-    lineTwo: line2,
-    state: v$.value.state.$model,
-    city: v$.value.city.$model
-  };
-  customerStore.createNewForm(customerState);
-  verifyCustomer();
+	showFields.value = true;
+	codeVerified.value = true;
+	//pagePayService.postAuthCode();
+	const customerState: ICustomerState = {
+		username: v$.value.username.$model,
+		email: v$.value.email.$model,
+		emailConfirmation: v$.value.emailConfirmation.$model,
+		cpf: v$.value.cpf.$model,
+		birthdate: v$.value.birthdate.$model,
+		phone: v$.value.phone.$model,
+		zipcode: v$.value.zipcode.$model,
+		street: v$.value.street.$model,
+		number: v$.value.number.$model,
+		lineTwo: line2,
+		state: v$.value.state.$model,
+		city: v$.value.city.$model
+	};
+	customerStore.createNewForm(customerState);
+	verifyCustomer();
 
-};
+}
 
 function verifyCode() {
-  showFields.value = false;
-  codeVerified.value = true;
-  pagePayService.postVerifyAuthCode(customerId, verificationCode);
-};
+	showFields.value = false;
+	codeVerified.value = true;
+	pagePayService.postVerifyAuthCode(customerId, verificationCode);
+}
 
 function validateCep(inputCep: string) {
-  cep(inputCep).then(
-    (address) => {
-      v$.value.street.$model = address.street;
-      v$.value.city.$model = address.city;
-      v$.value.state.$model = address.state;
-      messagesList.value.pop();
-    }
-  ).catch(err => {
-    console.log(err);
-    messagesList.value = [
-      { severity: 'error', content: 'Cep não encontrado', id: count.value++ },
-    ]
-  }
-  );
-};
+	cep(inputCep).then(
+		(address) => {
+			v$.value.street.$model = address.street;
+			v$.value.city.$model = address.city;
+			v$.value.state.$model = address.state;
+			messagesList.value.pop();
+		}
+	).catch(err => {
+		console.log(err);
+		messagesList.value = [
+			{ severity: "error", content: "Cep não encontrado", id: count.value++ },
+		];
+	}
+	);
+}
 
 const handleSubmit = (isFormValid: boolean) => {
-  submitted.value = true;
-  if (v$.value.paymentMethod.$model.value == 1 && !validDocument(v$.value.holderDocument.$model)) {
-    isFormValid = false;
-  }
-  if (!isFormValid) {
-    console.log('n passou');
-  } else {
-    console.log('passou');
-    store.createNewForm(defaultState);
-    payment = {
-      //uuid: paymentPage.uuid,
-      uuid: 'testeuuid',
-      customerId: customerId,
-      paymentType: store.defaultForms.paymentMethod.name,
-      installments: store.defaultForms.installments,
-    }
-    if (store.defaultForms.paymentMethod.name == 'CREDIT_CARD') {
-      card = {
-        cardBrand: store.defaultForms.cardBrand.name,
-        cardNumber: store.defaultForms.cardNumber,
-        holderDocument: store.defaultForms.holderDocument,
-        holderName: store.defaultForms.holderName,
-        dueDate: store.defaultForms.dueDate.getTime(),
-        securityCode: parseInt(store.defaultForms.securityCode),
-      }
-      payment.profileId = profileId;
-      //postCard
-      //pagePayService.postCard(customerId, card);
-      //getCardIdByUri
-      //pagePayService.getCardByUri(customerId, profileId);
-      //postPaymentInfo
-    }
+	submitted.value = true;
+	if (v$.value.paymentMethod.$model.value == 1 && !validDocument(v$.value.holderDocument.$model)) {
+		isFormValid = false;
+	}
+	if (!isFormValid) {
+		console.log("n passou");
+	} else {
+		console.log("passou");
+		store.createNewForm(defaultState);
+		payment = {
+			//uuid: paymentPage.uuid,
+			uuid: "testeuuid",
+			customerId: customerId,
+			paymentType: store.defaultForms.paymentMethod.name,
+			installments: store.defaultForms.installments,
+		};
+		if (store.defaultForms.paymentMethod.name == "CREDIT_CARD") {
+			card = {
+				cardBrand: store.defaultForms.cardBrand.name,
+				cardNumber: store.defaultForms.cardNumber,
+				holderDocument: store.defaultForms.holderDocument,
+				holderName: store.defaultForms.holderName,
+				dueDate: store.defaultForms.dueDate.getTime(),
+				securityCode: parseInt(store.defaultForms.securityCode),
+			};
+			payment.profileId = profileId;
+			//postCard
+			//pagePayService.postCard(customerId, card);
+			//getCardIdByUri
+			//pagePayService.getCardByUri(customerId, profileId);
+			//postPaymentInfo
+		}
 
-    console.log(newCustomer);
-    showTransactionSummary.value = true;
-  }
+		console.log(newCustomer);
+		showTransactionSummary.value = true;
+	}
 
 };
 

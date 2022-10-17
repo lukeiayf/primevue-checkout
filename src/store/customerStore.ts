@@ -6,19 +6,19 @@ export type RootState = {
 };
 
 export const useCustomerStore = defineStore({
-    id: "customerStore",
-    state: () =>
-    ({
-        customerState: {},
-    } as RootState),
+	id: "customerStore",
+	state: () =>
+		({
+			customerState: {},
+		} as RootState),
 
-    actions: {
-        createNewForm(customerState:ICustomerState) {
-            if (!customerState) return;
+	actions: {
+		createNewForm(customerState:ICustomerState) {
+			if (!customerState) return;
 
-            this.customerState = customerState;
-        },
+			this.customerState = customerState;
+		},
 
         
-    },
+	},
 });

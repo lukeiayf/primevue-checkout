@@ -1,22 +1,22 @@
-import { describe, expect, test } from 'vitest'
-import { verifyEmail, equalsToEmail } from '../helpers/validateEmail'
+import { describe, expect, test } from "vitest";
+import { verifyEmail, equalsToEmail } from "../helpers/validateEmail";
 
-describe('email',()=>{
-    test('emailConfirmationOK', () => {
-        const email = 'teste@teste.com';
-        const emailConfirmation = 'teste@teste.com'
+describe("email",()=>{
+	test("emailConfirmationOK", () => {
+		const email = "teste@teste.com";
+		const emailConfirmation = "teste@teste.com";
         
-        verifyEmail(email,emailConfirmation)
+		verifyEmail(email,emailConfirmation);
         
-        expect(equalsToEmail.value).toBe(true);
-    });
+		expect(equalsToEmail.value).toBe(true);
+	});
     
-    test('emailConfirmationFAIL', () => {
-        const email = 'teste@teste.com';
-        const emailConfirmation = 'teste@testefail.com'
+	test("emailConfirmationFAIL", () => {
+		const email = "teste@teste.com";
+		const emailConfirmation = "teste@testefail.com";
         
-        verifyEmail(email,emailConfirmation)
+		verifyEmail(email,emailConfirmation);
         
-        expect(equalsToEmail.value).toBe(false);
-    });
-})
+		expect(equalsToEmail.value).toBe(false);
+	});
+});

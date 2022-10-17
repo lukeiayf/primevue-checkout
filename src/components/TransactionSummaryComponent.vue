@@ -41,14 +41,14 @@
 </template>
 
 <script setup lang="ts">
-import Card from 'primevue/card';
-import 'moment/locale/pt-br';
-import { useMainStore } from '../store';
+import Card from "primevue/card";
+import "moment/locale/pt-br";
+import { useMainStore } from "../store";
 
 const store = useMainStore();
 
-const imgSrcBankslip = "src/assets/boleto-logo.svg"
-const imgSrcPix = "src/assets/qrcode.png"
+const imgSrcBankslip = "src/assets/boleto-logo.svg";
+const imgSrcPix = "src/assets/qrcode.png";
 
 </script> 
 

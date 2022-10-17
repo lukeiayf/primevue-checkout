@@ -1,17 +1,17 @@
-import { describe,expect, test } from 'vitest'
-import { validCpf } from '../helpers/cpfValidator'
+import { describe,expect, test } from "vitest";
+import { validCpf } from "../helpers/cpfValidator";
 
-describe('cpf',()=>{
-    test('cpfValidationOK', () => {
-        const cpf = '10095323678';
+describe("cpf",()=>{
+	test("cpfValidationOK", () => {
+		const cpf = "10095323678";
         
-        expect(validCpf(cpf)).toBe(true);
-    });
+		expect(validCpf(cpf)).toBe(true);
+	});
     
-    test('cpfValidationFAIL', () => {
-        const cpf = '10095320000';
+	test("cpfValidationFAIL", () => {
+		const cpf = "10095320000";
         
-        expect(validCpf(cpf)).toBe(false);
-    });
-})
+		expect(validCpf(cpf)).toBe(false);
+	});
+});
 

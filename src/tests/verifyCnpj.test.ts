@@ -1,17 +1,17 @@
-import { describe,expect, test } from 'vitest'
-import { validCnpj } from '../helpers/cnpjValidator'
+import { describe,expect, test } from "vitest";
+import { validCnpj } from "../helpers/cnpjValidator";
 
-describe('cnpj',()=>{
-    test('cnpjValidationOk', () => {
-        const cnpj = '19827720000153';
+describe("cnpj",()=>{
+	test("cnpjValidationOk", () => {
+		const cnpj = "19827720000153";
         
-        expect(validCnpj(cnpj)).toBe(true);
-    });
+		expect(validCnpj(cnpj)).toBe(true);
+	});
     
-    test('cnpjValidationFail', () => {
-        const cnpj = '19827720000223';
+	test("cnpjValidationFail", () => {
+		const cnpj = "19827720000223";
         
-        expect(validCnpj(cnpj)).toBe(false);
-    });
-})
+		expect(validCnpj(cnpj)).toBe(false);
+	});
+});
 

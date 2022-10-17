@@ -1,11 +1,6 @@
-<script setup>
-import FormComponent from './components/FormComponent.vue';
-import SalesDetailComponent from './components/SalesDetailComponent.vue';
-
-console.log(import.meta.env.VITE_APP_NAME);
-
-let url = `${import.meta.env.VITE_APP_NAME}/api/v2/checkout/companies/pagepays`
-
+<script setup lang="ts">
+import FormComponent from "./components/FormComponent.vue";
+import SalesDetailComponent from "./components/SalesDetailComponent.vue";
 
 </script>
 
@@ -24,8 +19,6 @@ let url = `${import.meta.env.VITE_APP_NAME}/api/v2/checkout/companies/pagepays`
 }
 
 body {
-  /* background: linear-gradient(45deg, #0b499c, #26a2bf); */
-  /* background-image: linear-gradient(45deg, rgb(11, 73, 156), rgb(38, 162, 191)); */
   background: #2196F3;
   background-position-x: initial;
   background-position-y: initial;
@@ -33,6 +26,5 @@ body {
   background-attachment: initial;
   background-origin: initial;
   background-clip: initial;
-  /* background-color: initial; */
 }
 </style>
