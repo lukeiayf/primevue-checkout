@@ -1,5 +1,6 @@
 import { ICustomerState } from "@/models/customerState.model";
 import { CardRequest } from "@/models/request/cardRequest";
+import { SaleRequest } from "@/models/request/paymentRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
 import { CustomerResponse } from "../models/response/customerResponse";
 import { PaymentPageResponse } from "../models/response/paymentPageResponse";
@@ -9,11 +10,13 @@ export class Backend {
 	private customerImplementation: CustomerServiceable;
     private addressImplementation: AddressServiceable;
     private cardImplementation: CardServiceable;
+    private paymentImplementation: PaymentServiceable;
 	private constructor() {
 		this.implementation = new PagePayBemPaggo();
 		this.customerImplementation = new CustomerBemPaggo();
         this.addressImplementation = new AddressBemPaggo();
         this.cardImplementation = new CardBemPaggo();
+        this.paymentImplementation = new PaymentBemPaggo();
 	}
 	public getImplementation(): PagePayServiceable {
 		return this.implementation;
@@ -27,6 +30,9 @@ export class Backend {
 	public getCardImplementation(): CardServiceable {
 		return this.cardImplementation;
 	}
+	public getPaymentImplementation(): PaymentServiceable {
+		return this.paymentImplementation;
+	}
 	public setImplementation(implementation: PagePayServiceable) {
 		this.implementation = implementation;
 	}
@@ -38,6 +44,9 @@ export class Backend {
 	}
 	public setCardImplementation(cardImplementation: CardServiceable) {
 		this.cardImplementation = cardImplementation;
+	}
+	public setPaymentImplementation(paymentImplementation: PaymentServiceable) {
+		this.paymentImplementation = paymentImplementation;
 	}
 	public static getInstance(): Backend {
 		if (!this.instance) {
@@ -62,6 +71,9 @@ export interface AddressServiceable {
 export interface CardServiceable {
 	createCard(cardState: CardRequest): CardRequest;
     getCard(): number;
+}
+export interface PaymentServiceable {
+	createPayment(paymentState: SaleRequest): SaleRequest;
 }
 
 class PagePayBemPaggo implements PagePayServiceable {
@@ -92,6 +104,13 @@ class CardBemPaggo implements CardServiceable {
         throw new Error("Method not implemented.");
     }
     getCard(): number {
+        throw new Error("Method not implemented.");
+    }
+    
+}
+
+class PaymentBemPaggo implements PaymentServiceable {
+    createPayment(paymentState: SaleRequest): SaleRequest {
         throw new Error("Method not implemented.");
     }
     

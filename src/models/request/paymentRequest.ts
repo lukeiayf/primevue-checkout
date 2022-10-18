@@ -1,4 +1,4 @@
-export class PaymentRequest{
+export class SaleRequest{
 	uuid: string;
 	customerId: number;
 	paymentType: string;

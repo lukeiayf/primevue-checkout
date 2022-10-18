@@ -1,10 +1,11 @@
 import { ICustomerState } from "@/models/customerState.model";
 import { CardRequest } from "@/models/request/cardRequest";
+import { SaleRequest } from "@/models/request/paymentRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
 import { createImportSpecifier } from "typescript";
 import { CustomerResponse } from "../models/response/customerResponse";
 import { PaymentPageResponse } from "../models/response/paymentPageResponse";
-import { AddressServiceable, CardServiceable, CustomerServiceable, PagePayServiceable } from "../services/backend";
+import { AddressServiceable, CardServiceable, CustomerServiceable, PagePayServiceable, PaymentServiceable } from "../services/backend";
 export class PagePayMock implements PagePayServiceable {
 	getPaymentPage(companyId: number): PaymentPageResponse {
 		return {
@@ -79,5 +80,12 @@ export class CardMock implements CardServiceable {
 	getCard(): number {
 		return 1;
 	}
+
+}
+export class PaymentMock implements PaymentServiceable {
+	createPayment(paymentState: SaleRequest): SaleRequest {
+		return paymentState;
+	}
+	
 
 }

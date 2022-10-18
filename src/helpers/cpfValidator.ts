@@ -9,15 +9,12 @@ export interface Message {
 }
 
 export const validCpf = (inputCPF: any) => {
-	// console.log(inputCPF);
-	// console.log('chamou validcpf para testar' + inputCPF);
 	inputCPF = inputCPF.replace(/[^\d]+/g, "");
 	let soma = 0;
 	let resto = 0;
 	const invalidCpf: string[] = ["00000000000", "11111111111", "22222222222", "3333333333", "44444444444", "55555555555", "66666666666", "77777777777", "88888888888", "99999999999"];
 
 	if (invalidCpf.indexOf(inputCPF) !== -1) {
-		console.log("cpf invalido");
 		addMessages("cpf invalido");
 		return false;
 	}
@@ -31,7 +28,6 @@ export const validCpf = (inputCPF: any) => {
 
 	// tslint:disable-next-line:radix
 	if (resto !== parseInt(inputCPF.substring(9, 10))) {
-		console.log("cpf invalido");
 		return false;
 	}
 
@@ -46,10 +42,8 @@ export const validCpf = (inputCPF: any) => {
 
 	// tslint:disable-next-line:radix
 	if (resto !== parseInt(inputCPF.substring(10, 11))) {
-		console.log("cpf invalido");
 		return false;
 	}
-	console.log("cpf valido");
 	messages.pop();
 	return true;
 };
@@ -60,6 +54,4 @@ export function addMessages(text: string) {
 		content: text,
 		id: 1
 	});
-	console.log(messages[0].content);
-	console.log(messages.length);
 }

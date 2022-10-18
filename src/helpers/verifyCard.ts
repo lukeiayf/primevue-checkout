@@ -50,15 +50,10 @@ export const brands: Brand[] = [
 export function verifyCard(card) {
 	let foundCardBrand = false;
 	const cardNumber = card.replace(/[^\d]+/g, "");
-	if (cardNumber != "")
-		console.log(cardNumber);
 	const cardType = creditCardType(cardNumber);
 	const modelCardBrand = cardType[0].type;
-	console.log(cardNumber);
-	console.log(brands.length);
 	for (let i = 0; i < brands.length; i++) {
 		if (modelCardBrand.toLowerCase() == brands[i].name.toLowerCase()) {
-			console.log("igual " + brands[i].name);
 			v.value.cardBrand.$model = brands[i];
 			foundCardBrand = true;
 		}
