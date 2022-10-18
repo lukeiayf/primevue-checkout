@@ -370,7 +370,8 @@ const handleSubmit = (isFormValid: boolean) => {
 			state: v$.value.state.$model,
 			city: v$.value.city.$model
 		};
-		Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
+    customerStore.createNewForm(customerState);
+		//Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
 		payment = {
 			//uuid: paymentPage.uuid,
 			uuid: "testeuuid",

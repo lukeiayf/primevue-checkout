@@ -1,7 +1,10 @@
 import { ICustomerState } from "@/models/customerState.model";
+import { CardRequest } from "@/models/request/cardRequest";
+import { AddressResponse } from "@/models/response/addressResponse";
+import { createImportSpecifier } from "typescript";
 import { CustomerResponse } from "../models/response/customerResponse";
 import { PaymentPageResponse } from "../models/response/paymentPageResponse";
-import { CustomerServiceable, PagePayServiceable } from "../services/backend";
+import { AddressServiceable, CardServiceable, CustomerServiceable, PagePayServiceable } from "../services/backend";
 export class PagePayMock implements PagePayServiceable {
 	getPaymentPage(companyId: number): PaymentPageResponse {
 		return {
@@ -37,8 +40,8 @@ export class PagePayMock implements PagePayServiceable {
 }
 
 export class CustomerMock implements CustomerServiceable {
-	createCustomer(customerState: ICustomerState): void {
-		console.log(customerState.username);
+	createCustomer(customerState: CustomerResponse): CustomerResponse {
+		return customerState;
 	}
 	getCustomer(): CustomerResponse {
 		return {
@@ -52,3 +55,29 @@ export class CustomerMock implements CustomerServiceable {
 	};
 
 };
+
+export class AddressMock implements AddressServiceable {
+	createAddress(addressState: AddressResponse): AddressResponse {
+		return addressState;
+	}
+	getAddress(): AddressResponse {
+		return {
+			street:"Rua 1",
+			number:"1",
+			lineTwo:"apto 1",
+			zipCode:"84010010",
+			city:"Ponta Grossa",
+			state:"Paraná"
+		}
+	}
+
+}
+export class CardMock implements CardServiceable {
+	createCard(cardState: CardRequest): CardRequest {
+		return cardState;
+	}
+	getCard(): number {
+		return 1;
+	}
+
+}
