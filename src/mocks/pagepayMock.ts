@@ -1,15 +1,16 @@
+import { ICustomerState } from "@/models/customerState.model";
+import { CustomerResponse } from "../models/response/customerResponse";
 import { PaymentPageResponse } from "../models/response/paymentPageResponse";
-import { PagePayServiceable } from "../services/backend";
+import { CustomerServiceable, PagePayServiceable } from "../services/backend";
 export class PagePayMock implements PagePayServiceable {
 	getPaymentPage(companyId: number): PaymentPageResponse {
-		console.log(companyId);
 		return {
 			uuid: "90076629-34dc-4a26-a333-22fab585ff5d",
 			image: "https://image.io/product.jpeg",
 			installmentType: "CARD_INSTALLMENT",
 			description: "Descrição",
 			plan: {
-				id: 1,
+				id: companyId,
 				name: "Plano Pro",
 				maxInstallments: 1,
 				accessionValue: 1,
@@ -34,3 +35,20 @@ export class PagePayMock implements PagePayServiceable {
 		};
 	}
 }
+
+export class CustomerMock implements CustomerServiceable {
+	createCustomer(customerState: ICustomerState): void {
+		console.log(customerState.username);
+	}
+	getCustomer(): CustomerResponse {
+		return {
+			id: 1,
+			name: "customer name",
+			cpf: "1009532345",
+			email: "teste@teste.com",
+			birthdate: 121019914,
+			phone: "23453212"
+		};
+	};
+
+};

@@ -283,6 +283,7 @@ import { CardRequest } from "../models/request/cardRequest";
 import { PaymentRequest } from "../models/request/paymentRequest";
 //import { PaymentPageResponse } from "../models/response/paymentPageResponse";
 import { customerId, newCustomer} from "../helpers/verifyCustomer";
+import { Backend } from "../services/backend";
 
 const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
@@ -369,7 +370,7 @@ const handleSubmit = (isFormValid: boolean) => {
 			state: v$.value.state.$model,
 			city: v$.value.city.$model
 		};
-		customerStore.createNewForm(customerState);
+		Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
 		payment = {
 			//uuid: paymentPage.uuid,
 			uuid: "testeuuid",

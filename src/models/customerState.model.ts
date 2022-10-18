@@ -5,7 +5,7 @@ export interface ICustomerState {
     email: string,
     emailConfirmation: string,
     cpf: string,
-    birthdate: any;
+    birthdate: Date;
     phone: string,
     zipcode: string,
     street: string,
@@ -20,7 +20,7 @@ export const customerState: ICustomerState = reactive({
 	email: "",
 	emailConfirmation: "",  
 	cpf: "",
-	birthdate: "",
+	birthdate: new Date(),
 	phone: "",
 	zipcode: "",
 	street: "",
