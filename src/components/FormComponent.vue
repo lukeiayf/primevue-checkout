@@ -280,9 +280,10 @@ import cep from "cep-promise";
 import Message, { MessageProps } from "primevue/message";
 import { verifyEmail, equalsToEmail } from "../helpers/validateEmail";
 import { CardRequest } from "../models/request/cardRequest";
-import { PaymentRequest } from "../models/request/paymentRequest";
+import { SaleRequest } from "../models/request/paymentRequest";
 //import { PaymentPageResponse } from "../models/response/paymentPageResponse";
 import { customerId, newCustomer} from "../helpers/verifyCustomer";
+import { Backend } from "../services/backend";
 // import { Backend } from "../services/backend";
 
 interface MessageError extends MessageProps {
@@ -303,53 +304,52 @@ const count = ref(0);
 
 let showTransactionSummary: Ref<boolean> = ref(false);
 let card: CardRequest;
-let payment: PaymentRequest;
-// let paymentPage: PaymentPageResponse;
+let payment: SaleRequest;
+//let paymentPage: PaymentPageResponse;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
 
 const rules = {
-	username: { required },
-	email: { required, email },
-	emailConfirmation: { required },
-	cpf: { required, minLengthValue: minLength(11), validCpf },
-	birthdate: {},
-	phone: {},
-	zipcode: { required, minLengthValue: minLength(8) },
-	street: { required },
-	lineTwo: {},
-	number: { required },
-	state: { required },
-	city: { required },
-	paymentMethod: { required },
-	installments: { required },
+  username: { required },
+  email: { required, email },
+  emailConfirmation: { required },
+  cpf: { required, minLengthValue: minLength(11), validCpf },
+  birthdate: {},
+  phone: {},
+  zipcode: { required, minLengthValue: minLength(8) },
+  street: { required },
+  lineTwo: {},
+  number: { required },
+  state: { required },
+  city: { required },
+  paymentMethod: { required },
+  installments: { required },
 
-	cardBrand: { required: requiredIf(isCard) },
-	cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
-	dueDate: { required: requiredIf(isCard) },
-	securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
-	holderName: { required: requiredIf(isCard) },
-	holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
+  cardBrand: { required: requiredIf(isCard) },
+  cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
+  dueDate: { required: requiredIf(isCard) },
+  securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
+  holderName: { required: requiredIf(isCard) },
+  holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
 };
 
 const v$ = useVuelidate(rules, defaultState);
 
 
 function validateCep(inputCep: string) {
-	cep(inputCep).then(
-		(address) => {
-			v$.value.street.$model = address.street;
-			v$.value.city.$model = address.city;
-			v$.value.state.$model = address.state;
-			messagesList.value.pop();
-		}
-	).catch(err => {
-		console.log(err);
-		messagesList.value = [
-			{ severity: "error", content: "Cep não encontrado", id: count.value++ },
-		];
-	}
-	);
+  cep(inputCep).then(
+    (address) => {
+      v$.value.street.$model = address.street;
+      v$.value.city.$model = address.city;
+      v$.value.state.$model = address.state;
+      messagesList.value.pop();
+    }
+  ).catch(err => {
+    messagesList.value = [
+      { severity: "error", content: "Cep não encontrado", id: count.value++ },
+    ];
+  }
+  );
 }
 
 const handleSubmit = (isFormValid: boolean) => {
@@ -376,8 +376,8 @@ const handleSubmit = (isFormValid: boolean) => {
 			state: v$.value.state.$model,
 			city: v$.value.city.$model
 		};
-		// Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
-		customerStore.createNewForm(customerState);
+		//Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
+    customerStore.createNewForm(customerState);
 		payment = {
 			//uuid: paymentPage.uuid,
 			uuid: "testeuuid",
@@ -385,7 +385,7 @@ const handleSubmit = (isFormValid: boolean) => {
 			paymentType: store.defaultForms.paymentMethod.name,
 			installments: store.defaultForms.installments,
 		};
-		if (store.defaultForms.paymentMethod.name == "Cartão") {
+		if (store.defaultForms.paymentMethod.name == "CREDIT_CARD") {
 			card = {
 				cardBrand: store.defaultForms.cardBrand.name,
 				cardNumber: store.defaultForms.cardNumber,
@@ -397,9 +397,8 @@ const handleSubmit = (isFormValid: boolean) => {
 			payment.profileId = profileId;
 		}
 
-		console.log(newCustomer);
-		showTransactionSummary.value = true;
-	}
+    showTransactionSummary.value = true;
+  }
 
 };
 

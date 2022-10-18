@@ -1,6 +1,5 @@
 export const validCnpj = (cnpj: string) => {
-	console.log("chamou valid cnpj para testar" + cnpj);
-	//console.log(v$.value.holderDocument.$model);
+
 	//remove caracteres especiais
 	cnpj = cnpj.replace(/[^\d]+/g, "");
 	if (cnpj == "") return false;
@@ -45,6 +44,5 @@ export const validCnpj = (cnpj: string) => {
 	if (String(resultado) != digitos.charAt(1))
 		return false;
     
-	console.log("cnpj valido");
 	return true;
 };
