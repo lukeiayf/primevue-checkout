@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import { DefaultState, defaultState as defaultForm } from "../models/defaultState.model";
+import { DefaultState } from "../models/defaultState.model";
+// import { DefaultState, defaultState as defaultForm } from "../models/defaultState.model";
 
 export type RootState = {
     defaultForms: DefaultState;
@@ -43,6 +44,6 @@ export const useMainStore = defineStore({
 	},
 });
 
-function createNewForm(): any {
+function createNewForm(): void {
 	throw new Error("Function ainda n implementada.");
 }

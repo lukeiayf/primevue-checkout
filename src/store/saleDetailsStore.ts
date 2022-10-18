@@ -5,7 +5,7 @@ export type RootState = {
     saleDetailsStore: PaymentPageResponse;
 };
 
-const paymentPage: PaymentPageResponse = new PaymentPageResponse;
+// const paymentPage: PaymentPageResponse = new PaymentPageResponse;
 
 export const useSalesDetailsStore = defineStore({
 	id: "saleDetailsStore",

@@ -1,10 +1,7 @@
-import creditCardType, {
-	types as CardType,
-} from "credit-card-type";
+import creditCardType from "credit-card-type";
 import { useVuelidate } from "@vuelidate/core";
 import { reactive } from "vue";
 import { required } from "@vuelidate/validators";
-
 
 export interface DefaultCardBrandState {
     cardBrand: Brand,

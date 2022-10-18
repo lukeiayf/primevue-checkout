@@ -1,4 +1,4 @@
-export const validCnpj = (cnpj: any) => {
+export const validCnpj = (cnpj: string) => {
 	console.log("chamou valid cnpj para testar" + cnpj);
 	//console.log(v$.value.holderDocument.$model);
 	//remove caracteres especiais
@@ -25,24 +25,24 @@ export const validCnpj = (cnpj: any) => {
 	let soma = 0;
 	let pos = tamanho - 7;
 	for (let i = tamanho; i >= 1; i--) {
-		soma += numeros.charAt(tamanho - i) * pos--;
+		soma += Number(numeros.charAt(tamanho - i)) * pos--;
 		if (pos < 2)
 			pos = 9;
 	}
 	let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-	if (resultado != digitos.charAt(0))
+	if (String(resultado) != digitos.charAt(0))
 		return false;
 	tamanho = tamanho + 1;
 	numeros = cnpj.substring(0, tamanho);
 	soma = 0;
 	pos = tamanho - 7;
 	for (let i = tamanho; i >= 1; i--) {
-		soma += numeros.charAt(tamanho - i) * pos--;
+		soma += Number(numeros.charAt(tamanho - i)) * pos--;
 		if (pos < 2)
 			pos = 9;
 	}
 	resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-	if (resultado != digitos.charAt(1))
+	if (String(resultado) != digitos.charAt(1))
 		return false;
     
 	console.log("cnpj valido");

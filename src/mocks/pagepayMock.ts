@@ -49,6 +49,6 @@ export class CustomerMock implements CustomerServiceable {
 			birthdate: 121019914,
 			phone: "23453212"
 		};
-	};
+	}
 
-};
+}

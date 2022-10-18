@@ -277,13 +277,18 @@ import { useMainStore } from "../store/index";
 import { useCustomerStore } from "../store/customerStore";
 import { ICustomerState } from "../models/customerState.model";
 import cep from "cep-promise";
-import Message from "primevue/message";
+import Message, { MessageProps } from "primevue/message";
 import { verifyEmail, equalsToEmail } from "../helpers/validateEmail";
 import { CardRequest } from "../models/request/cardRequest";
 import { PaymentRequest } from "../models/request/paymentRequest";
 //import { PaymentPageResponse } from "../models/response/paymentPageResponse";
 import { customerId, newCustomer} from "../helpers/verifyCustomer";
-import { Backend } from "../services/backend";
+// import { Backend } from "../services/backend";
+
+interface MessageError extends MessageProps {
+  id: number,
+  content: string,
+}
 
 const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
@@ -291,14 +296,15 @@ const line2: Ref<string> = ref("");
 const today: Ref<Date> = ref(new Date());
 const store = useMainStore();
 const customerStore = useCustomerStore();
-const messagesList: any = ref([]);
+const messagesList: Ref<MessageError[]> = ref([]);
+
 const count = ref(0);
 
 
 let showTransactionSummary: Ref<boolean> = ref(false);
 let card: CardRequest;
 let payment: PaymentRequest;
-//let paymentPage: PaymentPageResponse;
+// let paymentPage: PaymentPageResponse;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
 
@@ -370,7 +376,8 @@ const handleSubmit = (isFormValid: boolean) => {
 			state: v$.value.state.$model,
 			city: v$.value.city.$model
 		};
-		Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
+		// Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
+		customerStore.createNewForm(customerState);
 		payment = {
 			//uuid: paymentPage.uuid,
 			uuid: "testeuuid",
@@ -378,7 +385,7 @@ const handleSubmit = (isFormValid: boolean) => {
 			paymentType: store.defaultForms.paymentMethod.name,
 			installments: store.defaultForms.installments,
 		};
-		if (store.defaultForms.paymentMethod.name == "CREDIT_CARD") {
+		if (store.defaultForms.paymentMethod.name == "Cartão") {
 			card = {
 				cardBrand: store.defaultForms.cardBrand.name,
 				cardNumber: store.defaultForms.cardNumber,

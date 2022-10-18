@@ -1,7 +1,7 @@
-import { validCpf, messages } from "../helpers/cpfValidator";
+import { validCpf } from "../helpers/cpfValidator";
 import { validCnpj } from "../helpers/cnpjValidator";
 
-export function validDocument(value: any): boolean {
+export function validDocument(value: string): boolean {
 	//debugger
 	console.log("chamou validdocument");
 	if (validCnpj(value) || validCpf(value)) {

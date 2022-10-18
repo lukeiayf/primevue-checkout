@@ -1,8 +1,8 @@
-import cep from "cep-promise";
+import cep, { CEP } from "cep-promise";
 import { ref } from "vue";
 import type { Ref } from "vue";
 
-export const cepReturn: Ref<any> = ref({});
+export const cepReturn: Ref<CEP> = ref({} as CEP);
 
 export async function validateCep(inputCep: string){
 	cep(inputCep).then(

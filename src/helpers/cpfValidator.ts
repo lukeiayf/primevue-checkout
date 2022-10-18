@@ -8,7 +8,7 @@ export interface Message {
     id: number;
 }
 
-export const validCpf = (inputCPF: any) => {
+export const validCpf = (inputCPF: string) => {
 	// console.log(inputCPF);
 	// console.log('chamou validcpf para testar' + inputCPF);
 	inputCPF = inputCPF.replace(/[^\d]+/g, "");
