@@ -16,7 +16,7 @@ describe("store", () => {
 			email: "teste@email.com",
 			emailConfirmation: "teste@email.com",
 			cpf: "08245496006",
-			birthdate: 801100800,
+			birthdate: new Date(),
 			phone: "42999448643",
 			zipcode: "84010010",
 			street: "Rua Dr Colares",
@@ -35,7 +35,7 @@ describe("store", () => {
 				id: 1
 			},
 			cardNumber: "5448280000000007",
-			dueDate: 1835481600,
+			dueDate: new Date(),
 			securityCode: "123",
 			holderName: "Teste Name",
 			holderDocument: "08245496006",

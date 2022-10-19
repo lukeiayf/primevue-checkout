@@ -247,7 +247,7 @@
     </template>
   </Card>
 
-  <TransactionSummaryComponent :name="v$.username.$model" v-if="showTransactionSummary"></TransactionSummaryComponent>
+  <TransactionSummaryComponent :customer="customer" :name="v$.username.$model" v-if="showTransactionSummary"></TransactionSummaryComponent>
 
 </template>
 
@@ -274,16 +274,17 @@ import { brands, verifyCard, v } from "../helpers/verifyCard";
 import { defaultState } from "../models/defaultState.model";
 import { paymentOptions } from "../models/response/paymentMethodResponse";
 import { useMainStore } from "../store/index";
-import { useCustomerStore } from "../store/customerStore";
-import { ICustomerState } from "../models/customerState.model";
 import cep from "cep-promise";
 import Message, { MessageProps } from "primevue/message";
 import { verifyEmail, equalsToEmail } from "../helpers/validateEmail";
 import { CardRequest } from "../models/request/cardRequest";
 import { SaleRequest } from "../models/request/paymentRequest";
 import { customerId} from "../helpers/verifyCustomer";
-//import { Backend } from "../services/backend";
-// import { Backend } from "../services/backend";
+import { Backend } from "../services/backend";
+import { CustomerResponse } from "../models/response/customerResponse";
+import { AddressMock, CustomerMock } from "../mocks/pagepayMock";
+import { AddressResponse } from "@/models/response/addressResponse";
+import { CustomerRequest } from "@/models/request/customerRequest";
 
 interface MessageError extends MessageProps {
   id: number,
@@ -292,10 +293,9 @@ interface MessageError extends MessageProps {
 
 const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
-const line2: Ref<string> = ref("");
+const line2 = "";
 const today: Ref<Date> = ref(new Date());
 const store = useMainStore();
-const customerStore = useCustomerStore();
 const messagesList: Ref<MessageError[]> = ref([]);
 
 const count = ref(0);
@@ -307,6 +307,8 @@ let card: CardRequest;
 //let paymentPage: PaymentPageResponse;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
+let customer: Ref<CustomerResponse> = ref({} as CustomerResponse);
+let address : Ref<AddressResponse> = ref({} as AddressResponse);
 
 const rules = {
 	username: { required },
@@ -351,7 +353,7 @@ function validateCep(inputCep: string) {
 	);
 }
 
-const handleSubmit = (isFormValid: boolean) => {
+const handleSubmit = async (isFormValid: boolean) => {
 	submitted.value = true;
 	if (v$.value.paymentMethod.$model.value == 1 && !validDocument(v$.value.holderDocument.$model)) {
 		isFormValid = false;
@@ -361,22 +363,33 @@ const handleSubmit = (isFormValid: boolean) => {
 	} else {
 		console.log("passou");
 		store.createNewForm(defaultState);
-		const customerState: ICustomerState = {
-			username: v$.value.username.$model,
-			email: v$.value.email.$model,
-			emailConfirmation: v$.value.emailConfirmation.$model,
-			cpf: v$.value.cpf.$model,
-			birthdate: v$.value.birthdate.$model,
-			phone: v$.value.phone.$model,
-			zipcode: v$.value.zipcode.$model,
+
+		Backend.getInstance().setCustomerImplementation(new CustomerMock());
+		let newCustomer: CustomerRequest = await Backend.getInstance().getCustomerImplementation().getCustomer();
+		if (Object.keys(newCustomer).length == 0) {
+			const customerState: CustomerRequest = {
+				name: v$.value.username.$model,
+				email: v$.value.email.$model,
+				cpf: v$.value.cpf.$model,
+				birthdate: v$.value.birthdate.$model.getTime(),
+				phone: v$.value.phone.$model
+			};
+			const customerPromise: Promise<CustomerRequest> = Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
+			newCustomer = await customerPromise;
+		}
+
+		const AddressState: AddressResponse = {
+			zipCode: v$.value.zipcode.$model,
 			street: v$.value.street.$model,
 			number: v$.value.number.$model,
 			lineTwo: line2,
 			state: v$.value.state.$model,
 			city: v$.value.city.$model
 		};
-		//Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
-		customerStore.createNewForm(customerState);
+		Backend.getInstance().setAddressImplementation(new AddressMock());
+		const addressPromise: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().createAddress(AddressState, 123);
+		address.value = await addressPromise;
+
 		payment = {
 			//uuid: paymentPage.uuid,
 			uuid: "testeuuid",

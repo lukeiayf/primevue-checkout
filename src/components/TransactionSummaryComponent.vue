@@ -9,10 +9,10 @@
         <h5>{{$t('dadosCliente')}}</h5>
         <ul class="list">
           <li class="item-list">
-              <strong>{{$t('cliente.nome')}}</strong>: {{store.defaultForms.username}}
+              <strong>{{$t('cliente.nome')}}</strong>: {{props.customer.name}}
           </li>
           <li class="item-list">
-          <strong>{{$t('cliente.email')}}</strong>: {{store.defaultForms.email}}
+          <strong>{{$t('cliente.email')}}</strong>: {{props.customer.email}}
           </li>
         </ul>
         <h5>{{$t('dadosPagamento')}}</h5>
@@ -44,11 +44,16 @@
 import Card from "primevue/card";
 import "moment/locale/pt-br";
 import { useMainStore } from "../store";
+import { CustomerResponse } from "../models/response/customerResponse";
 
 const store = useMainStore();
 
 const imgSrcBankslip = "src/assets/boleto-logo.svg";
 const imgSrcPix = "src/assets/qrcode.png";
+
+const props = defineProps({
+	customer : CustomerResponse
+});
 
 </script> 
 
