@@ -53,7 +53,7 @@ export class CustomerMock implements CustomerServiceable {
 			phone: "23453212"
 		};
 	}
-};
+}
 
 export class AddressMock implements AddressServiceable {
 	createAddress(addressState: AddressResponse): AddressResponse {
@@ -67,7 +67,7 @@ export class AddressMock implements AddressServiceable {
 			zipCode: "84010010",
 			city: "Ponta Grossa",
 			state: "Paraná"
-		}
+		};
 	}
 
 }

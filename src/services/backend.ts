@@ -1,4 +1,3 @@
-import { ICustomerState } from "@/models/customerState.model";
 import { CardRequest } from "@/models/request/cardRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
@@ -8,15 +7,15 @@ export class Backend {
 	private static instance: Backend | undefined;
 	private implementation: PagePayServiceable;
 	private customerImplementation: CustomerServiceable;
-    private addressImplementation: AddressServiceable;
-    private cardImplementation: CardServiceable;
-    private paymentImplementation: PaymentServiceable;
+	private addressImplementation: AddressServiceable;
+	private cardImplementation: CardServiceable;
+	private paymentImplementation: PaymentServiceable;
 	private constructor() {
 		this.implementation = new PagePayBemPaggo();
 		this.customerImplementation = new CustomerBemPaggo();
-        this.addressImplementation = new AddressBemPaggo();
-        this.cardImplementation = new CardBemPaggo();
-        this.paymentImplementation = new PaymentBemPaggo();
+		this.addressImplementation = new AddressBemPaggo();
+		this.cardImplementation = new CardBemPaggo();
+		this.paymentImplementation = new PaymentBemPaggo();
 	}
 	public getImplementation(): PagePayServiceable {
 		return this.implementation;
@@ -83,7 +82,7 @@ class PagePayBemPaggo implements PagePayServiceable {
 
 }
 class CustomerBemPaggo implements CustomerServiceable {
-	createCustomer(customerState: CustomerResponse): any {
+	createCustomer(customerState: CustomerResponse): CustomerResponse {
 		throw new Error(customerState.name);
 	}
 	getCustomer(): CustomerResponse {
@@ -92,27 +91,27 @@ class CustomerBemPaggo implements CustomerServiceable {
 }
 
 class AddressBemPaggo implements AddressServiceable {
-    getAddress(): AddressResponse {
-        throw new Error("Method not implemented.");
-    }
-    createAddress(addressState: AddressResponse): any{
-        throw new Error("Method not implemented.");
-    }
+	getAddress(): AddressResponse {
+		throw new Error("Method not implemented.");
+	}
+	createAddress(addressState: AddressResponse): AddressResponse{
+		return addressState;
+	}
 }
 class CardBemPaggo implements CardServiceable {
-    createCard(cardState: CardRequest): CardRequest {
-        throw new Error("Method not implemented.");
-    }
-    getCard(): number {
-        throw new Error("Method not implemented.");
-    }
+	createCard(cardState: CardRequest): CardRequest {
+		return cardState;
+	}
+	getCard(): number {
+		throw new Error("Method not implemented.");
+	}
     
 }
 
 class PaymentBemPaggo implements PaymentServiceable {
-    createPayment(paymentState: SaleRequest): SaleRequest {
-        throw new Error("Method not implemented.");
-    }
+	createPayment(paymentState: SaleRequest): SaleRequest {
+		return paymentState;
+	}
     
 }
 

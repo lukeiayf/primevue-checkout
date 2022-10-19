@@ -281,9 +281,8 @@ import Message, { MessageProps } from "primevue/message";
 import { verifyEmail, equalsToEmail } from "../helpers/validateEmail";
 import { CardRequest } from "../models/request/cardRequest";
 import { SaleRequest } from "../models/request/paymentRequest";
-//import { PaymentPageResponse } from "../models/response/paymentPageResponse";
-import { customerId, newCustomer} from "../helpers/verifyCustomer";
-import { Backend } from "../services/backend";
+import { customerId} from "../helpers/verifyCustomer";
+//import { Backend } from "../services/backend";
 // import { Backend } from "../services/backend";
 
 interface MessageError extends MessageProps {
@@ -303,53 +302,53 @@ const count = ref(0);
 
 
 let showTransactionSummary: Ref<boolean> = ref(false);
-let card: CardRequest;
 let payment: SaleRequest;
+let card: CardRequest;
 //let paymentPage: PaymentPageResponse;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
 
 const rules = {
-  username: { required },
-  email: { required, email },
-  emailConfirmation: { required },
-  cpf: { required, minLengthValue: minLength(11), validCpf },
-  birthdate: {},
-  phone: {},
-  zipcode: { required, minLengthValue: minLength(8) },
-  street: { required },
-  lineTwo: {},
-  number: { required },
-  state: { required },
-  city: { required },
-  paymentMethod: { required },
-  installments: { required },
+	username: { required },
+	email: { required, email },
+	emailConfirmation: { required },
+	cpf: { required, minLengthValue: minLength(11), validCpf },
+	birthdate: {},
+	phone: {},
+	zipcode: { required, minLengthValue: minLength(8) },
+	street: { required },
+	lineTwo: {},
+	number: { required },
+	state: { required },
+	city: { required },
+	paymentMethod: { required },
+	installments: { required },
 
-  cardBrand: { required: requiredIf(isCard) },
-  cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
-  dueDate: { required: requiredIf(isCard) },
-  securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
-  holderName: { required: requiredIf(isCard) },
-  holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
+	cardBrand: { required: requiredIf(isCard) },
+	cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
+	dueDate: { required: requiredIf(isCard) },
+	securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
+	holderName: { required: requiredIf(isCard) },
+	holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
 };
 
 const v$ = useVuelidate(rules, defaultState);
 
 
 function validateCep(inputCep: string) {
-  cep(inputCep).then(
-    (address) => {
-      v$.value.street.$model = address.street;
-      v$.value.city.$model = address.city;
-      v$.value.state.$model = address.state;
-      messagesList.value.pop();
-    }
-  ).catch(err => {
-    messagesList.value = [
-      { severity: "error", content: "Cep não encontrado", id: count.value++ },
-    ];
-  }
-  );
+	cep(inputCep).then(
+		(address) => {
+			v$.value.street.$model = address.street;
+			v$.value.city.$model = address.city;
+			v$.value.state.$model = address.state;
+			messagesList.value.pop();
+		}
+	).catch(() => {
+		messagesList.value = [
+			{ severity: "error", content: "Cep não encontrado", id: count.value++ },
+		];
+	}
+	);
 }
 
 const handleSubmit = (isFormValid: boolean) => {
@@ -377,7 +376,7 @@ const handleSubmit = (isFormValid: boolean) => {
 			city: v$.value.city.$model
 		};
 		//Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
-    customerStore.createNewForm(customerState);
+		customerStore.createNewForm(customerState);
 		payment = {
 			//uuid: paymentPage.uuid,
 			uuid: "testeuuid",
@@ -394,11 +393,12 @@ const handleSubmit = (isFormValid: boolean) => {
 				dueDate: store.defaultForms.dueDate.getTime(),
 				securityCode: parseInt(store.defaultForms.securityCode),
 			};
+			console.log(card);
 			payment.profileId = profileId;
 		}
 
-    showTransactionSummary.value = true;
-  }
+		showTransactionSummary.value = true;
+	}
 
 };
 
