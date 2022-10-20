@@ -247,8 +247,8 @@
     </template>
   </Card>
 
-  <TransactionSummaryComponent :customer="customer" :name="v$.username.$model" v-if="showTransactionSummary"></TransactionSummaryComponent>
-
+  <TransactionSummaryComponent :customer="customer" :name="v$.username.$model" v-if="showTransactionSummary">
+  </TransactionSummaryComponent>
 </template>
 
 
@@ -279,7 +279,7 @@ import Message, { MessageProps } from "primevue/message";
 import { verifyEmail, equalsToEmail } from "../helpers/validateEmail";
 import { CardRequest } from "../models/request/cardRequest";
 import { SaleRequest } from "../models/request/paymentRequest";
-import { customerId} from "../helpers/verifyCustomer";
+import { customerId } from "../helpers/verifyCustomer";
 import { Backend } from "../services/backend";
 import { CustomerResponse } from "../models/response/customerResponse";
 import { AddressMock, CustomerMock } from "../mocks/pagepayMock";
@@ -308,110 +308,110 @@ let card: CardRequest;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
 let customer: Ref<CustomerResponse> = ref({} as CustomerResponse);
-let address : Ref<AddressResponse> = ref({} as AddressResponse);
+let address: Ref<AddressResponse> = ref({} as AddressResponse);
+
+console.log(import.meta.env.VITE_APP_BACK_END_CLASS);
 
 const rules = {
-	username: { required },
-	email: { required, email },
-	emailConfirmation: { required },
-	cpf: { required, minLengthValue: minLength(11), validCpf },
-	birthdate: {},
-	phone: {},
-	zipcode: { required, minLengthValue: minLength(8) },
-	street: { required },
-	lineTwo: {},
-	number: { required },
-	state: { required },
-	city: { required },
-	paymentMethod: { required },
-	installments: { required },
+  username: { required },
+  email: { required, email },
+  emailConfirmation: { required },
+  cpf: { required, minLengthValue: minLength(11), validCpf },
+  birthdate: {},
+  phone: {},
+  zipcode: { required, minLengthValue: minLength(8) },
+  street: { required },
+  lineTwo: {},
+  number: { required },
+  state: { required },
+  city: { required },
+  paymentMethod: { required },
+  installments: { required },
 
-	cardBrand: { required: requiredIf(isCard) },
-	cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
-	dueDate: { required: requiredIf(isCard) },
-	securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
-	holderName: { required: requiredIf(isCard) },
-	holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
+  cardBrand: { required: requiredIf(isCard) },
+  cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
+  dueDate: { required: requiredIf(isCard) },
+  securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
+  holderName: { required: requiredIf(isCard) },
+  holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
 };
 
 const v$ = useVuelidate(rules, defaultState);
 
 
 function validateCep(inputCep: string) {
-	cep(inputCep).then(
-		(address) => {
-			v$.value.street.$model = address.street;
-			v$.value.city.$model = address.city;
-			v$.value.state.$model = address.state;
-			messagesList.value.pop();
-		}
-	).catch(() => {
-		messagesList.value = [
-			{ severity: "error", content: "Cep não encontrado", id: count.value++ },
-		];
-	}
-	);
+  cep(inputCep).then(
+    (address) => {
+      v$.value.street.$model = address.street;
+      v$.value.city.$model = address.city;
+      v$.value.state.$model = address.state;
+      messagesList.value.pop();
+    }
+  ).catch(() => {
+    messagesList.value = [
+      { severity: "error", content: "Cep não encontrado", id: count.value++ },
+    ];
+  }
+  );
 }
 
 const handleSubmit = async (isFormValid: boolean) => {
-	submitted.value = true;
-	if (v$.value.paymentMethod.$model.value == 1 && !validDocument(v$.value.holderDocument.$model)) {
-		isFormValid = false;
-	}
-	if (!isFormValid) {
-		console.log("n passou");
-	} else {
-		console.log("passou");
-		store.createNewForm(defaultState);
+  submitted.value = true;
+  if (v$.value.paymentMethod.$model.value == 1 && !validDocument(v$.value.holderDocument.$model)) {
+    isFormValid = false;
+  }
+  if (!isFormValid) {
+    console.log("n passou");
+  } else {
+    console.log("passou");
+    store.createNewForm(defaultState);
 
-		Backend.getInstance().setCustomerImplementation(new CustomerMock());
-		let newCustomer: CustomerRequest = await Backend.getInstance().getCustomerImplementation().getCustomer();
-		if (Object.keys(newCustomer).length == 0) {
-			const customerState: CustomerRequest = {
-				name: v$.value.username.$model,
-				email: v$.value.email.$model,
-				cpf: v$.value.cpf.$model,
-				birthdate: v$.value.birthdate.$model.getTime(),
-				phone: v$.value.phone.$model
-			};
-			const customerPromise: Promise<CustomerRequest> = Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
-			newCustomer = await customerPromise;
-		}
+    let newCustomer: CustomerRequest = await Backend.getInstance().getCustomerImplementation().getCustomer();
+    if (Object.keys(newCustomer).length == 0) {
+      const customerState: CustomerRequest = {
+        name: v$.value.username.$model,
+        email: v$.value.email.$model,
+        cpf: v$.value.cpf.$model,
+        birthdate: v$.value.birthdate.$model.getTime(),
+        phone: v$.value.phone.$model
+      };
+      const customerPromise: Promise<CustomerRequest> = Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
+      newCustomer = await customerPromise;
+    }
 
-		const AddressState: AddressResponse = {
-			zipCode: v$.value.zipcode.$model,
-			street: v$.value.street.$model,
-			number: v$.value.number.$model,
-			lineTwo: line2,
-			state: v$.value.state.$model,
-			city: v$.value.city.$model
-		};
-		Backend.getInstance().setAddressImplementation(new AddressMock());
-		const addressPromise: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().createAddress(AddressState, 123);
-		address.value = await addressPromise;
+    const AddressState: AddressResponse = {
+      zipCode: v$.value.zipcode.$model,
+      street: v$.value.street.$model,
+      number: v$.value.number.$model,
+      lineTwo: line2,
+      state: v$.value.state.$model,
+      city: v$.value.city.$model
+    };
+    const addressPromise: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().createAddress(AddressState, 123);
+    address.value = await addressPromise;
 
-		payment = {
-			//uuid: paymentPage.uuid,
-			uuid: "testeuuid",
-			customerId: customerId,
-			paymentType: store.defaultForms.paymentMethod.name,
-			installments: store.defaultForms.installments,
-		};
-		if (store.defaultForms.paymentMethod.name == "CREDIT_CARD") {
-			card = {
-				cardBrand: store.defaultForms.cardBrand.name,
-				cardNumber: store.defaultForms.cardNumber,
-				holderDocument: store.defaultForms.holderDocument,
-				holderName: store.defaultForms.holderName,
-				dueDate: store.defaultForms.dueDate.getTime(),
-				securityCode: parseInt(store.defaultForms.securityCode),
-			};
-			console.log(card);
-			payment.profileId = profileId;
-		}
+    payment = {
+      //uuid: paymentPage.uuid,
+      uuid: "testeuuid",
+      customerId: customerId,
+      paymentType: store.defaultForms.paymentMethod.name,
+      installments: store.defaultForms.installments,
+    };
+    if (store.defaultForms.paymentMethod.name == "CREDIT_CARD") {
+      card = {
+        cardBrand: store.defaultForms.cardBrand.name,
+        cardNumber: store.defaultForms.cardNumber,
+        holderDocument: store.defaultForms.holderDocument,
+        holderName: store.defaultForms.holderName,
+        dueDate: store.defaultForms.dueDate.getTime(),
+        securityCode: parseInt(store.defaultForms.securityCode),
+      };
+      console.log(card);
+      payment.profileId = profileId;
+    }
 
-		showTransactionSummary.value = true;
-	}
+    showTransactionSummary.value = true;
+  }
 
 };
 

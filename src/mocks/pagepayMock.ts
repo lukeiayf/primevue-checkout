@@ -6,7 +6,7 @@ import { AddressResponse } from "@/models/response/addressResponse";
 import { CardResponse } from "@/models/response/cardResponse";
 import { CustomerResponse } from "../models/response/customerResponse";
 import { PaymentPageResponse } from "../models/response/paymentPageResponse";
-import { AddressServiceable, CardServiceable, CustomerServiceable, PagePayServiceable, PaymentServiceable } from "../services/backend";
+import { AddressServiceable, BackendImplementable, CardServiceable, CustomerServiceable, PagePayServiceable, PaymentServiceable } from "../services/facade";
 export class PagePayMock implements PagePayServiceable {
 	getPaymentPage(companyId: number): Promise<PaymentPageResponse> {
 		const obj = {
@@ -101,6 +101,24 @@ export class CardMock implements CardServiceable {
 export class PaymentMock implements PaymentServiceable {
 	createPayment(paymentState: SaleRequest): Promise<SaleRequest> {
 		return new Promise((resolve)=>resolve(paymentState));
+	}
+
+}
+export class BackendImplementationMock implements BackendImplementable {
+	getPaymentImplementation(): PaymentServiceable {
+		return new PaymentMock();
+	}
+	getCardImplementation(): CardServiceable {
+		return new CardMock();
+	}
+	getAddressImplementation(): AddressServiceable {
+		return new AddressMock();
+	}
+	getPagePayImplementation(): PagePayServiceable {
+		return new PagePayMock();
+	}
+	getCustomerImplementation(): CustomerServiceable {
+		return new CustomerMock();
 	}
 
 }
