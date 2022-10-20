@@ -62,9 +62,10 @@ export class CustomerMock implements CustomerServiceable {
 		};
 		return new Promise((resolve) => resolve(customer));
 	}
-	putCustomer(customer: CustomerResponse): Promise<CustomerResponse>{
+	putCustomer(customer: CustomerRequest, customerId: number): Promise<CustomerResponse>{
 		const updatedCustomer = {
 			...customer,
+			id: 2,
 			name: "new customer name"
 		};
 		return new Promise((resolve)=>resolve(updatedCustomer));

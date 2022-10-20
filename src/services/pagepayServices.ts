@@ -65,8 +65,8 @@ export class CustomerBemPaggo implements CustomerServiceable {
 		}
 	}
 	
-	public async putCustomer(customer: CustomerResponse):Promise<CustomerResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customer.id}`;
+	public async putCustomer(customer: CustomerRequest, customerId: number):Promise<CustomerResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customerId}`;
 		try {
 			const data = await fetch(url, { method: "PUT", body: JSON.stringify({ customer }) });
 			if (data.ok) {
