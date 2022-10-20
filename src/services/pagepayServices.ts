@@ -4,6 +4,7 @@ import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
 import { CardResponse } from "@/models/response/cardResponse";
+import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
 import { CustomerResponse } from "@/models/response/customerResponse";
 import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
 import { AddressServiceable, CardServiceable, CustomerServiceable, PagePayServiceable, PaymentServiceable } from "./facade";
@@ -25,7 +26,20 @@ export class PagePayBemPaggo implements PagePayServiceable {
 	}
 }
 export class CustomerBemPaggo implements CustomerServiceable {
-	async createCustomer(customerState: CustomerRequest): Promise<CustomerRequest> {
+	async getCustomerId(document: string): Promise<CustomerMinimalResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/document/${document}`;
+		try {
+			const response = await fetch(url, { method: "GET" });
+			if (response.ok) {
+				return await response.json();
+			} else {
+				throw new Error("erro no status da requisição");
+			}
+		} catch(error) {
+			throw new Error("erro na requisição");
+		}
+	}
+	async createCustomer(customerState: CustomerRequest): Promise<CustomerResponse> {
 		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/new`;         
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ customerState }) });
@@ -50,6 +64,7 @@ export class CustomerBemPaggo implements CustomerServiceable {
 			throw new Error("erro na requisição");
 		}
 	}
+	
 	public async putCustomer(customer: CustomerResponse):Promise<CustomerResponse> {
 		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customer.id}`;
 		try {

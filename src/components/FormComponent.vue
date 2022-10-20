@@ -20,8 +20,8 @@
             <div style="width:45%">
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-info-circle" />
-                <InputMask required id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
-                  :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" mask="99999999999" />
+                <InputText required id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
+                  :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" />
                 <label for="cpf">{{$t('cliente.cpf')}}*</label>
               </span>
               <small v-if="(v$.cpf.$invalid && submitted) || v$.cpf.$pending"
@@ -62,8 +62,7 @@
           <div style="width: 45%;">
             <span class="p-float-label p-input-icon-right">
               <i class="pi pi-phone"></i>
-              <InputMask id="phone" type="text" v-model="v$.phone.$model" mask="(99)99999-999?9"
-                class="full input-size" />
+              <InputText id="phone" type="text" v-model="v$.phone.$model" class="full input-size" />
               <label for="phone">{{$t('cliente.telefone')}}</label>
             </span>
           </div>
@@ -247,44 +246,44 @@
     </template>
   </Card>
 
-  <TransactionSummaryComponent :customer="customer" :name="v$.username.$model" v-if="showTransactionSummary">
+  <TransactionSummaryComponent :customer="customer" v-if="showTransactionSummary">
   </TransactionSummaryComponent>
 </template>
 
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { CustomerRequest } from "@/models/request/customerRequest";
+import { AddressResponse } from "@/models/response/addressResponse";
+import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
 import { useVuelidate } from "@vuelidate/core";
-import { required, email, minLength, maxLength, requiredIf } from "@vuelidate/validators";
-import InputText from "primevue/inputtext";
-import Card from "primevue/card";
-import Calendar from "primevue/calendar";
-import InputMask from "primevue/inputmask";
-import InputNumber from "primevue/inputnumber";
-import SelectButton from "primevue/selectbutton";
+import { email, maxLength, minLength, required, requiredIf } from "@vuelidate/validators";
+import cep from "cep-promise";
+import "moment/locale/pt-br";
 import Button from "primevue/button";
+import Calendar from "primevue/calendar";
+import Card from "primevue/card";
 import Dropdown from "primevue/dropdown";
 import InlineMessage from "primevue/inlinemessage";
-import type { Ref } from "vue";
-import "moment/locale/pt-br";
-import TransactionSummaryComponent from "./TransactionSummaryComponent.vue";
-import { validCpf, messages } from "../helpers/cpfValidator";
-import { validDocument } from "../helpers/validDocument";
-import { brands, verifyCard, v } from "../helpers/verifyCard";
-import { defaultState } from "../models/defaultState.model";
-import { paymentOptions } from "../models/response/paymentMethodResponse";
-import { useMainStore } from "../store/index";
-import cep from "cep-promise";
+import InputMask from "primevue/inputmask";
+import InputNumber from "primevue/inputnumber";
+import InputText from "primevue/inputtext";
 import Message, { MessageProps } from "primevue/message";
-import { verifyEmail, equalsToEmail } from "../helpers/validateEmail";
+import SelectButton from "primevue/selectbutton";
+import { Ref, ref } from "vue";
+import { messages, validCpf } from "../helpers/cpfValidator";
+import { equalsToEmail, verifyEmail } from "../helpers/validateEmail";
+import { validDocument } from "../helpers/validDocument";
+import { brands, v, verifyCard } from "../helpers/verifyCard";
+import { defaultState } from "../models/defaultState.model";
 import { CardRequest } from "../models/request/cardRequest";
 import { SaleRequest } from "../models/request/paymentRequest";
-import { customerId } from "../helpers/verifyCustomer";
-import { Backend } from "../services/backend";
 import { CustomerResponse } from "../models/response/customerResponse";
-import { AddressMock, CustomerMock } from "../mocks/pagepayMock";
-import { AddressResponse } from "@/models/response/addressResponse";
-import { CustomerRequest } from "@/models/request/customerRequest";
+import { paymentOptions } from "../models/response/paymentMethodResponse";
+import { Backend } from "../services/backend";
+import { useMainStore } from "../store/index";
+import TransactionSummaryComponent from "./TransactionSummaryComponent.vue";
+import moment from 'moment';
+import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
 
 interface MessageError extends MessageProps {
   id: number,
@@ -304,13 +303,37 @@ const count = ref(0);
 let showTransactionSummary: Ref<boolean> = ref(false);
 let payment: SaleRequest;
 let card: CardRequest;
-//let paymentPage: PaymentPageResponse;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
-let customer: Ref<CustomerResponse> = ref({} as CustomerResponse);
-let address: Ref<AddressResponse> = ref({} as AddressResponse);
+let customer: Ref<CustomerResponse> = ref(new CustomerResponse());
+let address: Ref<AddressResponse> = ref(new AddressResponse());
+let customerId: Ref<number> = ref(null)
 
-console.log(import.meta.env.VITE_APP_BACK_END_CLASS);
+
+Backend.getInstance().getCustomerImplementation().getCustomer().then(
+  result => {
+    customer.value = result;
+    v$.value.username.$model = customer.value.name;
+    v$.value.cpf.$model = customer.value.cpf;
+    v$.value.birthdate.$model = moment(customer.value.birthdate).toDate();
+    v$.value.email.$model = customer.value.email;
+    v$.value.emailConfirmation.$model = customer.value.email;
+    v$.value.phone.$model = customer.value.phone;
+  }
+);
+
+Backend.getInstance().getAddressImplementation().getAddress(1).then(
+  result => {
+    address.value = result;
+    v$.value.zipcode.$model = address.value.zipCode;
+    v$.value.city.$model = address.value.city;
+    v$.value.state.$model = address.value.state;
+    v$.value.street.$model = address.value.street;
+    v$.value.number.$model = address.value.number;
+    v$.value.lineTwo.$model = address.value.lineTwo;
+  }
+)
+
 
 const rules = {
   username: { required },
@@ -339,6 +362,7 @@ const rules = {
 const v$ = useVuelidate(rules, defaultState);
 
 
+
 function validateCep(inputCep: string) {
   cep(inputCep).then(
     (address) => {
@@ -365,9 +389,21 @@ const handleSubmit = async (isFormValid: boolean) => {
   } else {
     console.log("passou");
     store.createNewForm(defaultState);
+    const customerState: CustomerRequest = {
+        name: v$.value.username.$model,
+        email: v$.value.email.$model,
+        cpf: v$.value.cpf.$model,
+        birthdate: v$.value.birthdate.$model.getTime(),
+        phone: v$.value.phone.$model
+    };
 
-    let newCustomer: CustomerRequest = await Backend.getInstance().getCustomerImplementation().getCustomer();
-    if (Object.keys(newCustomer).length == 0) {
+
+    Backend.getInstance().getCustomerImplementation().getCustomerId(v$.value.cpf.$model).then(
+      result => {
+        customerId.value = result.customerId;
+      }
+    );
+    if (Object.keys(customer.value).length == 0) {
       const customerState: CustomerRequest = {
         name: v$.value.username.$model,
         email: v$.value.email.$model,
@@ -375,8 +411,7 @@ const handleSubmit = async (isFormValid: boolean) => {
         birthdate: v$.value.birthdate.$model.getTime(),
         phone: v$.value.phone.$model
       };
-      const customerPromise: Promise<CustomerRequest> = Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
-      newCustomer = await customerPromise;
+      customer.value = await Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
     }
 
     const AddressState: AddressResponse = {
@@ -393,7 +428,7 @@ const handleSubmit = async (isFormValid: boolean) => {
     payment = {
       //uuid: paymentPage.uuid,
       uuid: "testeuuid",
-      customerId: customerId,
+      customerId: customerId.value,
       paymentType: store.defaultForms.paymentMethod.name,
       installments: store.defaultForms.installments,
     };

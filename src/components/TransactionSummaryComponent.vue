@@ -43,18 +43,17 @@
 <script setup lang="ts">
 import Card from "primevue/card";
 import "moment/locale/pt-br";
-import { useMainStore } from "../store";
-import { CustomerResponse } from "../models/response/customerResponse";
+import { useMainStore } from "@/store";
+import { CustomerResponse } from "@/models/response/customerResponse";
 
 const store = useMainStore();
 
 const imgSrcBankslip = "src/assets/boleto-logo.svg";
 const imgSrcPix = "src/assets/qrcode.png";
 
-const props = defineProps({
-	customer : CustomerResponse
-});
-
+const props = defineProps<{
+  customer: CustomerResponse
+}>();
 </script> 
 
 <style lang="scss" scoped>

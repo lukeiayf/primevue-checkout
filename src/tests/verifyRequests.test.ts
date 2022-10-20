@@ -1,6 +1,7 @@
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
 import { CardResponse } from "@/models/response/cardResponse";
+import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
 import { describe, expect, test } from "vitest";
 import { CardRequest } from "../models/request/cardRequest";
 import { AddressResponse } from "../models/response/addressResponse";
@@ -28,8 +29,7 @@ describe("backend", () => {
 		expect(pagepay.affiliate.id).toEqual(1);
 		expect(pagepay.affiliate.name).toEqual("netflix");
 		expect(pagepay.affiliate.businessName).toEqual("netflix nome");
-		console.log("Env variaveis");
-		console.log(import.meta.env);
+
 
 		//.MODE: "development", "test", "production"
 	});
@@ -92,6 +92,10 @@ describe("backend", () => {
 	test("getCard", async () => {
 		const cardId: Promise<CardResponse> = Backend.getInstance().getCardImplementation().getCard("mockurl");
 		expect((await cardId).profileId).toEqual(1);
+	});
+	test("getCustomerId", async () => {
+		const customerId: Promise<CustomerMinimalResponse> = Backend.getInstance().getCustomerImplementation().getCustomerId("02577973004");
+		expect((await customerId).customerId).toEqual(1);
 	});
 	test("createCard", async () => {
 		const cardState: CardRequest = {

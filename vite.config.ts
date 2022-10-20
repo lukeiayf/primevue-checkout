@@ -10,6 +10,9 @@ export default ({ mode }) => {
     test: {
       globals: true
     },
+    resolve: {
+      alias: [{ find: "@", replacement: "/src" }],
+    },
 
   });
 }

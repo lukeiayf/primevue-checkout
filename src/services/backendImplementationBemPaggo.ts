@@ -2,7 +2,7 @@ import { AddressServiceable, BackendImplementable, CardServiceable, CustomerServ
 import { AddressBemPaggo, CardBemPaggo, CustomerBemPaggo, PagePayBemPaggo, PaymentBemPaggo } from "./pagepayServices";
 
 export class BackendImplementationBemPaggo implements BackendImplementable{
-    getPaymentImplementation(): PaymentServiceable {
+	getPaymentImplementation(): PaymentServiceable {
 		return new PaymentBemPaggo();
 	}
 	getCardImplementation(): CardServiceable {

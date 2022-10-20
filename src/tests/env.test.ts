@@ -1,6 +1,8 @@
 
 import { describe, expect, test } from "vitest";
 
-describe("backend", () => {
-    test("getPagepay", async () => { });
+describe("env", () => {
+	test("getEnv", async () => { 
+		expect(import.meta.env.VITE_APP_BACK_END_CLASS).toEqual("BackendImplementationMock");
+	});
 });

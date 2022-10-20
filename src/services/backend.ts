@@ -7,6 +7,7 @@ export class Backend {
 	private constructor(implementation: BackendImplementable) {
 		this.implementation = implementation;
 	}
+
 	public getPagePayImplementation(): PagePayServiceable {
 		return this.implementation.getPagePayImplementation();
 	}
@@ -24,10 +25,19 @@ export class Backend {
 	}
 	public static getInstance(): Backend {
 		if (!this.instance) {
-			this.instance = new Backend(new BackendImplementationMock());
+			const implementation = this.getImplementation();
+			this.instance = new Backend(implementation);
 			return this.instance;
 		} else {
 			return this.instance;
 		}
 	}
+	public static getImplementation(): BackendImplementable {
+		if (import.meta.env.VITE_APP_BACK_END_CLASS == "BackendImplementationMock") {
+			return new BackendImplementationMock();
+		} else {
+			return new BackendImplementationBemPaggo();
+		}
+	}
+
 }

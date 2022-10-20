@@ -4,6 +4,7 @@ import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
 import { CardResponse } from "@/models/response/cardResponse";
+import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
 import { CustomerResponse } from "../models/response/customerResponse";
 import { PaymentPageResponse } from "../models/response/paymentPageResponse";
 import { AddressServiceable, BackendImplementable, CardServiceable, CustomerServiceable, PagePayServiceable, PaymentServiceable } from "../services/facade";
@@ -43,14 +44,18 @@ export class PagePayMock implements PagePayServiceable {
 }
 
 export class CustomerMock implements CustomerServiceable {
-	createCustomer(customerState: CustomerRequest): Promise<CustomerRequest> {
-		return new Promise((resolve) => resolve(customerState));
+	createCustomer(customerState: CustomerRequest): Promise<CustomerResponse> {
+		const customerResponse: CustomerResponse = {
+			...customerState,
+			id: 2
+		};
+		return new Promise((resolve) => resolve(customerResponse));
 	}
 	getCustomer(): Promise<CustomerResponse> {
 		const customer = {
 			id: 1,
 			name: "customer name",
-			cpf: "1009532345",
+			cpf: "10095323678",
 			email: "teste@teste.com",
 			birthdate: 121019914,
 			phone: "23453212"
@@ -63,6 +68,13 @@ export class CustomerMock implements CustomerServiceable {
 			name: "new customer name"
 		};
 		return new Promise((resolve)=>resolve(updatedCustomer));
+	}
+	getCustomerId(document: string): Promise<CustomerMinimalResponse>{
+		console.log(document);
+		const customer = {
+			customerId: 1
+		};
+		return new Promise((resolve) => resolve(customer));
 	}
 }
 

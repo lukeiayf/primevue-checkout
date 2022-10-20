@@ -11,7 +11,8 @@ export interface PagePayServiceable {
     getPaymentPage(companyId: number): Promise<PaymentPageResponse>;
 }
 export interface CustomerServiceable {
-    createCustomer(customerState: CustomerRequest): Promise<CustomerRequest>;
+	getCustomerId(arg0: string): Promise<import("../models/response/customerMinimalResponse").CustomerMinimalResponse>;
+    createCustomer(customerState: CustomerRequest): Promise<CustomerResponse>;
     getCustomer(): Promise<CustomerResponse>;
     putCustomer(customer: CustomerResponse): Promise<CustomerResponse>;
 }
