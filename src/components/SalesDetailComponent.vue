@@ -63,7 +63,6 @@ let paymentPage: Ref<PaymentPageResponse> = ref(new PaymentPageResponse());
 Backend.getInstance().getPagePayImplementation().getPaymentPage(1).then(
 	result => {
 		paymentPage.value = result;
-		console.log(paymentPage.value.plan.accessionValue);
 	}
 );
 

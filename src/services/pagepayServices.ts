@@ -94,7 +94,7 @@ export class AddressBemPaggo implements AddressServiceable {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createAddress(addressState: AddressResponse, customerId:number): Promise<AddressResponse>{
+	async createAddress(addressState: AddressRequest, customerId:number): Promise<AddressRequest>{
 		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/customer/${customerId}/address/new`;        
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ addressState }) });

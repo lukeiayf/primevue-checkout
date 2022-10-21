@@ -1,7 +1,7 @@
 export interface PaymentMethod {
     name: string,
-    value: number,
-    message: string,
+    value: number | string,
+    message?: string,
 }
 
 export const paymentOptions: PaymentMethod[] = [
@@ -19,5 +19,20 @@ export const paymentOptions: PaymentMethod[] = [
 		name: "Pix",
 		value: 3,
 		message: "Ao selecionar essa opção, será gerado um QR code."
+	}
+];
+
+export const paymentMethods: PaymentMethod[] = [
+	{
+		name: "Cartão de crédito",
+		value: "CREDIT_CARD"
+	},
+	{
+		name: "Boleto",
+		value: "BANKSLIP"
+	},
+	{
+		name: "Pix",
+		value: "PIX"
 	}
 ];

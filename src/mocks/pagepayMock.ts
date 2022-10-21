@@ -1,4 +1,5 @@
 
+import { AddressRequest } from "@/models/request/addressRequest";
 import { CardRequest } from "@/models/request/cardRequest";
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
@@ -68,6 +69,7 @@ export class CustomerMock implements CustomerServiceable {
 			id: 2,
 			name: "new customer name"
 		};
+		console.log(customerId);
 		return new Promise((resolve)=>resolve(updatedCustomer));
 	}
 	getCustomerId(document: string): Promise<CustomerMinimalResponse>{
@@ -92,7 +94,7 @@ export class AddressMock implements AddressServiceable {
 		};
 		return new Promise((resolve) => resolve(address));
 	}
-	createAddress(addressState: AddressResponse, customerId:number): Promise<AddressResponse> {
+	createAddress(addressState: AddressRequest, customerId:number): Promise<AddressResponse> {
 		console.log(customerId);
 		return new Promise((resolve) => resolve(addressState));
 	}

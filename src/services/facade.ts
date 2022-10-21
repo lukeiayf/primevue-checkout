@@ -1,3 +1,4 @@
+import { AddressRequest } from "@/models/request/addressRequest";
 import { CardRequest } from "@/models/request/cardRequest";
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
@@ -16,7 +17,7 @@ export interface CustomerServiceable {
     putCustomer(customer: CustomerRequest, customerId: number): Promise<CustomerResponse>;
 }
 export interface AddressServiceable {
-    createAddress(addressState: AddressResponse, customerId: number): Promise<AddressResponse>;
+    createAddress(addressState: AddressRequest, customerId: number): Promise<AddressRequest>;
     getAddress(customerId: number): Promise<AddressResponse>;
 }
 export interface CardServiceable {

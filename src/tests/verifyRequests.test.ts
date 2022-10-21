@@ -37,7 +37,7 @@ describe("backend", () => {
 		const customer: Promise<CustomerResponse> = Backend.getInstance().getCustomerImplementation().getCustomer();
 		expect((await customer).id).toEqual(1);
 		expect((await customer).name).toEqual("customer name");
-		expect((await customer).cpf).toEqual("1009532345");
+		expect((await customer).cpf).toEqual("10095323678");
 		expect((await customer).email).toEqual("teste@teste.com");
 		expect((await customer).birthdate).toEqual(121019914);
 		expect((await customer).phone).toEqual("23453212");
@@ -59,7 +59,7 @@ describe("backend", () => {
 	test("putCustomer", async () => {
 		const customer: CustomerResponse = await Backend.getInstance().getCustomerImplementation().getCustomer();
 	
-		const updatedCustomer = Backend.getInstance().getCustomerImplementation().putCustomer(customer);
+		const updatedCustomer = Backend.getInstance().getCustomerImplementation().putCustomer(customer, 123);
 		expect((await updatedCustomer).name).toEqual("new customer name");
 
 	});

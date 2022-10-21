@@ -20,7 +20,7 @@
             <div style="width:45%">
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-info-circle" />
-                <InputText required id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
+                <InputMask mask="999.999.999-99" required id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
                   :class="{'full input-size p-invalid':v$.cpf.$invalid && submitted}" />
                 <label for="cpf">{{$t('cliente.cpf')}}*</label>
               </span>
@@ -140,7 +140,7 @@
           <div>
             <h5>{{$t('dadosPagamento')}}</h5>
 
-            <SelectButton class="button-payment" v-model="v$.paymentMethod.$model" :options="paymentOptions"
+            <SelectButton class="button-payment" v-model="v$.paymentMethod.$model" :options="payments"
               optionLabel="name" aria-labelledby="single" style="justify-content: center; display: flex;" />
 
             <div style="display: flex; flex-wrap: nowrap; justify-content: center;">
@@ -254,7 +254,6 @@
 <script setup lang="ts">
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
-import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
 import { useVuelidate } from "@vuelidate/core";
 import { email, maxLength, minLength, required, requiredIf } from "@vuelidate/validators";
 import cep from "cep-promise";
@@ -278,12 +277,13 @@ import { defaultState } from "../models/defaultState.model";
 import { CardRequest } from "../models/request/cardRequest";
 import { SaleRequest } from "../models/request/paymentRequest";
 import { CustomerResponse } from "../models/response/customerResponse";
-import { paymentOptions } from "../models/response/paymentMethodResponse";
+import { paymentOptions, paymentMethods, PaymentMethod } from "../models/response/paymentMethodResponse";
 import { Backend } from "../services/backend";
 import { useMainStore } from "../store/index";
 import TransactionSummaryComponent from "./TransactionSummaryComponent.vue";
-import moment from 'moment';
-import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
+import moment from "moment";
+import { AddressRequest } from "@/models/request/addressRequest";
+import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
 
 interface MessageError extends MessageProps {
   id: number,
@@ -307,146 +307,188 @@ let profileId: number;
 let isCard: Ref<boolean> = ref(false);
 let customer: Ref<CustomerResponse> = ref(new CustomerResponse());
 let address: Ref<AddressResponse> = ref(new AddressResponse());
-let customerId: Ref<number> = ref(null)
+let customerId: Ref<number> = ref(null);
 
+let payments: Ref<string[]> = ref([]);
+
+let paymentOptions2: PaymentMethod[] = [
+	{
+		name: "Cartão de crédito",
+		value: "CREDIT_CARD"
+	},
+	{
+		name: "Boleto",
+		value: "BANKSLIP"
+	},
+	{
+		name: "Pix",
+		value: "PIX"
+	}
+];
+
+function filterPayments(el){
+	for (let i = 0; i < payments.value.length; i++) {
+		if (el.value == payments.value[i]) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
+Backend.getInstance().getPagePayImplementation().getPaymentPage(1).then(
+	result => {
+		payments.value = result.paymentMethods;
+		paymentOptions2 = paymentMethods.filter(el => {});
+		console.log(payments.value);
+		console.log(paymentOptions2);
+	}
+);
 
 Backend.getInstance().getCustomerImplementation().getCustomer().then(
-  result => {
-    customer.value = result;
-    v$.value.username.$model = customer.value.name;
-    v$.value.cpf.$model = customer.value.cpf;
-    v$.value.birthdate.$model = moment(customer.value.birthdate).toDate();
-    v$.value.email.$model = customer.value.email;
-    v$.value.emailConfirmation.$model = customer.value.email;
-    v$.value.phone.$model = customer.value.phone;
-  }
+	result => {
+		customer.value = result;
+		v$.value.username.$model = customer.value.name;
+		v$.value.cpf.$model = customer.value.cpf;
+		v$.value.birthdate.$model = moment(customer.value.birthdate).toDate();
+		v$.value.email.$model = customer.value.email;
+		v$.value.emailConfirmation.$model = customer.value.email;
+		v$.value.phone.$model = customer.value.phone;
+	}
 );
 
 Backend.getInstance().getAddressImplementation().getAddress(1).then(
-  result => {
-    address.value = result;
-    v$.value.zipcode.$model = address.value.zipCode;
-    v$.value.city.$model = address.value.city;
-    v$.value.state.$model = address.value.state;
-    v$.value.street.$model = address.value.street;
-    v$.value.number.$model = address.value.number;
-    v$.value.lineTwo.$model = address.value.lineTwo;
-  }
-)
+	result => {
+		address.value = result;
+		v$.value.zipcode.$model = address.value.zipCode;
+		v$.value.city.$model = address.value.city;
+		v$.value.state.$model = address.value.state;
+		v$.value.street.$model = address.value.street;
+		v$.value.number.$model = address.value.number;
+		v$.value.lineTwo.$model = address.value.lineTwo;
+	}
+);
 
 
 const rules = {
-  username: { required },
-  email: { required, email },
-  emailConfirmation: { required },
-  cpf: { required, minLengthValue: minLength(11), validCpf },
-  birthdate: {},
-  phone: {},
-  zipcode: { required, minLengthValue: minLength(8) },
-  street: { required },
-  lineTwo: {},
-  number: { required },
-  state: { required },
-  city: { required },
-  paymentMethod: { required },
-  installments: { required },
+	username: { required },
+	email: { required, email },
+	emailConfirmation: { required },
+	cpf: { required, minLengthValue: minLength(11), validCpf },
+	birthdate: {},
+	phone: {},
+	zipcode: { required, minLengthValue: minLength(8) },
+	street: { required },
+	lineTwo: {},
+	number: { required },
+	state: { required },
+	city: { required },
+	paymentMethod: { required },
+	installments: { required },
 
-  cardBrand: { required: requiredIf(isCard) },
-  cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
-  dueDate: { required: requiredIf(isCard) },
-  securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
-  holderName: { required: requiredIf(isCard) },
-  holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
+	cardBrand: { required: requiredIf(isCard) },
+	cardNumber: { required: requiredIf(isCard), minLengthValue: minLength(13), maxLengthValue: maxLength(19) },
+	dueDate: { required: requiredIf(isCard) },
+	securityCode: { required: requiredIf(isCard), minLengthValue: minLength(3) },
+	holderName: { required: requiredIf(isCard) },
+	holderDocument: { minLengthValue: minLength(11), maxLengthValue: maxLength(18) }
 };
 
 const v$ = useVuelidate(rules, defaultState);
 
-
-
 function validateCep(inputCep: string) {
-  cep(inputCep).then(
-    (address) => {
-      v$.value.street.$model = address.street;
-      v$.value.city.$model = address.city;
-      v$.value.state.$model = address.state;
-      messagesList.value.pop();
-    }
-  ).catch(() => {
-    messagesList.value = [
-      { severity: "error", content: "Cep não encontrado", id: count.value++ },
-    ];
-  }
-  );
+	cep(inputCep).then(
+		(address) => {
+			v$.value.street.$model = address.street;
+			v$.value.city.$model = address.city;
+			v$.value.state.$model = address.state;
+			messagesList.value.pop();
+		}
+	).catch(() => {
+		messagesList.value = [
+			{ severity: "error", content: "Cep não encontrado", id: count.value++ },
+		];
+	}
+	);
+}
+
+function loadAddress() {
+	const AddressState: AddressRequest = {
+		zipCode: v$.value.zipcode.$model,
+		street: v$.value.street.$model,
+		number: v$.value.number.$model,
+		lineTwo: line2,
+		state: v$.value.state.$model,
+		city: v$.value.city.$model
+	};
+	Backend.getInstance().getAddressImplementation().createAddress(AddressState, customerId.value).then(result => {
+		address.value = result;
+	});
+}
+
+function loadCustomer(){
+	const customerState: CustomerRequest = {
+		name: v$.value.username.$model,
+		email: v$.value.email.$model,
+		cpf: v$.value.cpf.$model,
+		birthdate: v$.value.birthdate.$model.getTime(),
+		phone: v$.value.phone.$model
+	};
+
+	Backend.getInstance().getCustomerImplementation().getCustomerId(v$.value.cpf.$model).then(
+		result => {
+			customerId.value = result.customerId;
+		}
+	);
+	if (Object.keys(customer.value).length == 0) {
+		Backend.getInstance().getCustomerImplementation().createCustomer(customerState).then(() => {
+			Backend.getInstance().getCustomerImplementation().getCustomerId(v$.value.cpf.$model).then(
+				result => {
+					customerId.value = result.customerId;
+					loadAddress();
+				}
+			);
+		});
+	} else {
+		Backend.getInstance().getCustomerImplementation().putCustomer(customerState, customerId.value).then(() => loadAddress());
+	}
 }
 
 const handleSubmit = async (isFormValid: boolean) => {
-  submitted.value = true;
-  if (v$.value.paymentMethod.$model.value == 1 && !validDocument(v$.value.holderDocument.$model)) {
-    isFormValid = false;
-  }
-  if (!isFormValid) {
-    console.log("n passou");
-  } else {
-    console.log("passou");
-    store.createNewForm(defaultState);
-    const customerState: CustomerRequest = {
-        name: v$.value.username.$model,
-        email: v$.value.email.$model,
-        cpf: v$.value.cpf.$model,
-        birthdate: v$.value.birthdate.$model.getTime(),
-        phone: v$.value.phone.$model
-    };
+	submitted.value = true;
+	if (v$.value.paymentMethod.$model.value == 1 && !validDocument(v$.value.holderDocument.$model)) {
+		isFormValid = false;
+	}
+	if (!isFormValid) {
+		console.log("n passou");
+	} else {
+		console.log("passou");
+		store.createNewForm(defaultState);
+		
+		loadCustomer();
 
+		payment = {
+			//uuid: paymentPage.uuid,
+			uuid: "testeuuid",
+			customerId: customerId.value,
+			paymentType: store.defaultForms.paymentMethod.name,
+			installments: store.defaultForms.installments,
+		};
+		if (store.defaultForms.paymentMethod.name == "CREDIT_CARD") {
+			card = {
+				cardBrand: store.defaultForms.cardBrand.name,
+				cardNumber: store.defaultForms.cardNumber,
+				holderDocument: store.defaultForms.holderDocument,
+				holderName: store.defaultForms.holderName,
+				dueDate: store.defaultForms.dueDate.getTime(),
+				securityCode: parseInt(store.defaultForms.securityCode),
+			};
+			console.log(card);
+			payment.profileId = profileId;
+		}
 
-    Backend.getInstance().getCustomerImplementation().getCustomerId(v$.value.cpf.$model).then(
-      result => {
-        customerId.value = result.customerId;
-      }
-    );
-    if (Object.keys(customer.value).length == 0) {
-      const customerState: CustomerRequest = {
-        name: v$.value.username.$model,
-        email: v$.value.email.$model,
-        cpf: v$.value.cpf.$model,
-        birthdate: v$.value.birthdate.$model.getTime(),
-        phone: v$.value.phone.$model
-      };
-      customer.value = await Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
-    }
-
-    const AddressState: AddressResponse = {
-      zipCode: v$.value.zipcode.$model,
-      street: v$.value.street.$model,
-      number: v$.value.number.$model,
-      lineTwo: line2,
-      state: v$.value.state.$model,
-      city: v$.value.city.$model
-    };
-    const addressPromise: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().createAddress(AddressState, 123);
-    address.value = await addressPromise;
-
-    payment = {
-      //uuid: paymentPage.uuid,
-      uuid: "testeuuid",
-      customerId: customerId.value,
-      paymentType: store.defaultForms.paymentMethod.name,
-      installments: store.defaultForms.installments,
-    };
-    if (store.defaultForms.paymentMethod.name == "CREDIT_CARD") {
-      card = {
-        cardBrand: store.defaultForms.cardBrand.name,
-        cardNumber: store.defaultForms.cardNumber,
-        holderDocument: store.defaultForms.holderDocument,
-        holderName: store.defaultForms.holderName,
-        dueDate: store.defaultForms.dueDate.getTime(),
-        securityCode: parseInt(store.defaultForms.securityCode),
-      };
-      console.log(card);
-      payment.profileId = profileId;
-    }
-
-    showTransactionSummary.value = true;
-  }
+		showTransactionSummary.value = true;
+	}
 
 };
 
