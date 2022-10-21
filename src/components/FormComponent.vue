@@ -326,12 +326,10 @@ let paymentOptions2: PaymentMethod[] = [
 	}
 ];
 
-function filterPayments(el){
+function filterPayments(el: PaymentMethod){
 	for (let i = 0; i < payments.value.length; i++) {
 		if (el.value == payments.value[i]) {
 			return true;
-		} else {
-			return false;
 		}
 	}
 }
@@ -339,7 +337,7 @@ function filterPayments(el){
 Backend.getInstance().getPagePayImplementation().getPaymentPage(1).then(
 	result => {
 		payments.value = result.paymentMethods;
-		paymentOptions2 = paymentMethods.filter(el => {});
+		paymentOptions2 = paymentMethods.filter(filterPayments);
 		console.log(payments.value);
 		console.log(paymentOptions2);
 	}
