@@ -1,6 +1,5 @@
 /// <reference types="vite/client" />
 
-import { BackendImplementable } from "./services/facade";
 
 interface ImportMetaEnv {
     readonly VITE_APP_NAME: string;

@@ -1,71 +1,138 @@
 <template>
   <Card style="width: 50rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;">
-      <template #title>
-        <div style="display: flex; justify-content:flex-start; flex-direction: column">
-          <h5>{{$t('sumarioTransacao')}}</h5>
-        </div>
-      </template>
-      <template #content>
-        <h5>{{$t('dadosCliente')}}</h5>
-        <ul class="list">
-          <li class="item-list">
-              <strong>{{$t('cliente.nome')}}</strong>: {{props.customer.name}}
-          </li>
-          <li class="item-list">
-          <strong>{{$t('cliente.email')}}</strong>: {{props.customer.email}}
-          </li>
-        </ul>
-        <h5>{{$t('dadosPagamento')}}</h5>
-        <ul class="list">
-          <li class="item-list">
-            <strong>{{$t('metodoPagamento')}}</strong>: {{store.defaultForms.paymentMethod.name}}
-          </li>
-          <li class="item-list">
-            <strong>{{$t('quantidadeParcelas')}}</strong>: {{store.defaultForms.installments}}
-          </li>
-          <li v-if="store.defaultForms.paymentMethod.value == 3" class="item-list">
-            <strong>{{$t('detalhesPagamento.dataExpiracao')}}</strong>: Apenas para QRCODE
-          </li>
-          <li v-if="store.defaultForms.paymentMethod.value == 2" class="item-list">
-            <strong>{{$t('detalhesPagamento.dataVencimento')}}</strong>: Apenas para BOLETO
-          </li>
-        </ul>
-        <div v-if="store.defaultForms.paymentMethod.value == 2" style="display: flex; justify-content: center;">
-          <img :src="imgSrcBankslip" style="width:400px;" alt="Boleto"/>
-        </div>
-        <div v-if="store.defaultForms.paymentMethod.value == 3" style="display: flex; justify-content: center;">
-          <img :src="imgSrcPix" style="width:200px;" alt="PIX"/>
-        </div>
-      </template>
+    <template #title>
+      <div class="title">
+        <h5>{{ $t('sumarioTransacao') }}</h5>
+      </div>
+    </template>
+    <template #content>
+      <h5>{{ $t('dadosCliente') }}</h5>
+      <ul class="list">
+        <li class="item-list">
+          <strong>{{ $t('cliente.nome') }}</strong>: {{ props.customer.name }}
+        </li>
+        <li class="item-list">
+          <strong>{{ $t('cliente.email') }}</strong>: {{ props.customer.email }}
+        </li>
+      </ul>
+      <h5>{{ $t('dadosPagamento') }}</h5>
+      <ul class="list">
+        <li class="item-list">
+          <strong>{{ $t('metodoPagamento') }}</strong>: {{ paymentMethod }}
+        </li>
+        <li class="item-list">
+          <strong>{{ $t('quantidadeParcelas') }}</strong>: {{ props.payment.installments }}
+        </li>
+        <li type="date" v-if="props.payment.paymentType == 'PIX'" class="item-list">
+          <strong>{{ $t('detalhesPagamento.dataExpiracao') }}</strong>: {{ date }}
+        </li>
+        <li v-if="props.payment.paymentType == 'BANKSLIP'" class="item-list">
+          <strong>{{ $t('detalhesPagamento.dataVencimento') }}</strong>: {{ date }}
+        </li>
+
+      </ul>
+      <div v-if="props.payment.paymentType == 'BANKSLIP'" class="center">
+        <img :src="imgSrcBankslip" class="img-barcode" alt="Boleto" />
+      </div>
+      <div v-if="props.payment.paymentType == 'PIX'" class="container-qrcode">
+        <img :src="imgSrcPix" class="img-qrcode" alt="PIX" />
+        <Button type="submit" id="btn-copy" class="button" v-tooltip="'Clique para copiar'" v-if="props.payment.paymentType == 'PIX'" icon="pi pi-copy"
+          iconPos="left" @click="copyEmv()">{{textButton}}</Button>
+      </div>
+    </template>
   </Card>
 </template>
 
 <script setup lang="ts">
 import Card from "primevue/card";
 import "moment/locale/pt-br";
-import { useMainStore } from "@/store";
 import { CustomerResponse } from "@/models/response/customerResponse";
+import { SaleRequest } from "@/models/request/paymentRequest";
+import { Backend } from "@/services/backend";
+import { Ref, ref } from "vue";
+import moment from "moment";
+import Button from "primevue/button";
 
-const store = useMainStore();
 
 const imgSrcBankslip = "src/assets/boleto-logo.svg";
 const imgSrcPix = "src/assets/qrcode.png";
-
 const props = defineProps<{
-  customer: CustomerResponse
+  customer: CustomerResponse;
+  payment: SaleRequest;
+  location: string;
 }>();
+
+let date: Ref<string> = ref("");
+let code: Ref<string> = ref("");
+let paymentMethod: Ref<string> = ref("");
+let textButton: Ref<string> = ref("Pix copia e cola");
+
+
+
+Backend.getInstance().getPaymentImplementation().getPaymentInfo(props.location).then(
+	result => {
+		date.value = moment(result.date).format("DD/MM/yyyy");
+		code.value = result.code;
+	}
+);
+
+if (props.payment.paymentType == "CREDIT_CARD") {
+	paymentMethod.value = "Cartão de crédito";
+} else
+if (props.payment.paymentType == "BANKSLIP") {
+	paymentMethod.value = "Boleto";
+} else {
+	paymentMethod.value = "Pix";
+}
+
+function copyEmv(){
+	navigator.clipboard.writeText(code.value);
+	textButton.value = "Copiado!";
+	document.getElementById("btn-copy").classList.add("copy");
+}
 </script> 
 
 <style lang="scss" scoped>
+.center{
+  display: flex; 
+  justify-content: center;
+}
+.title{
+  display: flex; 
+  justify-content:flex-start; 
+  flex-direction: column
+}
 .list {
   padding: 1rem;
   list-style: none;
 }
+
 .item-list {
   border: #d4d9de solid 1px;
   border-radius: 3px;
   margin-bottom: 5px;
   padding: 0.2rem;
   font-size: small;
+}
+
+.container-qrcode {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.button {
+  width: 10rem !important;
+}
+.copy {
+  background-color: #5eb37f;
+  border: #5eb37f;
+}
+.img-barcode{
+  width:400px;
+}
+
+.img-qrcode{
+  width:200px;
 }
 </style>

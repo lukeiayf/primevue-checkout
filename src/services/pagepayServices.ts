@@ -6,6 +6,7 @@ import { AddressResponse } from "@/models/response/addressResponse";
 import { CardResponse } from "@/models/response/cardResponse";
 import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
 import { CustomerResponse } from "@/models/response/customerResponse";
+import { PaymentInfoResponse } from "@/models/response/paymentInfoResponse";
 import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
 import { AddressServiceable, CardServiceable, CustomerServiceable, PagePayServiceable, PaymentServiceable } from "./facade";
 
@@ -122,13 +123,13 @@ export class AddressBemPaggo implements AddressServiceable {
 	}
 }
 export class CardBemPaggo implements CardServiceable {
-	async createCard(cardState: CardRequest, customerId: number): Promise<CardRequest> {
+	async createCard(cardState: CardRequest, customerId: number): Promise<string> {
 		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customerId}/card`;        
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ cardState }) });
 			if (data.ok) {
-				data.headers.get("Location");
-				return await data.json();
+				const location = data.headers.get("Location");
+				return location;
 			} else {
 				throw new Error("erro no status da requisição");
 			}
@@ -152,12 +153,24 @@ export class CardBemPaggo implements CardServiceable {
 }
 
 export class PaymentBemPaggo implements PaymentServiceable {
-	async createPayment(paymentState: SaleRequest): Promise<SaleRequest> {
+	async getPaymentInfo(url: string): Promise<PaymentInfoResponse> {
+		try {
+			const response = await fetch(url, { method: "GET" });
+			if (response.ok) {
+				return await response.json();
+			} else {
+				throw new Error("erro no status da requisição");
+			}
+		} catch(error) {
+			throw new Error("erro na requisição");
+		}
+	}
+	async createPayment(paymentState: SaleRequest): Promise<string> {
 		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays`;        
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ paymentState }) });
 			if (data.ok) {
-				return await data.json();
+				return await data.headers.get("Location");
 			} else {
 				throw new Error("erro no status da requisição");
 			}

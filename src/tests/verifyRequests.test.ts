@@ -2,6 +2,7 @@ import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
 import { CardResponse } from "@/models/response/cardResponse";
 import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
+import { PaymentInfoResponse } from "@/models/response/paymentInfoResponse";
 import { describe, expect, test } from "vitest";
 import { CardRequest } from "../models/request/cardRequest";
 import { AddressResponse } from "../models/response/addressResponse";
@@ -106,13 +107,8 @@ describe("backend", () => {
 			dueDate: 121019914,
 			securityCode: 123
 		};
-		const card: Promise<CardRequest> = Backend.getInstance().getCardImplementation().createCard(cardState, 1);
-		expect((await card).cardBrand).toEqual("Mastercard");
-		expect((await card).cardNumber).toEqual("5448280000000007");
-		expect((await card).holderDocument).toEqual("38461175018");
-		expect((await card).holderName).toEqual("Nome Teste");
-		expect((await card).dueDate).toEqual(121019914);
-		expect((await card).securityCode).toEqual(123);
+		const url: string = await Backend.getInstance().getCardImplementation().createCard(cardState, 1);
+		expect((url)).toEqual("urlMock");
 
 	});
 	test("createPayment", async () => {
@@ -129,5 +125,10 @@ describe("backend", () => {
 		expect((await payment).paymentType).toEqual("CREDIT_CARD");
 		expect((await payment).installments).toEqual(2);
 		expect((await payment).profileId).toEqual(1);
+	});
+	test("getPayment", async () => {
+		const paymentInfo: PaymentInfoResponse = await Backend.getInstance().getPaymentImplementation().getPaymentInfo("urlMock");
+		expect(paymentInfo.code).toEqual("1235465421646545121");
+		expect(paymentInfo.date).toEqual(1665168260);
 	});
 });

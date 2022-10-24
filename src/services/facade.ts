@@ -5,6 +5,7 @@ import { SaleRequest } from "@/models/request/paymentRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
 import { CardResponse } from "@/models/response/cardResponse";
 import { CustomerResponse } from "@/models/response/customerResponse";
+import { PaymentInfoResponse } from "@/models/response/paymentInfoResponse";
 import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
 
 export interface PagePayServiceable {
@@ -21,11 +22,12 @@ export interface AddressServiceable {
     getAddress(customerId: number): Promise<AddressResponse>;
 }
 export interface CardServiceable {
-    createCard(cardState: CardRequest, customerId: number): Promise<CardRequest>;
+    createCard(cardState: CardRequest, customerId: number): Promise<string>;
     getCard(url: string): Promise<CardResponse>;
 }
 export interface PaymentServiceable {
-    createPayment(paymentState: SaleRequest): Promise<SaleRequest>;
+    createPayment(paymentState: SaleRequest): Promise<string>;
+    getPaymentInfo(url: string): Promise<PaymentInfoResponse>;
 }
 
 export interface BackendImplementable {

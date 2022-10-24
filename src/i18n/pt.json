@@ -22,7 +22,9 @@
 	"metodoPagamento": "Método de pagamento",
 	"detalhesPagamento": {
 		"dataExpiracao": "Data de expiração",
-		"dataVencimento": "Data de vencimento"
+		"dataVencimento": "Data de vencimento",
+		"linhaDigitavel": "Linha digitável",
+		"emv": "Pix copia e cola"
 	},
 	"cartao": {
 		"bandeira": "Bandeira",

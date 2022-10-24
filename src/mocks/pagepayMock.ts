@@ -6,6 +6,7 @@ import { SaleRequest } from "@/models/request/paymentRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
 import { CardResponse } from "@/models/response/cardResponse";
 import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
+import { PaymentInfoResponse } from "@/models/response/paymentInfoResponse";
 import { CustomerResponse } from "../models/response/customerResponse";
 import { PaymentPageResponse } from "../models/response/paymentPageResponse";
 import { AddressServiceable, BackendImplementable, CardServiceable, CustomerServiceable, PagePayServiceable, PaymentServiceable } from "../services/facade";
@@ -13,7 +14,7 @@ export class PagePayMock implements PagePayServiceable {
 	getPaymentPage(companyId: number): Promise<PaymentPageResponse> {
 		const obj = {
 			uuid: "90076629-34dc-4a26-a333-22fab585ff5d",
-			image: "https://image.io/product.jpeg",
+			image: "https://www.cupcom.com.br/wp-content/uploads/2020/10/IMAGENS-SITEuv-vuejs.jpg",
 			installmentType: "CARD_INSTALLMENT",
 			description: "Descrição",
 			plan: {
@@ -101,9 +102,9 @@ export class AddressMock implements AddressServiceable {
 
 }
 export class CardMock implements CardServiceable {
-	createCard(cardState: CardRequest, customerId:number): Promise<CardRequest> {
+	createCard(cardState: CardRequest, customerId:number): Promise<string> {
 		console.log(customerId);
-		return new Promise((resolve)=>resolve(cardState));
+		return new Promise((resolve)=>resolve("urlMock"));
 	}
 	getCard(url:string): Promise<CardResponse> {
 		console.log(url);
@@ -113,9 +114,19 @@ export class CardMock implements CardServiceable {
 	}
 
 }
+
 export class PaymentMock implements PaymentServiceable {
-	createPayment(paymentState: SaleRequest): Promise<SaleRequest> {
-		return new Promise((resolve)=>resolve(paymentState));
+	createPayment(paymentState: SaleRequest): Promise<string> {
+		console.log(paymentState);
+		return new Promise((resolve)=>resolve("urlMock"));
+	}
+	getPaymentInfo(url: string): Promise<PaymentInfoResponse> {
+		const paymentInfo: PaymentInfoResponse = {
+			code: "1235465421646545121",
+			date: 1665168260
+		};
+		console.log(url);
+		return new Promise((resolve) => resolve(paymentInfo));
 	}
 
 }

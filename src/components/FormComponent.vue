@@ -1,5 +1,5 @@
 <template>
-  <Card style="width: 50rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;"
+  <Card class="card"
     v-show="!showTransactionSummary">
     <template #content>
       <form @submit.prevent="handleSubmit(!v$.$invalid && !v.$invalid)" class="p-fluid">
@@ -16,8 +16,8 @@
             <small v-if="(v$.username.$invalid && submitted) || v$.username.$pending"
               class="p-error">{{$t('erros.cliente.nomeRequerido')}}</small>
           </div>
-          <div style="display: flex; flex-direction: row; justify-content: space-between;">
-            <div style="width:45%">
+          <div class="flex-row">
+            <div class="width-45">
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-info-circle" />
                 <InputMask mask="999.999.999-99" required id="cpf" type="text" v-model="v$.cpf.$model" class="full input-size"
@@ -27,7 +27,7 @@
               <small v-if="(v$.cpf.$invalid && submitted) || v$.cpf.$pending"
                 class="p-error">{{$t('erros.cliente.cpfRequerido')}}</small>
             </div>
-            <div style="width: 45%;">
+            <div class="width-45">
               <span class="p-float-label">
                 <Calendar inputId="birthdate" v-model="v$.birthdate.$model" autocomplete="off" class="full date-size"
                   dateFormat="dd/mm/yy" :showIcon="true" />
@@ -36,8 +36,8 @@
             </div>
           </div>
           <InlineMessage v-if="messages.length">{{messages[0]?.content}}</InlineMessage>
-          <div style="display: flex; flex-direction: row; justify-content: space-between;">
-            <div style="width: 45%;">
+          <div class="flex-row">
+            <div class="width-45">
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-at"></i>
                 <InputText required id="email" type="text" v-model="v$.email.$model" class="full input-size"
@@ -47,7 +47,7 @@
               <small v-if="(v$.email.$invalid && submitted) || v$.email.$pending"
                 class="p-error">{{$t('erros.cliente.emailRequerido')}}</small>
             </div>
-            <div style="width: 45%;">
+            <div class="width-45">
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-at"></i>
                 <InputText required id="emailConfirmation" type="text" v-model="v$.emailConfirmation.$model"
@@ -59,7 +59,7 @@
               <small v-if="(!equalsToEmail)" class="p-error">{{$t('erros.cliente.emailConfirmacao')}}</small>
             </div>
           </div>
-          <div style="width: 45%;">
+          <div class="width-45">
             <span class="p-float-label p-input-icon-right">
               <i class="pi pi-phone"></i>
               <InputText id="phone" type="text" v-model="v$.phone.$model" class="full input-size" />
@@ -81,8 +81,8 @@
             <small v-if="(v$.zipcode.$invalid && submitted) || v$.zipcode.$pending"
               class="p-error">{{$t('erros.endereco.cepRequerido')}}</small>
           </div>
-          <div style="display: flex; flex-direction: row; justify-content: space-between;">
-            <div style="width: 45%;">
+          <div class="flex-row">
+            <div class="width-45">
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-flag"></i>
                 <InputText required id="state" type="text" v-model="v$.state.$model" class="full input-size"
@@ -93,7 +93,7 @@
               <small v-if="(v$.state.$invalid && submitted) || v$.state.$pending"
                 class="p-error">{{$t('erros.endereco.estadoRequerido')}}</small>
             </div>
-            <div style="width: 45%;">
+            <div class="width-45">
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-flag"></i>
                 <InputText required id="city" type="text" v-model="v$.city.$model" class="full input-size"
@@ -116,8 +116,8 @@
             <small v-if="(v$.street.$invalid && submitted) || v$.street.$pending"
               class="p-error">{{$t('erros.endereco.logradouroRequerido')}}</small>
           </div>
-          <div style="display: flex; flex-direction: row; justify-content: space-between;">
-            <div style="width: 45%;">
+          <div class="flex-row">
+            <div class="width-45">
               <span class="p-float-label p-input-icon-right">
                 <i class="pi pi-home"></i>
                 <InputText required id="number" type="text" v-model="v$.number.$model" class="full input-size"
@@ -128,7 +128,7 @@
               <small v-if="(v$.number.$invalid && submitted) || v$.number.$pending"
                 class="p-error">{{$t('erros.endereco.numeroRequerido')}}</small>
             </div>
-            <div style="width: 45%;">
+            <div class="width-45">
               <span class=" p-float-label p-input-icon-right">
                 <i class="pi pi-building"></i>
                 <InputText id="line2" type="text" v-model="line2" class="full input-size" />
@@ -143,7 +143,7 @@
             <SelectButton class="button-payment" v-model="v$.paymentMethod.$model" :options="paymentOptions2"
               optionLabel="name" aria-labelledby="single" style="justify-content: center; display: flex;" />
 
-            <div style="display: flex; flex-wrap: nowrap; justify-content: center;">
+            <div class="flex-nowrap">
               <span class="p-float-label">
                 <InputNumber v-model="v$.installments.$model" id="installments" showButtons mode="decimal" :min="1"
                   :max="maxInstallments" :class="{'full input-size p-invalid':v$.installments.$invalid && submitted}" />
@@ -176,8 +176,8 @@
                 <small v-if="(v$.cardNumber.$invalid && submitted) || v$.cardNumber.$pending"
                   class="p-error">{{$t('erros.cartao.numeroRequerido')}}</small>
               </div>
-              <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                <div style="width: 45%;">
+              <div class="flex-row">
+                <div class="width-45">
                   <span>
                     <div class="field col-12 md:col-4">
                       <Calendar required inputId="dueDate" class="dropdown-size" v-model="v$.dueDate.$model"
@@ -188,11 +188,10 @@
                   <small v-if="(v$.dueDate.$invalid && submitted) || v$.dueDate.$pending"
                     class="p-error">{{$t('erros.cartao.validadeRequerida')}}</small>
                 </div>
-                <div style="width: 45%;">
+                <div class="width-45">
                   <span class="p-float-label p-input-icon-right">
                     <i class="pi pi-lock"></i>
                     <InputText required id="securityCode" v-model="v$.securityCode.$model" class="full input-size"
-                      style="width: 100%"
                       :class="{'full input-size p-invalid':v$.securityCode.$invalid && submitted}" />
                     <label for="number"
                       :class="{'p-error':v$.securityCode.$invalid && submitted}">{{$t('cartao.codigo')}}*</label>
@@ -246,7 +245,7 @@
     </template>
   </Card>
 
-  <TransactionSummaryComponent :customer="customer" v-if="showTransactionSummary">
+  <TransactionSummaryComponent :customer="customer" :location="paymentLocation" :payment="payment" v-if="showTransactionSummary">
   </TransactionSummaryComponent>
 </template>
 
@@ -279,7 +278,6 @@ import { SaleRequest } from "../models/request/paymentRequest";
 import { CustomerResponse } from "../models/response/customerResponse";
 import { paymentMethods, PaymentMethod } from "../models/response/paymentMethodResponse";
 import { Backend } from "../services/backend";
-import { useMainStore } from "../store/index";
 import TransactionSummaryComponent from "./TransactionSummaryComponent.vue";
 import moment from "moment";
 import { AddressRequest } from "@/models/request/addressRequest";
@@ -294,14 +292,13 @@ const maxInstallments: Ref<number> = ref(12);
 const submitted: Ref<boolean> = ref(false);
 const line2 = "";
 const today: Ref<Date> = ref(new Date());
-const store = useMainStore();
 const messagesList: Ref<MessageError[]> = ref([]);
 
 const count = ref(0);
 
 
 let showTransactionSummary: Ref<boolean> = ref(false);
-let payment: SaleRequest;
+let payment: Ref<SaleRequest> = ref(new SaleRequest());
 let card: CardRequest;
 let profileId: number;
 let isCard: Ref<boolean> = ref(false);
@@ -309,6 +306,7 @@ let customer: Ref<CustomerResponse> = ref(new CustomerResponse());
 let address: Ref<AddressResponse> = ref(new AddressResponse());
 let customerId: Ref<number> = ref(null);
 let paymentPage: Ref<PaymentPageResponse> = ref(new PaymentPageResponse());
+let paymentLocation: Ref<string> = ref("");
 
 let payments: Ref<string[]> = ref([]);
 
@@ -413,14 +411,14 @@ function validateCep(inputCep: string) {
 }
 
 function loadPayment(){
-	payment = {
+	payment.value = {
 		//uuid: paymentPage.uuid,
 		uuid: paymentPage.value.uuid,
 		customerId: customerId.value,
 		paymentType: v$.value.paymentMethod.$model.value,
 		installments: v$.value.installments.$model,
 	};
-	if (store.defaultForms.paymentMethod.value == "CREDIT_CARD") {
+	if (v$.value.paymentMethod.$model.value == "CREDIT_CARD") {
 		card = {
 			cardBrand: v$.value.cardBrand.$model.name,
 			cardNumber: v$.value.cardNumber.$model,
@@ -430,14 +428,23 @@ function loadPayment(){
 			securityCode: parseInt(v$.value.securityCode.$model),
 		};
 		Backend.getInstance().getCardImplementation().createCard(card, customerId.value).then(
-			() => {
-				console.log(customerId);
+			result => {
+				Backend.getInstance().getCardImplementation().getCard(result).then(
+					result => {
+						profileId = result.profileId;
+						payment.value.profileId = profileId;
+					}
+				);
 			}
 		);
-		console.log(card);
-		payment.profileId = profileId;
+		
 	}
-	Backend.getInstance().getPaymentImplementation().createPayment(payment);
+	Backend.getInstance().getPaymentImplementation().createPayment(payment.value).then(
+		result => {
+			paymentLocation.value = result;
+			showTransactionSummary.value = true;
+		}
+	);
 }
 
 function loadAddress() {
@@ -492,31 +499,10 @@ const handleSubmit = async (isFormValid: boolean) => {
 		console.log("n passou");
 	} else {
 		console.log("passou");
-		store.createNewForm(defaultState);
 		
 		loadCustomer();
 
-		payment = {
-			//uuid: paymentPage.uuid,
-			uuid: "testeuuid",
-			customerId: customerId.value,
-			paymentType: store.defaultForms.paymentMethod.value,
-			installments: store.defaultForms.installments,
-		};
-		if (store.defaultForms.paymentMethod.value == "CREDIT_CARD") {
-			card = {
-				cardBrand: store.defaultForms.cardBrand.name,
-				cardNumber: store.defaultForms.cardNumber,
-				holderDocument: store.defaultForms.holderDocument,
-				holderName: store.defaultForms.holderName,
-				dueDate: store.defaultForms.dueDate.getTime(),
-				securityCode: parseInt(store.defaultForms.securityCode),
-			};
-			console.log(card);
-			payment.profileId = profileId;
-		}
-
-		showTransactionSummary.value = true;
+		
 	}
 
 };
@@ -525,6 +511,31 @@ const handleSubmit = async (isFormValid: boolean) => {
 </script> 
 
 <style lang="scss" scoped>
+.flex-row{
+  display: flex !important; 
+  flex-direction: row !important; 
+  justify-content: space-between !important;
+}
+.flex-column{
+  display: flex !important; 
+  flex-direction: column !important; 
+  justify-content: space-between !important;
+}
+.card{
+  width: 50rem; 
+  margin-bottom: 1.5em; 
+  margin-top:1.5em; 
+  align-items: center;
+}
+
+.flex-nowrap{
+  display: flex !important; 
+  flex-wrap: nowrap !important; 
+  justify-content: center !important;
+}
+.width-45{
+  width:45%
+}
 .input-area>* {
   display: block;
   margin-bottom: 1.5rem;
