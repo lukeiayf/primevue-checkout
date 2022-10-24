@@ -41,9 +41,8 @@ export const defaultState: DefaultState = reactive({
 	state: "",
 	city: "",
 	paymentMethod: {
-		name: "Cartão",
-		value: 1,
-		message: "" 
+		name: "Cartão de crédito",
+		value: "CREDIT_CARD"
 	},
 	installments: 1,
 	cardNumber: "",

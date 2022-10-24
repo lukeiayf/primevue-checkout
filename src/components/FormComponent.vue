@@ -140,7 +140,7 @@
           <div>
             <h5>{{$t('dadosPagamento')}}</h5>
 
-            <SelectButton class="button-payment" v-model="v$.paymentMethod.$model" :options="payments"
+            <SelectButton class="button-payment" v-model="v$.paymentMethod.$model" :options="paymentOptions2"
               optionLabel="name" aria-labelledby="single" style="justify-content: center; display: flex;" />
 
             <div style="display: flex; flex-wrap: nowrap; justify-content: center;">
@@ -152,7 +152,7 @@
               </span>
             </div>
 
-            <div v-if="v$.paymentMethod.$model.value == 1" class="input-area" style="margin-top: 25px">
+            <div v-if="v$.paymentMethod.$model.value == 'CREDIT_CARD'" class="input-area" style="margin-top: 25px">
               <div>
                 <span class="p-float-label" v-if="v$.cardNumber.$model.length > 13">
                   <Dropdown required inputStyle="padding: 2px; padding-left: 6px" v-model="v.cardBrand.$model"
@@ -230,12 +230,12 @@
 
           <div>
             <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
-              v-if="v$.paymentMethod.$model.value == 1" icon="pi pi-play" iconPos="left" />
+              v-if="v$.paymentMethod.$model.value == 'CREDIT_CARD'" icon="pi pi-play" iconPos="left" />
             <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
-              v-tooltip="'Será gerado um Boleto Bancário'" v-if="v$.paymentMethod.$model.value == 2" icon="pi pi-play"
+              v-tooltip="'Será gerado um Boleto Bancário'" v-if="v$.paymentMethod.$model.value == 'BANKSLIP'" icon="pi pi-play"
               iconPos="left" />
             <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
-              v-tooltip="'Será gerado um QR code'" v-if="v$.paymentMethod.$model.value == 3" icon="pi pi-play"
+              v-tooltip="'Será gerado um QR code'" v-if="v$.paymentMethod.$model.value == 'PIX'" icon="pi pi-play"
               iconPos="left" />
           </div>
         </div>
@@ -277,7 +277,7 @@ import { defaultState } from "../models/defaultState.model";
 import { CardRequest } from "../models/request/cardRequest";
 import { SaleRequest } from "../models/request/paymentRequest";
 import { CustomerResponse } from "../models/response/customerResponse";
-import { paymentOptions, paymentMethods, PaymentMethod } from "../models/response/paymentMethodResponse";
+import { paymentMethods, PaymentMethod } from "../models/response/paymentMethodResponse";
 import { Backend } from "../services/backend";
 import { useMainStore } from "../store/index";
 import TransactionSummaryComponent from "./TransactionSummaryComponent.vue";
@@ -308,6 +308,7 @@ let isCard: Ref<boolean> = ref(false);
 let customer: Ref<CustomerResponse> = ref(new CustomerResponse());
 let address: Ref<AddressResponse> = ref(new AddressResponse());
 let customerId: Ref<number> = ref(null);
+let paymentPage: Ref<PaymentPageResponse> = ref(new PaymentPageResponse());
 
 let payments: Ref<string[]> = ref([]);
 
@@ -336,6 +337,7 @@ function filterPayments(el: PaymentMethod){
 
 Backend.getInstance().getPagePayImplementation().getPaymentPage(1).then(
 	result => {
+		paymentPage.value = result;
 		payments.value = result.paymentMethods;
 		paymentOptions2 = paymentMethods.filter(filterPayments);
 		console.log(payments.value);
@@ -410,6 +412,34 @@ function validateCep(inputCep: string) {
 	);
 }
 
+function loadPayment(){
+	payment = {
+		//uuid: paymentPage.uuid,
+		uuid: paymentPage.value.uuid,
+		customerId: customerId.value,
+		paymentType: v$.value.paymentMethod.$model.value,
+		installments: v$.value.installments.$model,
+	};
+	if (store.defaultForms.paymentMethod.value == "CREDIT_CARD") {
+		card = {
+			cardBrand: v$.value.cardBrand.$model.name,
+			cardNumber: v$.value.cardNumber.$model,
+			holderDocument: v$.value.holderDocument.$model,
+			holderName: v$.value.holderName.$model,
+			dueDate: v$.value.dueDate.getTime(),
+			securityCode: parseInt(v$.value.securityCode.$model),
+		};
+		Backend.getInstance().getCardImplementation().createCard(card, customerId.value).then(
+			() => {
+				console.log(customerId);
+			}
+		);
+		console.log(card);
+		payment.profileId = profileId;
+	}
+	Backend.getInstance().getPaymentImplementation().createPayment(payment);
+}
+
 function loadAddress() {
 	const AddressState: AddressRequest = {
 		zipCode: v$.value.zipcode.$model,
@@ -421,6 +451,7 @@ function loadAddress() {
 	};
 	Backend.getInstance().getAddressImplementation().createAddress(AddressState, customerId.value).then(result => {
 		address.value = result;
+		loadPayment();
 	});
 }
 
@@ -454,7 +485,7 @@ function loadCustomer(){
 
 const handleSubmit = async (isFormValid: boolean) => {
 	submitted.value = true;
-	if (v$.value.paymentMethod.$model.value == 1 && !validDocument(v$.value.holderDocument.$model)) {
+	if (v$.value.paymentMethod.$model.value == "CREDIT_CARD" && !validDocument(v$.value.holderDocument.$model)) {
 		isFormValid = false;
 	}
 	if (!isFormValid) {
@@ -469,10 +500,10 @@ const handleSubmit = async (isFormValid: boolean) => {
 			//uuid: paymentPage.uuid,
 			uuid: "testeuuid",
 			customerId: customerId.value,
-			paymentType: store.defaultForms.paymentMethod.name,
+			paymentType: store.defaultForms.paymentMethod.value,
 			installments: store.defaultForms.installments,
 		};
-		if (store.defaultForms.paymentMethod.name == "CREDIT_CARD") {
+		if (store.defaultForms.paymentMethod.value == "CREDIT_CARD") {
 			card = {
 				cardBrand: store.defaultForms.cardBrand.name,
 				cardNumber: store.defaultForms.cardNumber,

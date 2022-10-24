@@ -127,6 +127,7 @@ export class CardBemPaggo implements CardServiceable {
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ cardState }) });
 			if (data.ok) {
+				data.headers.get("Location");
 				return await data.json();
 			} else {
 				throw new Error("erro no status da requisição");
