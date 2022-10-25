@@ -14,7 +14,7 @@ describe("backend", () => {
 	test("getPagepay", async () => {
 		const pagepay: PaymentPageResponse = await Backend.getInstance().getPagePayImplementation().getPaymentPage(1);
 		expect(pagepay.uuid).toEqual("90076629-34dc-4a26-a333-22fab585ff5d");
-		expect(pagepay.image).toEqual("https://image.io/product.jpeg");
+		expect(pagepay.image).toEqual("https://www.cupcom.com.br/wp-content/uploads/2020/10/IMAGENS-SITEuv-vuejs.jpg");
 		expect(pagepay.installmentType).toEqual("CARD_INSTALLMENT");
 		expect(pagepay.description).toEqual("Descrição");
 		expect(pagepay.plan.id).toEqual(1);
@@ -119,12 +119,8 @@ describe("backend", () => {
 			installments:2,
 			profileId:1
 		};
-		const payment: Promise<SaleRequest> = Backend.getInstance().getPaymentImplementation().createPayment(paymentState);
-		expect((await payment).uuid).toEqual("90076629-34dc-4a26-a333-22fab585ff5d");
-		expect((await payment).customerId).toEqual(1);
-		expect((await payment).paymentType).toEqual("CREDIT_CARD");
-		expect((await payment).installments).toEqual(2);
-		expect((await payment).profileId).toEqual(1);
+		const payment: string = await Backend.getInstance().getPaymentImplementation().createPayment(paymentState);
+		expect( payment).toEqual("urlMock");
 	});
 	test("getPayment", async () => {
 		const paymentInfo: PaymentInfoResponse = await Backend.getInstance().getPaymentImplementation().getPaymentInfo("urlMock");
