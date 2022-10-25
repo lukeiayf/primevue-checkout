@@ -4,76 +4,15 @@
       <form @submit.prevent="handleSubmit(!v$.$invalid && !v.$invalid)" class="p-fluid">
         <h5>{{ $t('dadosCliente') }}</h5>
         <div class="input-area">
-          <div>
-            <span class="p-float-label p-input-icon-right">
-              <i class="pi pi-user" />
-              <InputText id="username" type="text" v-model="v$.username.$model" class="full input-size"
-                :class="{ 'full input-size p-invalid': v$.username.$invalid && submitted }" />
-              <label for="username"
-                :class="{ ' full p-inputtext-sm p-error': v$.username.$invalid && submitted }">{{ $t('cliente.nome') }}*</label>
-            </span>
-            <small v-if="(v$.username.$invalid && submitted) || v$.username.$pending"
-              class="p-error">{{ $t('erros.cliente.nomeRequerido') }}</small>
-          </div>
-          <div class="flex-row">
-            <div class="width-45">
-              <span class="p-float-label p-input-icon-right">
-                <i class="pi pi-info-circle" />
-                <InputMask mask="999.999.999-99" required id="cpf" type="text" v-model="v$.cpf.$model"
-                  class="full input-size" :class="{ 'full input-size p-invalid': v$.cpf.$invalid && submitted }" />
-                <label for="cpf">{{ $t('cliente.cpf') }}*</label>
-              </span>
-              <small v-if="(v$.cpf.$invalid && submitted) || v$.cpf.$pending"
-                class="p-error">{{ $t('erros.cliente.cpfRequerido') }}</small>
-            </div>
-            <div class="width-45">
-              <span class="p-float-label">
-                <Calendar inputId="birthdate" v-model="v$.birthdate.$model" autocomplete="off" class="full date-size"
-                  dateFormat="dd/mm/yy" :showIcon="true" />
-                <label for="birthdate">{{ $t('cliente.nascimento') }}</label>
-              </span>
-            </div>
-          </div>
-          <InlineMessage v-if="messages.length">{{ messages[0]?.content }}</InlineMessage>
-          <div class="flex-row">
-            <div class="width-45">
-              <span class="p-float-label p-input-icon-right">
-                <i class="pi pi-at"></i>
-                <InputText required id="email" type="text" v-model="v$.email.$model" class="full input-size"
-                  :class="{ 'full input-size p-invalid': v$.email.$invalid && submitted }" />
-                <label for="email" :class="{ 'p-error': v$.email.$invalid && submitted }">{{ $t('cliente.email') }}*</label>
-              </span>
-              <small v-if="(v$.email.$invalid && submitted) || v$.email.$pending"
-                class="p-error">{{ $t('erros.cliente.emailRequerido') }}</small>
-            </div>
-            <div class="width-45">
-              <span class="p-float-label p-input-icon-right">
-                <i class="pi pi-at"></i>
-                <InputText required id="emailConfirmation" type="text" v-model="v$.emailConfirmation.$model"
-                  class="full input-size" :class="{ 'full input-size p-invalid': !equalsToEmail }"
-                  @blur="verifyEmail(v$.email.$model, v$.emailConfirmation.$model)" />
-                <label for="emailConfirmation"
-                  :class="{ 'p-error': !equalsToEmail }">{{ $t('cliente.confirmacaoEmail') }}*</label>
-              </span>
-              <small v-if="(!equalsToEmail)" class="p-error">{{ $t('erros.cliente.emailConfirmacao') }}</small>
-            </div>
-          </div>
-          <div class="width-45">
-            <span class="p-float-label p-input-icon-right">
-              <i class="pi pi-phone"></i>
-              <InputText id="phone" type="text" v-model="v$.phone.$model" class="full input-size" />
-              <label for="phone">{{ $t('cliente.telefone') }}</label>
-            </span>
-          </div>
+          <CustomerComponent :submitted="submitted" ></CustomerComponent>
           <h5>{{ $t('dadosEndereco') }}</h5>
           <AddressComponent :submitted="submitted"></AddressComponent>
           <div>
             <h5>{{ $t('dadosPagamento') }}</h5>
-            <SelectButton class="button-payment" v-model="v$.paymentMethod.$model" :options="paymentOptions2"
-              optionLabel="name" aria-labelledby="single" style="justify-content: center; display: flex;" />
-            <PaymentComponent :submitted="submitted"></PaymentComponent>
+            <SelectButton class="button-payment center-button" v-model="v$.paymentMethod.$model" :options="paymentOptions2"
+              optionLabel="name" aria-labelledby="single"/>
+            <PaymentComponent :submitted="submitted" :maxInstallments="maxInstallments"></PaymentComponent>
           </div>
-
           <div>
             <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
               v-if="v$.paymentMethod.$model.value == 'CREDIT_CARD'" icon="pi pi-play" iconPos="left" />
@@ -87,9 +26,6 @@
         </div>
       </form>
     </template>
-    <template #footer>
-
-    </template>
   </Card>
 
   <TransactionSummaryComponent :customer="customer" :location="paymentLocation" :payment="payment"
@@ -99,33 +35,28 @@
 
 
 <script setup lang="ts">
+import AddressComponent from "@/components/AddressComponent.vue";
+import CustomerComponent from "@/components/CustomerComponent.vue";
+import PaymentComponent from "@/components/PaymentComponent.vue";
+import { v$ } from "@/helpers/vuelidadeConfig";
+import { AddressRequest } from "@/models/request/addressRequest";
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
+import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
+import moment from "moment";
 import "moment/locale/pt-br";
 import Button from "primevue/button";
-import Calendar from "primevue/calendar";
 import Card from "primevue/card";
-import InlineMessage from "primevue/inlinemessage";
-import InputMask from "primevue/inputmask";
-import InputText from "primevue/inputtext";
 import SelectButton from "primevue/selectbutton";
 import { Ref, ref } from "vue";
-import { messages } from "../helpers/cpfValidator";
-import { equalsToEmail, verifyEmail } from "../helpers/validateEmail";
 import { validDocument } from "../helpers/validDocument";
 import { v } from "../helpers/verifyCard";
 import { CardRequest } from "../models/request/cardRequest";
 import { SaleRequest } from "../models/request/paymentRequest";
 import { CustomerResponse } from "../models/response/customerResponse";
-import { paymentMethods, PaymentMethod } from "../models/response/paymentMethodResponse";
+import { PaymentMethod, paymentMethods } from "../models/response/paymentMethodResponse";
 import { Backend } from "../services/backend";
 import TransactionSummaryComponent from "./TransactionSummaryComponent.vue";
-import moment from "moment";
-import { AddressRequest } from "@/models/request/addressRequest";
-import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
-import { v$ } from "@/helpers/vuelidadeConfig";
-import PaymentComponent from "@/components/PaymentComponent.vue";
-import AddressComponent from "@/components/AddressComponent.vue";
 
 const submitted: Ref<boolean> = ref(false);
 
@@ -140,7 +71,6 @@ let paymentPage: Ref<PaymentPageResponse> = ref(new PaymentPageResponse());
 let paymentLocation: Ref<string> = ref("");
 
 let payments: Ref<string[]> = ref([]);
-
 let paymentOptions2: PaymentMethod[] = [
 	{
 		name: "Cartão de crédito",
@@ -155,6 +85,7 @@ let paymentOptions2: PaymentMethod[] = [
 		value: "PIX"
 	}
 ];
+let maxInstallments: Ref<number> = ref(1);
 
 function filterPayments(el: PaymentMethod) {
 	for (let i = 0; i < payments.value.length; i++) {
@@ -169,8 +100,7 @@ Backend.getInstance().getPagePayImplementation().getPaymentPage(1).then(
 		paymentPage.value = result;
 		payments.value = result.paymentMethods;
 		paymentOptions2 = paymentMethods.filter(filterPayments);
-		console.log(payments.value);
-		console.log(paymentOptions2);
+		paymentPage.value.plan ? maxInstallments.value = paymentPage.value.plan.maxInstallments : maxInstallments.value = paymentPage.value.loose.maxInstallments;
 	}
 );
 
@@ -364,5 +294,10 @@ const handleSubmit = async (isFormValid: boolean) => {
   height: 27.33px;
   padding: -2px;
   padding-left: -6px;
+}
+
+.center-button {
+  justify-content: center;
+  display: flex;
 }
 </style>

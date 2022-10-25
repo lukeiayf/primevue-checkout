@@ -2,7 +2,7 @@
   <div class="flex-nowrap">
     <span class="p-float-label">
       <InputNumber v-model="v$.installments.$model" id="installments" showButtons mode="decimal" :min="1"
-        :max="maxInstallments" :class="{ 'full input-size p-invalid': v$.installments.$invalid && props.submitted }" />
+        :max="props.maxInstallments" :class="{ 'full input-size p-invalid': v$.installments.$invalid && props.submitted }" />
       <label for="number" :class="{ 'p-error': v$.installments.$invalid && props.submitted }">{{ $t('quantidadeParcelas') }}*</label>
     </span>
   </div>
@@ -87,14 +87,12 @@ import InputNumber from "primevue/inputnumber";
 import { Ref, ref } from "vue";
 import { v$ } from "@/helpers/vuelidadeConfig";
 
-const maxInstallments: Ref<number> = ref(12);
 const today: Ref<Date> = ref(new Date());
 
 const props = defineProps<{
   submitted: boolean;
+  maxInstallments: number;
 }>();
-
-
 </script>
 
 
@@ -125,7 +123,6 @@ const props = defineProps<{
 .input-size {
   padding: 2px;
 }
-
 
 .dropdown-size {
   height: 27.33px;

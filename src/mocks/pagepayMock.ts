@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { AddressRequest } from "@/models/request/addressRequest";
 import { CardRequest } from "@/models/request/cardRequest";
@@ -20,7 +21,7 @@ export class PagePayMock implements PagePayServiceable {
 			plan: {
 				id: companyId,
 				name: "Plano Pro",
-				maxInstallments: 1,
+				maxInstallments: 4,
 				accessionValue: 1,
 				value: 10.50,
 				frequency: "MONTHLY",
@@ -67,16 +68,14 @@ export class CustomerMock implements CustomerServiceable {
 	putCustomer(customer: CustomerRequest, customerId: number): Promise<CustomerResponse>{
 		const updatedCustomer = {
 			...customer,
-			id: 2,
+			id: customerId,
 			name: "new customer name"
 		};
-		console.log(customerId);
 		return new Promise((resolve)=>resolve(updatedCustomer));
 	}
 	getCustomerId(document: string): Promise<CustomerMinimalResponse>{
-		console.log(document);
 		const customer = {
-			customerId: 1
+			customerId: 1,
 		};
 		return new Promise((resolve) => resolve(customer));
 	}
@@ -84,7 +83,6 @@ export class CustomerMock implements CustomerServiceable {
 
 export class AddressMock implements AddressServiceable {
 	getAddress(customerId:number): Promise<AddressResponse> {
-		console.log(customerId);
 		const address = {
 			street: "Rua 1",
 			number: "1",
@@ -96,18 +94,15 @@ export class AddressMock implements AddressServiceable {
 		return new Promise((resolve) => resolve(address));
 	}
 	createAddress(addressState: AddressRequest, customerId:number): Promise<AddressResponse> {
-		console.log(customerId);
 		return new Promise((resolve) => resolve(addressState));
 	}
 
 }
 export class CardMock implements CardServiceable {
 	createCard(cardState: CardRequest, customerId:number): Promise<string> {
-		console.log(customerId);
 		return new Promise((resolve)=>resolve("urlMock"));
 	}
 	getCard(url:string): Promise<CardResponse> {
-		console.log(url);
 		return new Promise((resolve) => resolve({
 			profileId: 1
 		}));
@@ -117,7 +112,6 @@ export class CardMock implements CardServiceable {
 
 export class PaymentMock implements PaymentServiceable {
 	createPayment(paymentState: SaleRequest): Promise<string> {
-		console.log(paymentState);
 		return new Promise((resolve)=>resolve("urlMock"));
 	}
 	getPaymentInfo(url: string): Promise<PaymentInfoResponse> {
@@ -125,7 +119,6 @@ export class PaymentMock implements PaymentServiceable {
 			code: "1235465421646545121",
 			date: 1665168260
 		};
-		console.log(url);
 		return new Promise((resolve) => resolve(paymentInfo));
 	}
 

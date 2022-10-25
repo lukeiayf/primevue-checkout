@@ -5,8 +5,8 @@ import SalesDetailComponent from "./components/SalesDetailComponent.vue";
 </script>
 
 <template>
-  <div style="justify-content:center; display: flex; flex-direction: row; ">
-    <SalesDetailComponent style="margin-right: 1rem;"></SalesDetailComponent>
+  <div class="flex-row">
+    <SalesDetailComponent class="margin-right"></SalesDetailComponent>
     <FormComponent></FormComponent>
   </div>
 </template>
@@ -26,5 +26,14 @@ body {
   background-attachment: initial;
   background-origin: initial;
   background-clip: initial;
+}
+
+.flex-row {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+}
+.margin-right {
+  margin-right: 1rem;
 }
 </style>

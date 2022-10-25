@@ -1,5 +1,5 @@
 <template>
-  <Card style="width: 30rem; margin-bottom: 1.5em; margin-top: 1.5em; align-items: center;">
+  <Card class="sale-details-card">
     <template #title>
       <div class="flex-start-column">
         <img class="logo" src="..\assets\bempaggo.png" />
@@ -68,19 +68,6 @@ Backend.getInstance().getPagePayImplementation().getPaymentPage(1).then(
 	}
 );
 
-
-
-
-
-
-function loadSaleDetails() {
-	//detailStore.createNewSalesDetail(paymentPageResponse);
-}
-
-loadSaleDetails();
-
-
-
 </script>
 
 
@@ -117,5 +104,12 @@ loadSaleDetails();
 .center{
   display: flex; 
   justify-content: center; 
+}
+
+.sale-details-card{
+  width: 30rem;
+  margin-bottom: 1.5em;
+  margin-top: 1.5em;
+  align-items: center;
 }
 </style>

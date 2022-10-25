@@ -1,5 +1,5 @@
 <template>
-  <Card style="width: 50rem; margin-bottom: 1.5em; margin-top:1.5em; align-items: center;">
+  <Card class="transaction-summary-card">
     <template #title>
       <div class="title">
         <h5>{{ $t('sumarioTransacao') }}</h5>
@@ -29,7 +29,6 @@
         <li v-if="props.payment.paymentType == 'BANKSLIP'" class="item-list">
           <strong>{{ $t('detalhesPagamento.dataVencimento') }}</strong>: {{ date }}
         </li>
-
       </ul>
       <div v-if="props.payment.paymentType == 'BANKSLIP'" class="center">
         <img :src="imgSrcBankslip" class="img-barcode" alt="Boleto" />
@@ -134,5 +133,12 @@ function copyEmv(){
 
 .img-qrcode{
   width:200px;
+}
+
+.transaction-summary-card{
+  width: 50rem;
+  margin-bottom: 1.5em;
+  margin-top: 1.5em;
+  align-items: center;
 }
 </style>
