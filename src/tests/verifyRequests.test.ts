@@ -12,14 +12,14 @@ import { Backend } from "../services/backend";
 
 describe("backend", () => {
 	test("getPagepay", async () => {
-		const pagepay: PaymentPageResponse = await Backend.getInstance().getPagePayImplementation().getPaymentPage(1);
+		const pagepay: PaymentPageResponse = await Backend.getInstance().getPagePayImplementation().getPaymentPage(1, "90076629-34dc-4a26-a333-22fab585ff5d");
 		expect(pagepay.uuid).toEqual("90076629-34dc-4a26-a333-22fab585ff5d");
 		expect(pagepay.image).toEqual("https://www.cupcom.com.br/wp-content/uploads/2020/10/IMAGENS-SITEuv-vuejs.jpg");
 		expect(pagepay.installmentType).toEqual("CARD_INSTALLMENT");
 		expect(pagepay.description).toEqual("Descrição");
 		expect(pagepay.plan.id).toEqual(1);
 		expect(pagepay.plan.name).toEqual("Plano Pro");
-		expect(pagepay.plan.maxInstallments).toEqual(1);
+		expect(pagepay.plan.maxInstallments).toEqual(4);
 		expect(pagepay.plan.accessionValue).toEqual(1);
 		expect(pagepay.plan.value).toEqual(10.50);
 		expect(pagepay.plan.frequency).toEqual("MONTHLY");
@@ -35,7 +35,7 @@ describe("backend", () => {
 		//.MODE: "development", "test", "production"
 	});
 	test("getCustomer", async () => {
-		const customer: Promise<CustomerResponse> = Backend.getInstance().getCustomerImplementation().getCustomer();
+		const customer: Promise<CustomerResponse> = Backend.getInstance().getCustomerImplementation().getCustomer(1, "90076629-34dc-4a26-a333-22fab585ff5d");
 		expect((await customer).id).toEqual(1);
 		expect((await customer).name).toEqual("customer name");
 		expect((await customer).cpf).toEqual("10095323678");
@@ -51,21 +51,21 @@ describe("backend", () => {
 			birthdate: 121019914,
 			phone: "45999999999",
 		};
-		const customer: Promise<CustomerRequest> = Backend.getInstance().getCustomerImplementation().createCustomer(customerState);
+		const customer: Promise<CustomerRequest> = Backend.getInstance().getCustomerImplementation().createCustomer(1, customerState);
 		expect((await customer).name).toEqual("Nome Teste");
 		expect((await customer).cpf).toEqual("02577973004");
 		expect((await customer).birthdate).toEqual(121019914);
 		expect((await customer).phone).toEqual("45999999999");
 	});
 	test("putCustomer", async () => {
-		const customer: CustomerResponse = await Backend.getInstance().getCustomerImplementation().getCustomer();
+		const customer: CustomerResponse = await Backend.getInstance().getCustomerImplementation().getCustomer(1, "90076629-34dc-4a26-a333-22fab585ff5d");
 	
-		const updatedCustomer = Backend.getInstance().getCustomerImplementation().putCustomer(customer, 123);
+		const updatedCustomer = Backend.getInstance().getCustomerImplementation().putCustomer(customer,1, 123);
 		expect((await updatedCustomer).name).toEqual("new customer name");
 
 	});
 	test("getAddress", async () => {
-		const address: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().getAddress(1);
+		const address: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().getAddress(1, 123);
 		expect((await address).street).toEqual("Rua 1");
 		expect((await address).number).toEqual("1");
 		expect((await address).lineTwo).toEqual("apto 1");
@@ -82,7 +82,7 @@ describe("backend", () => {
 			city: "Campinas",
 			state: "Acre"
 		};
-		const address: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().createAddress(addressState, 1);
+		const address: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().createAddress(addressState, 1, 123);
 		expect((await address).street).toEqual("Rua 2");
 		expect((await address).number).toEqual("2");
 		expect((await address).lineTwo).toEqual("apto 2");
@@ -95,7 +95,7 @@ describe("backend", () => {
 		expect((await cardId).profileId).toEqual(1);
 	});
 	test("getCustomerId", async () => {
-		const customerId: Promise<CustomerMinimalResponse> = Backend.getInstance().getCustomerImplementation().getCustomerId("02577973004");
+		const customerId: Promise<CustomerMinimalResponse> = Backend.getInstance().getCustomerImplementation().getCustomerId(1, "02577973004");
 		expect((await customerId).customerId).toEqual(1);
 	});
 	test("createCard", async () => {
@@ -107,7 +107,7 @@ describe("backend", () => {
 			dueDate: 121019914,
 			securityCode: 123
 		};
-		const url: string = await Backend.getInstance().getCardImplementation().createCard(cardState, 1);
+		const url: string = await Backend.getInstance().getCardImplementation().createCard(cardState, 1, 123);
 		expect((url)).toEqual("urlMock");
 
 	});
@@ -119,7 +119,7 @@ describe("backend", () => {
 			installments:2,
 			profileId:1
 		};
-		const payment: string = await Backend.getInstance().getPaymentImplementation().createPayment(paymentState);
+		const payment: string = await Backend.getInstance().getPaymentImplementation().createPayment(paymentState, 1, "90076629-34dc-4a26-a333-22fab585ff5d");
 		expect( payment).toEqual("urlMock");
 	});
 	test("getPayment", async () => {

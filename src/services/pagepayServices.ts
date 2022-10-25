@@ -11,8 +11,8 @@ import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
 import { AddressServiceable, CardServiceable, CustomerServiceable, PagePayServiceable, PaymentServiceable } from "./facade";
 
 export class PagePayBemPaggo implements PagePayServiceable {
-	async getPaymentPage(companyId: number): Promise<PaymentPageResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays`;         
+	async getPaymentPage(companyId: number, uuid: string): Promise<PaymentPageResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}`;         
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
@@ -27,8 +27,8 @@ export class PagePayBemPaggo implements PagePayServiceable {
 	}
 }
 export class CustomerBemPaggo implements CustomerServiceable {
-	async getCustomerId(document: string): Promise<CustomerMinimalResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/document/${document}`;
+	async getCustomerId(companyId:number, customerDocument: string): Promise<CustomerMinimalResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/document/${customerDocument}`;
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
@@ -40,8 +40,8 @@ export class CustomerBemPaggo implements CustomerServiceable {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createCustomer(customerState: CustomerRequest): Promise<CustomerResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/new`;         
+	async createCustomer(companyId:number, customerState: CustomerRequest): Promise<CustomerResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customer/new`;         
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ customerState }) });
 			if (data.ok) {
@@ -52,8 +52,8 @@ export class CustomerBemPaggo implements CustomerServiceable {
 		} catch(error) {
 			throw new Error("erro na requisição");
 		}}
-	async getCustomer(): Promise<CustomerResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer`;
+	async getCustomer(companyId: number, uuid: string): Promise<CustomerResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/customer`;
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
@@ -66,8 +66,8 @@ export class CustomerBemPaggo implements CustomerServiceable {
 		}
 	}
 	
-	public async putCustomer(customer: CustomerRequest, customerId: number):Promise<CustomerResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customerId}`;
+	public async putCustomer(customer: CustomerRequest, companyId:number, customerId: number):Promise<CustomerResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customer/${customerId}`;
 		try {
 			const data = await fetch(url, { method: "PUT", body: JSON.stringify({ customer }) });
 			if (data.ok) {
@@ -82,8 +82,8 @@ export class CustomerBemPaggo implements CustomerServiceable {
 }
 
 export class AddressBemPaggo implements AddressServiceable {
-	async getAddress(customerId:number): Promise<AddressResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/customer/${customerId}/bestAddress`;        
+	async getAddress(companyId:number, customerId:number): Promise<AddressResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customers/${customerId}/bestAddress`;        
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
@@ -95,8 +95,8 @@ export class AddressBemPaggo implements AddressServiceable {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createAddress(addressState: AddressRequest, customerId:number): Promise<AddressRequest>{
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/customer/${customerId}/address/new`;        
+	async createAddress(addressState: AddressRequest, companyId:number, customerId:number): Promise<AddressRequest>{
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customers/${customerId}/address/new`;        
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ addressState }) });
 			if (data.ok) {
@@ -123,8 +123,8 @@ export class AddressBemPaggo implements AddressServiceable {
 	}
 }
 export class CardBemPaggo implements CardServiceable {
-	async createCard(cardState: CardRequest, customerId: number): Promise<string> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customerId}/card`;        
+	async createCard(cardState: CardRequest,companyId:number, customerId: number): Promise<string> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customers/${customerId}/card`;        
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ cardState }) });
 			if (data.ok) {
@@ -165,8 +165,8 @@ export class PaymentBemPaggo implements PaymentServiceable {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createPayment(paymentState: SaleRequest): Promise<string> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays`;        
+	async createPayment(paymentState: SaleRequest, companyId:number, uuid:string): Promise<string> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}`;        
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ paymentState }) });
 			if (data.ok) {

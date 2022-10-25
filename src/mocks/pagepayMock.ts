@@ -47,14 +47,14 @@ export class PagePayMock implements PagePayServiceable {
 }
 
 export class CustomerMock implements CustomerServiceable {
-	createCustomer(customerState: CustomerRequest): Promise<CustomerResponse> {
+	createCustomer(companyId:number, customerState: CustomerRequest): Promise<CustomerResponse> {
 		const customerResponse: CustomerResponse = {
 			...customerState,
 			id: 2
 		};
 		return new Promise((resolve) => resolve(customerResponse));
 	}
-	getCustomer(): Promise<CustomerResponse> {
+	getCustomer(companyId: number, uuid: string): Promise<CustomerResponse> {
 		const customer = {
 			id: 1,
 			name: "customer name",
@@ -65,7 +65,7 @@ export class CustomerMock implements CustomerServiceable {
 		};
 		return new Promise((resolve) => resolve(customer));
 	}
-	putCustomer(customer: CustomerRequest, customerId: number): Promise<CustomerResponse>{
+	putCustomer(customer: CustomerRequest, companyId:number, customerId: number): Promise<CustomerResponse>{
 		const updatedCustomer = {
 			...customer,
 			id: customerId,
@@ -73,7 +73,7 @@ export class CustomerMock implements CustomerServiceable {
 		};
 		return new Promise((resolve)=>resolve(updatedCustomer));
 	}
-	getCustomerId(document: string): Promise<CustomerMinimalResponse>{
+	getCustomerId(companyId:number, customerDocument: string): Promise<CustomerMinimalResponse>{
 		const customer = {
 			customerId: 1,
 		};
@@ -82,7 +82,7 @@ export class CustomerMock implements CustomerServiceable {
 }
 
 export class AddressMock implements AddressServiceable {
-	getAddress(customerId:number): Promise<AddressResponse> {
+	getAddress(companyId:number, customerId:number): Promise<AddressResponse> {
 		const address = {
 			street: "Rua 1",
 			number: "1",
@@ -93,13 +93,13 @@ export class AddressMock implements AddressServiceable {
 		};
 		return new Promise((resolve) => resolve(address));
 	}
-	createAddress(addressState: AddressRequest, customerId:number): Promise<AddressResponse> {
+	createAddress(addressState: AddressRequest, companyId:number, customerId:number): Promise<AddressResponse> {
 		return new Promise((resolve) => resolve(addressState));
 	}
 
 }
 export class CardMock implements CardServiceable {
-	createCard(cardState: CardRequest, customerId:number): Promise<string> {
+	createCard(cardState: CardRequest, companyId: number, customerId: number): Promise<string> {
 		return new Promise((resolve)=>resolve("urlMock"));
 	}
 	getCard(url:string): Promise<CardResponse> {
@@ -111,7 +111,7 @@ export class CardMock implements CardServiceable {
 }
 
 export class PaymentMock implements PaymentServiceable {
-	createPayment(paymentState: SaleRequest): Promise<string> {
+	createPayment(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string> {
 		return new Promise((resolve)=>resolve("urlMock"));
 	}
 	getPaymentInfo(url: string): Promise<PaymentInfoResponse> {

@@ -7,26 +7,27 @@ import { CardResponse } from "@/models/response/cardResponse";
 import { CustomerResponse } from "@/models/response/customerResponse";
 import { PaymentInfoResponse } from "@/models/response/paymentInfoResponse";
 import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
+import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
 
 export interface PagePayServiceable {
-    getPaymentPage(companyId: number): Promise<PaymentPageResponse>;
+    getPaymentPage(companyId: number, uuid: string): Promise<PaymentPageResponse>;
 }
 export interface CustomerServiceable {
-	getCustomerId(arg0: string): Promise<import("../models/response/customerMinimalResponse").CustomerMinimalResponse>;
-    createCustomer(customerState: CustomerRequest): Promise<CustomerResponse>;
-    getCustomer(): Promise<CustomerResponse>;
-    putCustomer(customer: CustomerRequest, customerId: number): Promise<CustomerResponse>;
+	getCustomerId(companyId: number, customerDocument: string): Promise<CustomerMinimalResponse>;
+    createCustomer(companyId: number, customerState: CustomerRequest): Promise<CustomerResponse>;
+    getCustomer(companyId: number, uuid: string): Promise<CustomerResponse>;
+    putCustomer(customer: CustomerRequest, companyId:number, customerId: number): Promise<CustomerResponse>;
 }
 export interface AddressServiceable {
-    createAddress(addressState: AddressRequest, customerId: number): Promise<AddressRequest>;
-    getAddress(customerId: number): Promise<AddressResponse>;
+    createAddress(addressState: AddressRequest, companyId:number, customerId: number): Promise<AddressRequest>;
+    getAddress(companyId:number, customerId: number): Promise<AddressResponse>;
 }
 export interface CardServiceable {
-    createCard(cardState: CardRequest, customerId: number): Promise<string>;
+    createCard(cardState: CardRequest, companyId:number, customerId: number): Promise<string>;
     getCard(url: string): Promise<CardResponse>;
 }
 export interface PaymentServiceable {
-    createPayment(paymentState: SaleRequest): Promise<string>;
+    createPayment(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string>;
     getPaymentInfo(url: string): Promise<PaymentInfoResponse>;
 }
 
