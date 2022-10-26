@@ -1,36 +1,36 @@
 <template>
-  <Card class="card" v-show="!showTransactionSummary">
-    <template #content>
-      <form @submit.prevent="handleSubmit(!v$.$invalid && !v.$invalid)" class="p-fluid">
-        <h5>{{ $t('dadosCliente') }}</h5>
-        <div class="input-area">
-          <CustomerComponent :submitted="submitted" ></CustomerComponent>
-          <h5>{{ $t('dadosEndereco') }}</h5>
-          <AddressComponent :submitted="submitted"></AddressComponent>
-          <div>
-            <h5>{{ $t('dadosPagamento') }}</h5>
-            <SelectButton class="button-payment center-button" v-model="v$.paymentMethod.$model" :options="paymentOptions2"
-              optionLabel="name" aria-labelledby="single"/>
-            <PaymentComponent :submitted="submitted" :maxInstallments="maxInstallments"></PaymentComponent>
-          </div>
-          <div>
-            <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
-              v-if="v$.paymentMethod.$model.value == 'CREDIT_CARD'" icon="pi pi-play" iconPos="left" />
-            <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
-              v-tooltip="'Será gerado um Boleto Bancário'" v-if="v$.paymentMethod.$model.value == 'BANKSLIP'"
-              icon="pi pi-play" iconPos="left" />
-            <Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
-              v-tooltip="'Será gerado um QR code'" v-if="v$.paymentMethod.$model.value == 'PIX'" icon="pi pi-play"
-              iconPos="left" />
-          </div>
-        </div>
-      </form>
-    </template>
-  </Card>
+	<Card class="card" v-show="!showTransactionSummary">
+		<template #content>
+			<form @submit.prevent="handleSubmit(!v$.$invalid && !v.$invalid)" class="p-fluid">
+				<h5>{{ $t('dadosCliente') }}</h5>
+				<div class="input-area">
+					<CustomerComponent :submitted="submitted"></CustomerComponent>
+					<h5>{{ $t('dadosEndereco') }}</h5>
+					<AddressComponent :submitted="submitted"></AddressComponent>
+					<div>
+						<h5>{{ $t('dadosPagamento') }}</h5>
+						<SelectButton class="button-payment center-button" v-model="v$.paymentMethod.$model"
+							:options="paymentOptions2" optionLabel="name" aria-labelledby="single" />
+						<PaymentComponent :submitted="submitted" :maxInstallments="maxInstallments"></PaymentComponent>
+					</div>
+					<div>
+						<Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
+							v-if="v$.paymentMethod.$model.value == 'CREDIT_CARD'" icon="pi pi-play" iconPos="left" />
+						<Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
+							v-tooltip="'Será gerado um Boleto Bancário'"
+							v-if="v$.paymentMethod.$model.value == 'BANKSLIP'" icon="pi pi-play" iconPos="left" />
+						<Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
+							v-tooltip="'Será gerado um QR code'" v-if="v$.paymentMethod.$model.value == 'PIX'"
+							icon="pi pi-play" iconPos="left" />
+					</div>
+				</div>
+			</form>
+		</template>
+	</Card>
 
-  <TransactionSummaryComponent :customer="customer" :location="paymentLocation" :payment="payment"
-    v-if="showTransactionSummary">
-  </TransactionSummaryComponent>
+	<TransactionSummaryComponent :customer="customer" :location="paymentLocation" :payment="payment"
+		v-if="showTransactionSummary">
+	</TransactionSummaryComponent>
 </template>
 
 
@@ -131,6 +131,7 @@ Backend.getInstance().getAddressImplementation().getAddress(companyId, customerI
 );
 
 
+
 function loadPayment() {
 	payment.value = {
 		uuid: paymentPage.value.uuid,
@@ -140,7 +141,7 @@ function loadPayment() {
 	};
 	if (v$.value.paymentMethod.$model.value == "CREDIT_CARD") {
 		card = {
-			cardBrand: v$.value.cardBrand.$model.name,
+			cardBrand: v.value.cardBrand.$model.name,
 			cardNumber: v$.value.cardNumber.$model,
 			holderDocument: v$.value.holderDocument.$model,
 			holderName: v$.value.holderName.$model,
@@ -229,77 +230,77 @@ const handleSubmit = async (isFormValid: boolean) => {
 
 <style lang="scss" scoped>
 .flex-row {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: space-between !important;
+	display: flex !important;
+	flex-direction: row !important;
+	justify-content: space-between !important;
 }
 
 .flex-column {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
+	display: flex !important;
+	flex-direction: column !important;
+	justify-content: space-between !important;
 }
 
 .card {
-  width: 50rem;
-  margin-bottom: 1.5em;
-  margin-top: 1.5em;
-  align-items: center;
+	width: 50rem;
+	margin-bottom: 1.5em;
+	margin-top: 1.5em;
+	align-items: center;
 }
 
 .flex-nowrap {
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  justify-content: center !important;
+	display: flex !important;
+	flex-wrap: nowrap !important;
+	justify-content: center !important;
 }
 
 .width-45 {
-  width: 45%
+	width: 45%
 }
 
 .input-area>* {
-  display: block;
-  margin-bottom: 1.5rem;
+	display: block;
+	margin-bottom: 1.5rem;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
+	&:last-child {
+		margin-bottom: 0;
+	}
 }
 
 .input-size {
-  padding: 2px;
+	padding: 2px;
 }
 
 .date-size {
-  width: 368px;
-  height: 27.33px;
+	width: 368px;
+	height: 27.33px;
 }
 
 .full {
-  width: 100%;
+	width: 100%;
 }
 
 .half {
-  margin: 0 1px !important;
-  width: 50%;
+	margin: 0 1px !important;
+	width: 50%;
 }
 
 .code-input {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .button-payment {
-  margin-bottom: 2rem;
+	margin-bottom: 2rem;
 }
 
 .dropdown-size {
-  height: 27.33px;
-  padding: -2px;
-  padding-left: -6px;
+	height: 27.33px;
+	padding: -2px;
+	padding-left: -6px;
 }
 
 .center-button {
-  justify-content: center;
-  display: flex;
+	justify-content: center;
+	display: flex;
 }
 </style>

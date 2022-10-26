@@ -1,10 +1,12 @@
 import creditCardType from "credit-card-type";
 import { useVuelidate } from "@vuelidate/core";
-import { reactive } from "vue";
+import { reactive, ref, Ref } from "vue";
 import { required } from "@vuelidate/validators";
+import { BrandsResponse } from "@/models/response/brandsResponse";
+import { Backend } from "@/services/backend";
 
 export interface DefaultCardBrandState {
-    cardBrand: Brand,
+    cardBrand: BrandsResponse,
 }
 
 export const defaultCardBrandState: DefaultCardBrandState = reactive({
@@ -20,38 +22,25 @@ export const cardBrandRules = {
 
 export const v = useVuelidate(cardBrandRules, defaultCardBrandState);
 
-export interface Brand {
-    name: string,
-    id: number,
-}
 
-export const brands: Brand[] = [
-	{
-		name: "Mastercard",
-		id: 1
-	},
-	{
-		name: "Hipercard",
-		id: 2
-	},
-	{
-		name: "Elo",
-		id: 3
-	},
-	{
-		name: "Visa",
-		id: 4
+export const brandsAdministradoras: Ref<BrandsResponse[]> = ref([]);
+
+Backend.getInstance().getCardImplementation().getBrands().then(
+	brands => {
+		brandsAdministradoras.value = brands;
+		console.log(brandsAdministradoras.value);
 	}
-];
+);
+
 
 export function verifyCard(card) {
 	let foundCardBrand = false;
 	const cardNumber = card.replace(/[^\d]+/g, "");
 	const cardType = creditCardType(cardNumber);
 	const modelCardBrand = cardType[0].type;
-	for (let i = 0; i < brands.length; i++) {
-		if (modelCardBrand.toLowerCase() == brands[i].name.toLowerCase()) {
-			v.value.cardBrand.$model = brands[i];
+	for (let i = 0; i < brandsAdministradoras.value.length; i++) {
+		if (modelCardBrand.toLowerCase() == brandsAdministradoras.value[i].name.toLowerCase()) {
+			v.value.cardBrand.$model = brandsAdministradoras.value[i];
 			foundCardBrand = true;
 		}
 

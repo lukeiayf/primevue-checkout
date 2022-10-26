@@ -3,6 +3,7 @@ import { CardRequest } from "@/models/request/cardRequest";
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
+import { BrandsResponse } from "@/models/response/brandsResponse";
 import { CardResponse } from "@/models/response/cardResponse";
 import { CustomerResponse } from "@/models/response/customerResponse";
 import { PaymentInfoResponse } from "@/models/response/paymentInfoResponse";
@@ -25,6 +26,7 @@ export interface AddressServiceable {
 export interface CardServiceable {
     createCard(cardState: CardRequest, companyId:number, customerId: number): Promise<string>;
     getCard(url: string): Promise<CardResponse>;
+    getBrands(): Promise<BrandsResponse[]>
 }
 export interface PaymentServiceable {
     createPayment(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string>;

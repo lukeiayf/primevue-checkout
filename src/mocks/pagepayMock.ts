@@ -5,6 +5,7 @@ import { CardRequest } from "@/models/request/cardRequest";
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
+import { BrandsResponse } from "@/models/response/brandsResponse";
 import { CardResponse } from "@/models/response/cardResponse";
 import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
 import { PaymentInfoResponse } from "@/models/response/paymentInfoResponse";
@@ -99,7 +100,20 @@ export class AddressMock implements AddressServiceable {
 
 }
 export class CardMock implements CardServiceable {
-	createCard(cardState: CardRequest, companyId: number, customerId: number): Promise<string> {
+	getBrands(): Promise<BrandsResponse[]> {
+		const brands: BrandsResponse[] = [
+			{
+				id:1,
+				name:"Visa"
+			},
+			{
+				id:2,
+				name:"Mastercard"
+			}
+		];
+		return new Promise((resolve) => resolve(brands));
+	}
+	createCard(cardState: CardRequest, companyId: number, customerId:number): Promise<string> {
 		return new Promise((resolve)=>resolve("urlMock"));
 	}
 	getCard(url:string): Promise<CardResponse> {

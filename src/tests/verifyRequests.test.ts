@@ -1,5 +1,6 @@
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
+import { BrandsResponse } from "@/models/response/brandsResponse";
 import { CardResponse } from "@/models/response/cardResponse";
 import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
 import { PaymentInfoResponse } from "@/models/response/paymentInfoResponse";
@@ -126,5 +127,12 @@ describe("backend", () => {
 		const paymentInfo: PaymentInfoResponse = await Backend.getInstance().getPaymentImplementation().getPaymentInfo("urlMock");
 		expect(paymentInfo.code).toEqual("1235465421646545121");
 		expect(paymentInfo.date).toEqual(1665168260);
+	});
+	test("getBrands", async () => {
+		const brands: BrandsResponse[] = await Backend.getInstance().getCardImplementation().getBrands();
+		expect(brands[0].id).toEqual(1);
+		expect(brands[0].name).toEqual("Visa");
+		expect(brands[1].id).toEqual(2);
+		expect(brands[1].name).toEqual("Mastercard");
 	});
 });
