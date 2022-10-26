@@ -57,11 +57,15 @@ import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
 
 let imgSrc: Ref<string> = ref("");
 
+let companyId: Ref<number> = ref(null);
+let uuid: Ref<string> = ref("");
 
+companyId.value = parseInt(window.location.pathname.split("/")[2]);
+uuid.value = window.location.pathname.split("/")[3];
   
 let paymentPage: Ref<PaymentPageResponse> = ref(new PaymentPageResponse());
 
-Backend.getInstance().getPagePayImplementation().getPaymentPage(1).then(
+Backend.getInstance().getPagePayImplementation().getPaymentPage(companyId.value, uuid.value).then(
 	result => {
 		paymentPage.value = result;
 		imgSrc.value = paymentPage.value.image;

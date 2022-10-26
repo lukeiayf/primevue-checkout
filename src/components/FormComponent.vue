@@ -86,8 +86,8 @@ let paymentOptions2: Ref<PaymentMethod[]> = ref([
 	}
 ]);
 let maxInstallments: Ref<number> = ref(1);
-let companyId = 1;
-let uuid = "uuid";
+let companyId: Ref<number> = ref(null);
+let uuid: Ref<string> = ref("");
 
 function filterPayments(el: PaymentMethod) {
 	for (let i = 0; i < payments.value.length; i++) {
@@ -97,7 +97,7 @@ function filterPayments(el: PaymentMethod) {
 	}
 }
 
-Backend.getInstance().getPagePayImplementation().getPaymentPage(companyId, uuid).then(
+Backend.getInstance().getPagePayImplementation().getPaymentPage(companyId.value, uuid.value).then(
 	result => {
 		paymentPage.value = result;
 		payments.value = result.paymentMethods;
@@ -106,7 +106,7 @@ Backend.getInstance().getPagePayImplementation().getPaymentPage(companyId, uuid)
 	}
 );
 
-Backend.getInstance().getCustomerImplementation().getCustomer(companyId, uuid).then(
+Backend.getInstance().getCustomerImplementation().getCustomer(companyId.value, uuid.value).then(
 	result => {
 		customer.value = result;
 		v$.value.username.$model = customer.value.name;
@@ -118,7 +118,7 @@ Backend.getInstance().getCustomerImplementation().getCustomer(companyId, uuid).t
 	}
 );
 
-Backend.getInstance().getAddressImplementation().getAddress(companyId, customerId.value).then(
+Backend.getInstance().getAddressImplementation().getAddress(companyId.value, customerId.value).then(
 	result => {
 		address.value = result;
 		v$.value.zipcode.$model = address.value.zipCode;
@@ -148,7 +148,7 @@ function loadPayment() {
 			dueDate: v$.value.dueDate.$model.getTime(),
 			securityCode: parseInt(v$.value.securityCode.$model),
 		};
-		Backend.getInstance().getCardImplementation().createCard(card, companyId, customerId.value).then(
+		Backend.getInstance().getCardImplementation().createCard(card, companyId.value, customerId.value).then(
 			result => {
 				Backend.getInstance().getCardImplementation().getCard(result).then(
 					result => {
@@ -161,7 +161,7 @@ function loadPayment() {
 		);
 
 	}
-	Backend.getInstance().getPaymentImplementation().createPayment(payment.value,companyId, uuid).then(
+	Backend.getInstance().getPaymentImplementation().createPayment(payment.value,companyId.value, uuid.value).then(
 		result => {
 			paymentLocation.value = result;
 			showTransactionSummary.value = true;
@@ -178,7 +178,7 @@ function loadAddress() {
 		state: v$.value.state.$model,
 		city: v$.value.city.$model
 	};
-	Backend.getInstance().getAddressImplementation().createAddress(AddressState, companyId, customerId.value).then(result => {
+	Backend.getInstance().getAddressImplementation().createAddress(AddressState, companyId.value, customerId.value).then(result => {
 		address.value = result;
 		loadPayment();
 	});
@@ -193,14 +193,14 @@ function loadCustomer() {
 		phone: v$.value.phone.$model
 	};
 
-	Backend.getInstance().getCustomerImplementation().getCustomerId(companyId, v$.value.cpf.$model).then(
+	Backend.getInstance().getCustomerImplementation().getCustomerId(companyId.value, v$.value.cpf.$model).then(
 		result => {
 			customerId.value = result.customerId;
 		}
 	);
 	if (Object.keys(customer.value).length == 0) {
-		Backend.getInstance().getCustomerImplementation().createCustomer(companyId, customerState).then(() => {
-			Backend.getInstance().getCustomerImplementation().getCustomerId(companyId, v$.value.cpf.$model).then(
+		Backend.getInstance().getCustomerImplementation().createCustomer(companyId.value, customerState).then(() => {
+			Backend.getInstance().getCustomerImplementation().getCustomerId(companyId.value, v$.value.cpf.$model).then(
 				result => {
 					customerId.value = result.customerId;
 					loadAddress();
@@ -208,7 +208,7 @@ function loadCustomer() {
 			);
 		});
 	} else {
-		Backend.getInstance().getCustomerImplementation().putCustomer(customerState, companyId, customerId.value).then(() => loadAddress());
+		Backend.getInstance().getCustomerImplementation().putCustomer(customerState, companyId.value, customerId.value).then(() => loadAddress());
 	}
 }
 
