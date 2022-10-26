@@ -11,7 +11,7 @@
     <div>
       <span class="p-float-label" v-if="v$.cardNumber.$model.length > 13">
         <Dropdown required inputStyle="padding: 2px; padding-left: 6px" v-model="v.cardBrand.$model" id="cardBrand"
-          :options="brands" option-label="name" class="full dropdown-size"
+          :options="brandsAdministradoras" option-label="name" class="full dropdown-size"
           :class="{ 'full dropdown-size p-invalid': v.cardBrand.$invalid && props.submitted }" />
         <label for="number" :class="{ 'p-error': v.cardBrand.$invalid && props.submitted }">{{ $t('cartao.bandeira') }}*</label>
       </span>
@@ -21,7 +21,7 @@
     <div>
       <span class="p-float-label p-input-icon-right">
         <i class="pi pi-credit-card"></i>
-        <InputText required id="cardNumber" type="text" v-model="v$.cardNumber.$model" class="full input-size"
+        <InputText required id="cardNumber" type="text" v-model="v$.cardNumber.$model" maxlength="19" class="full input-size"
           :class="{ 'full input-size p-invalid': v$.cardNumber.$invalid && props.submitted }"
           @blur="verifyCard(v$.cardNumber.$model)" />
         <label for="number" :class="{ 'p-error': v$.cardNumber.$invalid && props.submitted }">{{ $t('cartao.numero') }}*</label>
@@ -82,12 +82,14 @@ import Dropdown from "primevue/dropdown";
 import InputText from "primevue/inputtext";
 import Calendar from "primevue/calendar";
 import { validDocument } from "@/helpers/validDocument";
-import { v, brands, verifyCard } from "@/helpers/verifyCard";
+import { v, brandsAdministradoras, verifyCard } from "@/helpers/verifyCard";
 import InputNumber from "primevue/inputnumber";
 import { Ref, ref } from "vue";
 import { v$ } from "@/helpers/vuelidadeConfig";
 
 const today: Ref<Date> = ref(new Date());
+
+
 
 const props = defineProps<{
   submitted: boolean;

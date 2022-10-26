@@ -3,6 +3,7 @@ import { CardRequest } from "@/models/request/cardRequest";
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
+import { BrandsResponse } from "@/models/response/brandsResponse";
 import { CardResponse } from "@/models/response/cardResponse";
 import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
 import { CustomerResponse } from "@/models/response/customerResponse";
@@ -123,6 +124,19 @@ export class AddressBemPaggo implements AddressServiceable {
 	}
 }
 export class CardBemPaggo implements CardServiceable {
+	async getBrands(): Promise<BrandsResponse[]> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/brands/all`;        
+		try {
+			const response = await fetch(url, { method: "GET" });
+			if (response.ok) {
+				return await response.json();
+			} else {
+				throw new Error("erro no status da requisição");
+			}
+		} catch(error) {
+			throw new Error("erro na requisição");
+		}
+	}
 	async createCard(cardState: CardRequest, customerId: number): Promise<string> {
 		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/customer/${customerId}/card`;        
 		try {
