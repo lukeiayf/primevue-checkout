@@ -89,6 +89,9 @@ let maxInstallments: Ref<number> = ref(1);
 let companyId: Ref<number> = ref(null);
 let uuid: Ref<string> = ref("");
 
+companyId.value = parseInt(window.location.pathname.split("/")[2]);
+uuid.value = window.location.pathname.split("/")[3];
+
 function filterPayments(el: PaymentMethod) {
 	for (let i = 0; i < payments.value.length; i++) {
 		if (el.value == payments.value[i]) {

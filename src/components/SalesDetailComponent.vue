@@ -31,7 +31,7 @@
           paymentPage.plan?.value }}
         </li>
         <li class=item-list v-if="paymentPage.plan?.frequency">
-          <strong>{{$t('detalhesCompra.periodicidade')}}</strong>:{{paymentPage.plan?.frequency}}
+          <strong>{{$t('detalhesCompra.periodicidade.titulo')}}</strong>: {{$t(`detalhesCompra.periodicidade.${paymentPage.plan.frequency}`)}}
         </li>
         <li class=item-list v-if="paymentPage.plan?.name">
           <strong>{{$t('detalhesCompra.nomePlano')}}</strong>: {{paymentPage.plan?.name}}

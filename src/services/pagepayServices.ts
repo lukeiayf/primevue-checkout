@@ -13,7 +13,7 @@ import { AddressServiceable, CardServiceable, CustomerServiceable, PagePayServic
 
 export class PagePayBemPaggo implements PagePayServiceable {
 	async getPaymentPage(companyId: number, uuid: string): Promise<PaymentPageResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}`;         
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}`;      
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {

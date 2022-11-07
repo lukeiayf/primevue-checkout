@@ -72,7 +72,13 @@
 		"valorPrincipal":"Valor principal",
 		"valorPlano":"Valor principal",
 		"total": "Total",
-		"periodicidade": "Periodicidade",
+		"periodicidade": {
+			"titulo": "Periodicidade",
+			"MONTHLY": "Mensal",
+			"YEARLY": "Anual",
+			"SEMESTRAL": "Semestral",
+			"BIMONTHLY": "Bimestral"
+		},
 		"nomePlano": "Nome do plano",
 		"loja": "Loja",
 		"descricao": "Descrição"
