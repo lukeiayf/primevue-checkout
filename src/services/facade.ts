@@ -26,10 +26,12 @@ export interface AddressServiceable {
 export interface CardServiceable {
     createCard(cardState: CardRequest, companyId:number, customerId: number): Promise<string>;
     getCard(url: string): Promise<CardResponse>;
-    getBrands(): Promise<BrandsResponse[]>
+    getBrands(companyId:number, uuid:string): Promise<BrandsResponse[]>
 }
 export interface PaymentServiceable {
-    createPayment(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string>;
+    createPaymentPix(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string>;
+    createPaymentCreditCard(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string>;
+    createPaymentBankSlip(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string>;
     getPaymentInfo(url: string): Promise<PaymentInfoResponse>;
 }
 

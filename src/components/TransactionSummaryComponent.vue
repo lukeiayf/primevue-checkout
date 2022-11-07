@@ -23,19 +23,19 @@
         <li class="item-list">
           <strong>{{ $t('quantidadeParcelas') }}</strong>: {{ props.payment.installments }}
         </li>
-        <li type="date" v-if="props.payment.paymentType == 'PIX'" class="item-list">
+        <li type="date" v-if="props.paymentMethod == 'PIX'" class="item-list">
           <strong>{{ $t('detalhesPagamento.dataExpiracao') }}</strong>: {{ date }}
         </li>
-        <li v-if="props.payment.paymentType == 'BANKSLIP'" class="item-list">
+        <li v-if="props.paymentMethod == 'BANKSLIP'" class="item-list">
           <strong>{{ $t('detalhesPagamento.dataVencimento') }}</strong>: {{ date }}
         </li>
       </ul>
-      <div v-if="props.payment.paymentType == 'BANKSLIP'" class="center">
+      <div v-if="props.paymentMethod == 'BANKSLIP'" class="center">
         <img :src="imgSrcBankslip" class="img-barcode" alt="Boleto" />
       </div>
-      <div v-if="props.payment.paymentType == 'PIX'" class="container-qrcode">
+      <div v-if="props.paymentMethod == 'PIX'" class="container-qrcode">
         <img :src="imgSrcPix" class="img-qrcode" alt="PIX" />
-        <Button type="submit" id="btn-copy" class="button" v-tooltip="'Clique para copiar'" v-if="props.payment.paymentType == 'PIX'" icon="pi pi-copy"
+        <Button type="submit" id="btn-copy" class="button" v-tooltip="'Clique para copiar'" v-if="props.paymentMethod == 'PIX'" icon="pi pi-copy"
           iconPos="left" @click="copyEmv()">{{textButton}}</Button>
       </div>
     </template>
@@ -59,11 +59,11 @@ const props = defineProps<{
   customer: CustomerResponse;
   payment: SaleRequest;
   location: string;
+  paymentMethod: string;
 }>();
 
 let date: Ref<string> = ref("");
 let code: Ref<string> = ref("");
-let paymentMethod: Ref<string> = ref("");
 let textButton: Ref<string> = ref("Pix copia e cola");
 
 
@@ -74,15 +74,6 @@ Backend.getInstance().getPaymentImplementation().getPaymentInfo(props.location).
 		code.value = result.code;
 	}
 );
-
-if (props.payment.paymentType == "CREDIT_CARD") {
-	paymentMethod.value = "Cartão de crédito";
-} else
-if (props.payment.paymentType == "BANKSLIP") {
-	paymentMethod.value = "Boleto";
-} else {
-	paymentMethod.value = "Pix";
-}
 
 function copyEmv(){
 	navigator.clipboard.writeText(code.value);

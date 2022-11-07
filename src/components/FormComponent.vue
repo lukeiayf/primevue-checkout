@@ -28,7 +28,7 @@
 		</template>
 	</Card>
 
-	<TransactionSummaryComponent :customer="customer" :location="paymentLocation" :payment="payment"
+	<TransactionSummaryComponent :customer="customer" :location="paymentLocation" :payment="payment" :paymentMethod="paymentMethod"
 		v-if="showTransactionSummary">
 	</TransactionSummaryComponent>
 </template>
@@ -69,6 +69,7 @@ let address: Ref<AddressResponse> = ref(new AddressResponse());
 let customerId: Ref<number> = ref(null);
 let paymentPage: Ref<PaymentPageResponse> = ref(new PaymentPageResponse());
 let paymentLocation: Ref<string> = ref("");
+let paymentMethod: Ref<string> = ref(v$.value.paymentMethod.$model.value);
 
 let payments: Ref<string[]> = ref([]);
 let paymentOptions2: Ref<PaymentMethod[]> = ref([
@@ -137,9 +138,7 @@ Backend.getInstance().getAddressImplementation().getAddress(companyId.value, cus
 
 function loadPayment() {
 	payment.value = {
-		uuid: paymentPage.value.uuid,
 		customerId: customerId.value,
-		paymentType: v$.value.paymentMethod.$model.value,
 		installments: v$.value.installments.$model,
 	};
 	if (v$.value.paymentMethod.$model.value == "CREDIT_CARD") {
@@ -157,19 +156,33 @@ function loadPayment() {
 					result => {
 						profileId = result.profileId;
 						payment.value.profileId = profileId;
-
+						Backend.getInstance().getPaymentImplementation().createPaymentCreditCard(payment.value, companyId.value, uuid.value).then(
+							result => {
+								paymentLocation.value = result;
+								showTransactionSummary.value = true;
+							}
+						);
 					}
 				);
 			}
 		);
 
+	} else if (v$.value.paymentMethod.$model.value == "BANKSLIP") {
+		Backend.getInstance().getPaymentImplementation().createPaymentBankSlip(payment.value, companyId.value, uuid.value).then(
+			result => {
+				paymentLocation.value = result;
+				showTransactionSummary.value = true;
+			}
+		);
+	} else if (v$.value.paymentMethod.$model.value == "PIX") {
+		Backend.getInstance().getPaymentImplementation().createPaymentPix(payment.value, companyId.value, uuid.value).then(
+			result => {
+				paymentLocation.value = result;
+				showTransactionSummary.value = true;
+			}
+		);
 	}
-	Backend.getInstance().getPaymentImplementation().createPayment(payment.value,companyId.value, uuid.value).then(
-		result => {
-			paymentLocation.value = result;
-			showTransactionSummary.value = true;
-		}
-	);
+	
 }
 
 function loadAddress() {

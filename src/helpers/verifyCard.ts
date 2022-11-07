@@ -25,7 +25,13 @@ export const v = useVuelidate(cardBrandRules, defaultCardBrandState);
 
 export const brandsAdministradoras: Ref<BrandsResponse[]> = ref([]);
 
-Backend.getInstance().getCardImplementation().getBrands().then(
+const companyId: Ref<number> = ref(null);
+const uuid: Ref<string> = ref("");
+
+companyId.value = parseInt(window.location.pathname.split("/")[2]);
+uuid.value = window.location.pathname.split("/")[3];
+
+Backend.getInstance().getCardImplementation().getBrands(companyId.value, uuid.value).then(
 	brands => {
 		brandsAdministradoras.value = brands;
 		console.log(brandsAdministradoras.value);

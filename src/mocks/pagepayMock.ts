@@ -100,7 +100,7 @@ export class AddressMock implements AddressServiceable {
 
 }
 export class CardMock implements CardServiceable {
-	getBrands(): Promise<BrandsResponse[]> {
+	getBrands(companyId: number, uuid: string): Promise<BrandsResponse[]> {
 		const brands: BrandsResponse[] = [
 			{
 				id:1,
@@ -125,7 +125,13 @@ export class CardMock implements CardServiceable {
 }
 
 export class PaymentMock implements PaymentServiceable {
-	createPayment(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string> {
+	createPaymentPix(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string> {
+		return new Promise((resolve)=>resolve("urlMock"));
+	}
+	createPaymentCreditCard(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string> {
+		return new Promise((resolve)=>resolve("urlMock"));
+	}
+	createPaymentBankSlip(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string> {
 		return new Promise((resolve)=>resolve("urlMock"));
 	}
 	getPaymentInfo(url: string): Promise<PaymentInfoResponse> {

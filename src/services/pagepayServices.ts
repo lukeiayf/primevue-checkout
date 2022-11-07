@@ -124,8 +124,8 @@ export class AddressBemPaggo implements AddressServiceable {
 	}
 }
 export class CardBemPaggo implements CardServiceable {
-	async getBrands(): Promise<BrandsResponse[]> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/pagepays/brands/all`;        
+	async getBrands(companyId: number, uuid: string): Promise<BrandsResponse[]> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/brands`;        
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
@@ -179,8 +179,34 @@ export class PaymentBemPaggo implements PaymentServiceable {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createPayment(paymentState: SaleRequest, companyId:number, uuid:string): Promise<string> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}`;        
+	async createPaymentPix(paymentState: SaleRequest, companyId:number, uuid:string): Promise<string> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/pix`;        
+		try {
+			const data = await fetch(url, { method: "POST", body: JSON.stringify({ paymentState }) });
+			if (data.ok) {
+				return await data.headers.get("Location");
+			} else {
+				throw new Error("erro no status da requisição");
+			}
+		} catch(error) {
+			throw new Error("erro na requisição");
+		}
+	}
+	async createPaymentCreditCard(paymentState: SaleRequest, companyId:number, uuid:string): Promise<string> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/credit/card`;        
+		try {
+			const data = await fetch(url, { method: "POST", body: JSON.stringify({ paymentState }) });
+			if (data.ok) {
+				return await data.headers.get("Location");
+			} else {
+				throw new Error("erro no status da requisição");
+			}
+		} catch(error) {
+			throw new Error("erro na requisição");
+		}
+	}
+	async createPaymentBankSlip(paymentState: SaleRequest, companyId:number, uuid:string): Promise<string> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/bank/slip`;        
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ paymentState }) });
 			if (data.ok) {
