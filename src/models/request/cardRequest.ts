@@ -3,6 +3,6 @@ export class CardRequest{
 	cardNumber: string;
 	holderDocument: string;
 	holderName: string;
-	dueDate: number;
+	expirationDate: number;
 	securityCode?: number;
 }

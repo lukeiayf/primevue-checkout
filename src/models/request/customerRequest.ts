@@ -1,6 +1,6 @@
 export class CustomerRequest {
 	name: string;
-	cpf: string;
+	document: string;
 	email: string;
 	birthdate?: number;
 	phone?: string;

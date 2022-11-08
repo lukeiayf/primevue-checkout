@@ -34,7 +34,6 @@ uuid.value = window.location.pathname.split("/")[3];
 Backend.getInstance().getCardImplementation().getBrands(companyId.value, uuid.value).then(
 	brands => {
 		brandsAdministradoras.value = brands;
-		console.log(brandsAdministradoras.value);
 	}
 );
 

@@ -39,7 +39,7 @@ describe("backend", () => {
 		const customer: Promise<CustomerResponse> = Backend.getInstance().getCustomerImplementation().getCustomer(1, "90076629-34dc-4a26-a333-22fab585ff5d");
 		expect((await customer).id).toEqual(1);
 		expect((await customer).name).toEqual("customer name");
-		expect((await customer).cpf).toEqual("10095323678");
+		expect((await customer).document).toEqual("10095323678");
 		expect((await customer).email).toEqual("teste@teste.com");
 		expect((await customer).birthdate).toEqual(121019914);
 		expect((await customer).phone).toEqual("23453212");
@@ -48,13 +48,13 @@ describe("backend", () => {
 		const customerState: CustomerRequest = {
 			name: "Nome Teste",
 			email: "nome@teste.com",
-			cpf: "02577973004",
+			document: "02577973004",
 			birthdate: 121019914,
 			phone: "45999999999",
 		};
 		const customer: Promise<CustomerRequest> = Backend.getInstance().getCustomerImplementation().createCustomer(1, customerState);
 		expect((await customer).name).toEqual("Nome Teste");
-		expect((await customer).cpf).toEqual("02577973004");
+		expect((await customer).document).toEqual("02577973004");
 		expect((await customer).birthdate).toEqual(121019914);
 		expect((await customer).phone).toEqual("45999999999");
 	});
@@ -68,8 +68,8 @@ describe("backend", () => {
 	test("getAddress", async () => {
 		const address: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().getAddress(1, 123);
 		expect((await address).street).toEqual("Rua 1");
-		expect((await address).number).toEqual("1");
-		expect((await address).lineTwo).toEqual("apto 1");
+		expect((await address).streetNumber).toEqual("1");
+		expect((await address).addressLineTwo).toEqual("apto 1");
 		expect((await address).zipCode).toEqual("84010010");
 		expect((await address).city).toEqual("Ponta Grossa");
 		expect((await address).state).toEqual("Paraná");
@@ -77,16 +77,16 @@ describe("backend", () => {
 	test("createAddress", async () => {
 		const addressState: AddressResponse = {
 			street: "Rua 2",
-			number: "2",
-			lineTwo: "apto 2",
+			streetNumber: "2",
+			addressLineTwo: "apto 2",
 			zipCode: "69929970",
 			city: "Campinas",
 			state: "Acre"
 		};
 		const address: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().createAddress(addressState, 1, 123);
 		expect((await address).street).toEqual("Rua 2");
-		expect((await address).number).toEqual("2");
-		expect((await address).lineTwo).toEqual("apto 2");
+		expect((await address).streetNumber).toEqual("2");
+		expect((await address).addressLineTwo).toEqual("apto 2");
 		expect((await address).zipCode).toEqual("69929970");
 		expect((await address).city).toEqual("Campinas");
 		expect((await address).state).toEqual("Acre");
@@ -105,7 +105,7 @@ describe("backend", () => {
 			cardNumber: "5448280000000007",
 			holderDocument: "38461175018",
 			holderName: "Nome Teste",
-			dueDate: 121019914,
+			expirationDate: 121019914,
 			securityCode: 123
 		};
 		const url: string = await Backend.getInstance().getCardImplementation().createCard(cardState, 1, 123);

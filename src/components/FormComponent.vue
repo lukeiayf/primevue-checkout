@@ -28,8 +28,8 @@
 		</template>
 	</Card>
 
-	<TransactionSummaryComponent :customer="customer" :location="paymentLocation" :payment="payment" :paymentMethod="paymentMethod"
-		v-if="showTransactionSummary">
+	<TransactionSummaryComponent :customer="customer" :location="paymentLocation" :payment="payment"
+		:paymentMethod="paymentMethod" v-if="showTransactionSummary">
 	</TransactionSummaryComponent>
 </template>
 
@@ -42,6 +42,7 @@ import { v$ } from "@/helpers/vuelidadeConfig";
 import { AddressRequest } from "@/models/request/addressRequest";
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { AddressResponse } from "@/models/response/addressResponse";
+import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
 import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
 import moment from "moment";
 import "moment/locale/pt-br";
@@ -67,6 +68,7 @@ let profileId: number;
 let customer: Ref<CustomerResponse> = ref(new CustomerResponse());
 let address: Ref<AddressResponse> = ref(new AddressResponse());
 let customerId: Ref<number> = ref(null);
+let customerMinimal: Ref<CustomerMinimalResponse> = ref(new CustomerMinimalResponse);
 let paymentPage: Ref<PaymentPageResponse> = ref(new PaymentPageResponse());
 let paymentLocation: Ref<string> = ref("");
 let paymentMethod: Ref<string> = ref(v$.value.paymentMethod.$model.value);
@@ -104,7 +106,7 @@ function filterPayments(el: PaymentMethod) {
 Backend.getInstance().getPagePayImplementation().getPaymentPage(companyId.value, uuid.value).then(
 	result => {
 		paymentPage.value = result;
-		payments.value = result.paymentMethods;
+		payments.value = result.methods;
 		paymentOptions2.value = paymentMethods.filter(filterPayments);
 		paymentPage.value.plan ? maxInstallments.value = paymentPage.value.plan.maxInstallments : maxInstallments.value = paymentPage.value.loose.maxInstallments;
 	}
@@ -119,20 +121,24 @@ Backend.getInstance().getCustomerImplementation().getCustomer(companyId.value, u
 		v$.value.email.$model = customer.value.email;
 		v$.value.emailConfirmation.$model = customer.value.email;
 		v$.value.phone.$model = customer.value.phone;
+		customerId.value = customer.value.id;
+		if (result) {
+			Backend.getInstance().getAddressImplementation().getAddress(companyId.value, customerId.value).then(
+				result => {
+					address.value = result;
+					v$.value.zipcode.$model = address.value.zipCode;
+					v$.value.city.$model = address.value.city;
+					v$.value.state.$model = address.value.state;
+					v$.value.street.$model = address.value.street;
+					v$.value.number.$model = address.value.streetNumber;
+					v$.value.lineTwo.$model = address.value.addressLineTwo;
+				}
+			);
+		}
 	}
 );
 
-Backend.getInstance().getAddressImplementation().getAddress(companyId.value, customerId.value).then(
-	result => {
-		address.value = result;
-		v$.value.zipcode.$model = address.value.zipCode;
-		v$.value.city.$model = address.value.city;
-		v$.value.state.$model = address.value.state;
-		v$.value.street.$model = address.value.street;
-		v$.value.number.$model = address.value.number;
-		v$.value.lineTwo.$model = address.value.lineTwo;
-	}
-);
+
 
 
 
@@ -145,9 +151,9 @@ function loadPayment() {
 		card = {
 			cardBrand: v.value.cardBrand.$model.name,
 			cardNumber: v$.value.cardNumber.$model,
-			holderDocument: v$.value.holderDocument.$model,
+			holderDocument: v$.value.holderDocument.$model.replace(/[^\d]+/g, ""),
 			holderName: v$.value.holderName.$model,
-			dueDate: v$.value.dueDate.$model.getTime(),
+			expirationDate: v$.value.dueDate.$model.getTime(),
 			securityCode: parseInt(v$.value.securityCode.$model),
 		};
 		Backend.getInstance().getCardImplementation().createCard(card, companyId.value, customerId.value).then(
@@ -182,55 +188,57 @@ function loadPayment() {
 			}
 		);
 	}
-	
+
 }
 
-function loadAddress() {
+function loadAddress(customerId: number) {
+	console.log("chegou no load");
 	const AddressState: AddressRequest = {
 		zipCode: v$.value.zipcode.$model,
 		street: v$.value.street.$model,
-		number: v$.value.number.$model,
-		lineTwo: v$.value.lineTwo.$model,
+		streetNumber: v$.value.number.$model,
+		addressLineTwo: v$.value.lineTwo.$model,
 		state: v$.value.state.$model,
-		city: v$.value.city.$model
+		city: v$.value.city.$model,
+		neighborhood:"teste"
 	};
-	Backend.getInstance().getAddressImplementation().createAddress(AddressState, companyId.value, customerId.value).then(result => {
+	Backend.getInstance().getAddressImplementation().createAddress(AddressState, companyId.value, customerId).then(result => {
 		address.value = result;
 		loadPayment();
 	});
 }
 
-function loadCustomer() {
+async function loadCustomer() {
 	const customerState: CustomerRequest = {
 		name: v$.value.username.$model,
 		email: v$.value.email.$model,
-		cpf: v$.value.cpf.$model,
+		document: v$.value.cpf.$model.replace(/[^\d]+/g, ""),
 		birthdate: v$.value.birthdate.$model.getTime(),
-		phone: v$.value.phone.$model
+		phone: v$.value.phone.$model,
 	};
 
-	Backend.getInstance().getCustomerImplementation().getCustomerId(companyId.value, v$.value.cpf.$model).then(
-		result => {
-			customerId.value = result.customerId;
-		}
-	);
-	if (Object.keys(customer.value).length == 0) {
+	customerMinimal.value = await Backend.getInstance().getCustomerImplementation().getCustomerId(companyId.value, v$.value.cpf.$model);
+	if (Object.keys(customerMinimal.value).length == 0) {
 		Backend.getInstance().getCustomerImplementation().createCustomer(companyId.value, customerState).then(() => {
-			Backend.getInstance().getCustomerImplementation().getCustomerId(companyId.value, v$.value.cpf.$model).then(
+			Backend.getInstance().getCustomerImplementation().getCustomerId(companyId.value, v$.value.cpf.$model.replace(/[^\d]+/g, "")).then(
 				result => {
-					customerId.value = result.customerId;
-					loadAddress();
+					customerId.value = result.id;
+					loadAddress(customerId.value);
 				}
 			);
 		});
 	} else {
-		Backend.getInstance().getCustomerImplementation().putCustomer(customerState, companyId.value, customerId.value).then(() => loadAddress());
+		Backend.getInstance().getCustomerImplementation().putCustomer(customerState, companyId.value, customerId.value)
+			.then(() => {
+				console.log(customerMinimal.value);
+				loadAddress(customerMinimal.value.id);
+			});
 	}
 }
 
 const handleSubmit = async (isFormValid: boolean) => {
 	submitted.value = true;
-	if (v$.value.paymentMethod.$model.value == "CREDIT_CARD" && !validDocument(v$.value.holderDocument.$model)) {
+	if (v$.value.paymentMethod.$model.value == "CREDIT_CARD" && !validDocument(v$.value.holderDocument.$model.replace(/[^\d]+/g, ""))) {
 		isFormValid = false;
 	}
 	if (!isFormValid) {

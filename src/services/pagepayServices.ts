@@ -13,7 +13,7 @@ import { AddressServiceable, CardServiceable, CustomerServiceable, PagePayServic
 
 export class PagePayBemPaggo implements PagePayServiceable {
 	async getPaymentPage(companyId: number, uuid: string): Promise<PaymentPageResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}`;      
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}`;
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
@@ -22,14 +22,14 @@ export class PagePayBemPaggo implements PagePayServiceable {
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
-		} 
+		}
 	}
 }
 export class CustomerBemPaggo implements CustomerServiceable {
-	async getCustomerId(companyId:number, customerDocument: string): Promise<CustomerMinimalResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/document/${customerDocument}`;
+	async getCustomerId(companyId: number, customerDocument: string): Promise<CustomerMinimalResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/customers/document/${customerDocument.replace(/[^\d]+/g, "")}`;
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
@@ -37,40 +37,14 @@ export class CustomerBemPaggo implements CustomerServiceable {
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createCustomer(companyId:number, customerState: CustomerRequest): Promise<CustomerResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customer/new`;         
+	async createCustomer(companyId: number, customerState: CustomerRequest): Promise<CustomerResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customer/new`;
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ customerState }) });
-			if (data.ok) {
-				return await data.json();
-			} else {
-				throw new Error("erro no status da requisição");
-			}
-		} catch(error) {
-			throw new Error("erro na requisição");
-		}}
-	async getCustomer(companyId: number, uuid: string): Promise<CustomerResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/customer`;
-		try {
-			const response = await fetch(url, { method: "GET" });
-			if (response.ok) {
-				return await response.json();
-			} else {
-				throw new Error("erro no status da requisição");
-			}
-		} catch(error) {
-			throw new Error("erro na requisição");
-		}
-	}
-	
-	public async putCustomer(customer: CustomerRequest, companyId:number, customerId: number):Promise<CustomerResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customer/${customerId}`;
-		try {
-			const data = await fetch(url, { method: "PUT", body: JSON.stringify({ customer }) });
 			if (data.ok) {
 				return await data.json();
 			} else {
@@ -80,11 +54,8 @@ export class CustomerBemPaggo implements CustomerServiceable {
 			throw new Error("erro na requisição");
 		}
 	}
-}
-
-export class AddressBemPaggo implements AddressServiceable {
-	async getAddress(companyId:number, customerId:number): Promise<AddressResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customers/${customerId}/bestAddress`;        
+	async getCustomer(companyId: number, uuid: string): Promise<CustomerResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/customer`;
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
@@ -92,22 +63,57 @@ export class AddressBemPaggo implements AddressServiceable {
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createAddress(addressState: AddressRequest, companyId:number, customerId:number): Promise<AddressRequest>{
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customers/${customerId}/address/new`;        
+
+	public async putCustomer(customer: CustomerRequest, companyId: number, customerId: number): Promise<any> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/customers/${customerId}`;
+
+		const data = await fetch(url, {
+			method: "PUT", headers: {
+				"Content-Type": "application/json"
+			}, body: JSON.stringify(customer)
+		});
+		if (data.status == 200) {
+			console.log("if");
+			return await data;
+		} else {
+			console.log("else");
+			throw new Error("erro no status da requisição");
+		}
+	}
+}
+
+export class AddressBemPaggo implements AddressServiceable {
+	async getAddress(companyId: number, customerId: number): Promise<AddressResponse> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/customers/${customerId}/bestAddress`;
 		try {
-			const data = await fetch(url, { method: "POST", body: JSON.stringify({ addressState }) });
-			if (data.ok) {
-				return await data.json();
+			const response = await fetch(url, { method: "GET" });
+			if (response.ok) {
+				return await response.json();
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
-		} 
+		}
+	}
+	async createAddress(addressState: AddressRequest, companyId: number, customerId: number): Promise<any> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/customers/${customerId}/address`;
+		try {
+			const data = await fetch(url, { method: "POST", headers: {
+				"Content-Type": "application/json"
+			}, body: JSON.stringify(addressState) });
+			if (data.ok) {
+				return await data;
+			} else {
+				throw new Error("erro no status da requisição");
+			}
+		} catch (error) {
+			throw new Error("erro na requisição");
+		}
 	}
 	public async putAddress(customerId: number, address: AddressRequest) {
 		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/customer/${customerId}/address/update`;
@@ -125,7 +131,7 @@ export class AddressBemPaggo implements AddressServiceable {
 }
 export class CardBemPaggo implements CardServiceable {
 	async getBrands(companyId: number, uuid: string): Promise<BrandsResponse[]> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/brands`;        
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/brands`;
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
@@ -133,12 +139,12 @@ export class CardBemPaggo implements CardServiceable {
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
 		}
 	}
 	async createCard(cardState: CardRequest, companyId: number, customerId: number): Promise<string> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customers/${customerId}/card`;                
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customers/${customerId}/card`;
 		try {
 			const data = await fetch(url, { method: "POST", body: JSON.stringify({ cardState }) });
 			if (data.ok) {
@@ -147,11 +153,11 @@ export class CardBemPaggo implements CardServiceable {
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
 		}
 	}
-	async getCard(url:string): Promise<CardResponse> {
+	async getCard(url: string): Promise<CardResponse> {
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
@@ -159,11 +165,11 @@ export class CardBemPaggo implements CardServiceable {
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
 		}
 	}
-    
+
 }
 
 export class PaymentBemPaggo implements PaymentServiceable {
@@ -175,48 +181,54 @@ export class PaymentBemPaggo implements PaymentServiceable {
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createPaymentPix(paymentState: SaleRequest, companyId:number, uuid:string): Promise<string> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/pix`;        
+	async createPaymentPix(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/pix`;
 		try {
-			const data = await fetch(url, { method: "POST", body: JSON.stringify({ paymentState }) });
+			const data = await fetch(url, { method: "POST", headers: {
+				"Content-Type": "application/json"
+			}, body: JSON.stringify(paymentState) });
 			if (data.ok) {
 				return await data.headers.get("Location");
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createPaymentCreditCard(paymentState: SaleRequest, companyId:number, uuid:string): Promise<string> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/credit/card`;        
+	async createPaymentCreditCard(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/credit/card`;
 		try {
-			const data = await fetch(url, { method: "POST", body: JSON.stringify({ paymentState }) });
+			const data = await fetch(url, { method: "POST", headers: {
+				"Content-Type": "application/json"
+			}, body: JSON.stringify({ paymentState }) });
 			if (data.ok) {
 				return await data.headers.get("Location");
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createPaymentBankSlip(paymentState: SaleRequest, companyId:number, uuid:string): Promise<string> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/bank/slip`;        
+	async createPaymentBankSlip(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/${uuid}/bank/slip`;
 		try {
-			const data = await fetch(url, { method: "POST", body: JSON.stringify({ paymentState }) });
+			const data = await fetch(url, { method: "POST",headers: {
+				"Content-Type": "application/json"
+			}, body: JSON.stringify(paymentState) });
 			if (data.ok) {
 				return await data.headers.get("Location");
 			} else {
 				throw new Error("erro no status da requisição");
 			}
-		} catch(error) {
+		} catch (error) {
 			throw new Error("erro na requisição");
 		}
 	}
-    
+
 }

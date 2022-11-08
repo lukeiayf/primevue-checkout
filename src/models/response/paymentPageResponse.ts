@@ -5,7 +5,7 @@ export class PaymentPageResponse {
 	plan?: PlanResponse;
 	image?: string;
 	description?: string;
-	paymentMethods: string[];
+	methods: string[];
 	installmentType?: string;
 	affiliate: AffiliateMinimalResponse;
 	loose?: LooseResponse;

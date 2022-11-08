@@ -20,7 +20,7 @@ export interface CustomerServiceable {
     putCustomer(customer: CustomerRequest, companyId:number, customerId: number): Promise<CustomerResponse>;
 }
 export interface AddressServiceable {
-    createAddress(addressState: AddressRequest, companyId:number, customerId: number): Promise<AddressRequest>;
+    createAddress(addressState: AddressRequest, companyId:number, customerId: number): Promise<AddressResponse>;
     getAddress(companyId:number, customerId: number): Promise<AddressResponse>;
 }
 export interface CardServiceable {

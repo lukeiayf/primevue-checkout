@@ -1,7 +1,7 @@
 export class AddressResponse {
 	street: string;
-	number: string;
-	lineTwo?: string;
+	streetNumber: string;
+	addressLineTwo?: string;
 	zipCode: string;
 	city: string;
 	state: string;
