@@ -9,6 +9,7 @@ import { CustomerResponse } from "@/models/response/customerResponse";
 import { PaymentInfoResponse } from "@/models/response/paymentInfoResponse";
 import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
 import { CustomerMinimalResponse } from "@/models/response/customerMinimalResponse";
+import { TransactionResponse } from "@/models/response/transactionResponse";
 
 export interface PagePayServiceable {
     getPaymentPage(companyId: number, uuid: string): Promise<PaymentPageResponse>;
@@ -29,6 +30,7 @@ export interface CardServiceable {
     getBrands(companyId:number, uuid:string): Promise<BrandsResponse[]>
 }
 export interface PaymentServiceable {
+    getTransaction(location: string): Promise<TransactionResponse>;
     createPaymentPix(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string>;
     createPaymentCreditCard(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string>;
     createPaymentBankSlip(paymentState: SaleRequest, companyId: number, uuid: string): Promise<string>;

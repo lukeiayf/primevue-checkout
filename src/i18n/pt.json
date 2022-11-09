@@ -82,5 +82,10 @@
 		"nomePlano": "Nome do plano",
 		"loja": "Loja",
 		"descricao": "Descrição"
+	},
+	"transactionSummary": {
+		"CREDIT_CARD": "Cartão de crédito",
+		"BANK_SLIP": "Boleto",
+		"PIX": "Pix" 
 	}
 }

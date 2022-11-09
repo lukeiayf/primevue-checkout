@@ -27,7 +27,7 @@ describe("backend", () => {
 		expect(pagepay.plan.trialDays).toEqual(15);
 		expect(pagepay.loose.value).toEqual(10.50);
 		expect(pagepay.loose.maxInstallments).toEqual(2);
-		expect(pagepay.paymentMethods).toEqual(["CREDIT_CARD", "PIX", "BANKSLIP"]);
+		expect(pagepay.paymentMethods).toEqual(["CREDIT_CARD", "PIX", "BANK_SLIP"]);
 		expect(pagepay.affiliate.id).toEqual(1);
 		expect(pagepay.affiliate.name).toEqual("netflix");
 		expect(pagepay.affiliate.businessName).toEqual("netflix nome");

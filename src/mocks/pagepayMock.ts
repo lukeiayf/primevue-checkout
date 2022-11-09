@@ -35,7 +35,7 @@ export class PagePayMock implements PagePayServiceable {
 			paymentMethods: [
 				"CREDIT_CARD",
 				"PIX",
-				"BANKSLIP"
+				"BANK_SLIP"
 			],
 			affiliate: {
 				id: 1,

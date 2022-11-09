@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import { Brand } from "../helpers/verifyCard";
+import { BrandsResponse } from "./response/brandsResponse";
 import { PaymentMethod } from "./response/paymentMethodResponse";
 
 export interface DefaultState {
@@ -18,7 +18,7 @@ export interface DefaultState {
     city: string,
     paymentMethod: PaymentMethod,
     installments: number,
-    cardBrand: Brand,
+    cardBrand: BrandsResponse,
     cardNumber: string,
     dueDate: Date,
     securityCode: string,

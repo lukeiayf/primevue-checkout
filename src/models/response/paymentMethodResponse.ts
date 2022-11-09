@@ -13,7 +13,7 @@ export const paymentMethods: PaymentMethod[] = [
 	},
 	{
 		name: "Boleto",
-		value: "BANKSLIP"
+		value: "BANK_SLIP"
 	},
 	{
 		name: "Pix",

@@ -9,6 +9,7 @@ import { CustomerMinimalResponse } from "@/models/response/customerMinimalRespon
 import { CustomerResponse } from "@/models/response/customerResponse";
 import { PaymentInfoResponse } from "@/models/response/paymentInfoResponse";
 import { PaymentPageResponse } from "@/models/response/paymentPageResponse";
+import { TransactionResponse } from "@/models/response/transactionResponse";
 import { AddressServiceable, CardServiceable, CustomerServiceable, PagePayServiceable, PaymentServiceable } from "./facade";
 
 export class PagePayBemPaggo implements PagePayServiceable {
@@ -144,9 +145,11 @@ export class CardBemPaggo implements CardServiceable {
 		}
 	}
 	async createCard(cardState: CardRequest, companyId: number, customerId: number): Promise<string> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customers/${customerId}/card`;
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/customers/${customerId}/credit/card`;
 		try {
-			const data = await fetch(url, { method: "POST", body: JSON.stringify({ cardState }) });
+			const data = await fetch(url, { method: "POST", headers: {
+				"Content-Type": "application/json"
+			}, body: JSON.stringify(cardState)});
 			if (data.ok) {
 				const location = data.headers.get("Location");
 				return location;
@@ -173,6 +176,18 @@ export class CardBemPaggo implements CardServiceable {
 }
 
 export class PaymentBemPaggo implements PaymentServiceable {
+	async getTransaction(location: string): Promise<TransactionResponse> {
+		try {
+			const response = await fetch(location, { method: "GET" });
+			if (response.ok) {
+				return await response.json();
+			} else {
+				throw new Error("erro no status da requisição");
+			}
+		} catch (error) {
+			throw new Error("erro na requisição");
+		}
+	}
 	async getPaymentInfo(url: string): Promise<PaymentInfoResponse> {
 		try {
 			const response = await fetch(url, { method: "GET" });
@@ -205,7 +220,7 @@ export class PaymentBemPaggo implements PaymentServiceable {
 		try {
 			const data = await fetch(url, { method: "POST", headers: {
 				"Content-Type": "application/json"
-			}, body: JSON.stringify({ paymentState }) });
+			}, body: JSON.stringify(paymentState) });
 			if (data.ok) {
 				return await data.headers.get("Location");
 			} else {

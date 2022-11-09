@@ -18,7 +18,7 @@
 							v-if="v$.paymentMethod.$model.value == 'CREDIT_CARD'" icon="pi pi-play" iconPos="left" />
 						<Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
 							v-tooltip="'Será gerado um Boleto Bancário'"
-							v-if="v$.paymentMethod.$model.value == 'BANKSLIP'" icon="pi pi-play" iconPos="left" />
+							v-if="v$.paymentMethod.$model.value == 'BANK_SLIP'" icon="pi pi-play" iconPos="left" />
 						<Button type="submit" :label="$t('botao.finalizarTransacao')" class="full"
 							v-tooltip="'Será gerado um QR code'" v-if="v$.paymentMethod.$model.value == 'PIX'"
 							icon="pi pi-play" iconPos="left" />
@@ -71,7 +71,7 @@ let customerId: Ref<number> = ref(null);
 let customerMinimal: Ref<CustomerMinimalResponse> = ref(new CustomerMinimalResponse);
 let paymentPage: Ref<PaymentPageResponse> = ref(new PaymentPageResponse());
 let paymentLocation: Ref<string> = ref("");
-let paymentMethod: Ref<string> = ref(v$.value.paymentMethod.$model.value);
+let paymentMethod: Ref<string> = ref("");
 
 let payments: Ref<string[]> = ref([]);
 let paymentOptions2: Ref<PaymentMethod[]> = ref([
@@ -81,7 +81,7 @@ let paymentOptions2: Ref<PaymentMethod[]> = ref([
 	},
 	{
 		name: "Boleto",
-		value: "BANKSLIP"
+		value: "BANK_SLIP"
 	},
 	{
 		name: "Pix",
@@ -130,8 +130,8 @@ Backend.getInstance().getCustomerImplementation().getCustomer(companyId.value, u
 					v$.value.city.$model = address.value.city;
 					v$.value.state.$model = address.value.state;
 					v$.value.street.$model = address.value.street;
-					v$.value.number.$model = address.value.streetNumber;
-					v$.value.lineTwo.$model = address.value.addressLineTwo;
+					v$.value.number.$model = address.value.number;
+					v$.value.lineTwo.$model = address.value.lineTwo;
 				}
 			);
 		}
@@ -147,6 +147,7 @@ function loadPayment() {
 		customerId: customerId.value,
 		installments: v$.value.installments.$model,
 	};
+	paymentMethod.value = v$.value.paymentMethod.$model.value;
 	if (v$.value.paymentMethod.$model.value == "CREDIT_CARD") {
 		card = {
 			cardBrand: v.value.cardBrand.$model.name,
@@ -154,13 +155,13 @@ function loadPayment() {
 			holderDocument: v$.value.holderDocument.$model.replace(/[^\d]+/g, ""),
 			holderName: v$.value.holderName.$model,
 			expirationDate: v$.value.dueDate.$model.getTime(),
-			securityCode: parseInt(v$.value.securityCode.$model),
+			securityCode: v$.value.securityCode.$model,
 		};
 		Backend.getInstance().getCardImplementation().createCard(card, companyId.value, customerId.value).then(
 			result => {
 				Backend.getInstance().getCardImplementation().getCard(result).then(
 					result => {
-						profileId = result.profileId;
+						profileId = result.id;
 						payment.value.profileId = profileId;
 						Backend.getInstance().getPaymentImplementation().createPaymentCreditCard(payment.value, companyId.value, uuid.value).then(
 							result => {
@@ -172,8 +173,7 @@ function loadPayment() {
 				);
 			}
 		);
-
-	} else if (v$.value.paymentMethod.$model.value == "BANKSLIP") {
+	} else if (v$.value.paymentMethod.$model.value == "BANK_SLIP") {
 		Backend.getInstance().getPaymentImplementation().createPaymentBankSlip(payment.value, companyId.value, uuid.value).then(
 			result => {
 				paymentLocation.value = result;
@@ -183,6 +183,8 @@ function loadPayment() {
 	} else if (v$.value.paymentMethod.$model.value == "PIX") {
 		Backend.getInstance().getPaymentImplementation().createPaymentPix(payment.value, companyId.value, uuid.value).then(
 			result => {
+				console.log(paymentMethod.value);
+				console.log(v$.value.paymentMethod.$model.value);
 				paymentLocation.value = result;
 				showTransactionSummary.value = true;
 			}
@@ -192,7 +194,6 @@ function loadPayment() {
 }
 
 function loadAddress(customerId: number) {
-	console.log("chegou no load");
 	const AddressState: AddressRequest = {
 		zipCode: v$.value.zipcode.$model,
 		street: v$.value.street.$model,
@@ -230,7 +231,6 @@ async function loadCustomer() {
 	} else {
 		Backend.getInstance().getCustomerImplementation().putCustomer(customerState, companyId.value, customerId.value)
 			.then(() => {
-				console.log(customerMinimal.value);
 				loadAddress(customerMinimal.value.id);
 			});
 	}

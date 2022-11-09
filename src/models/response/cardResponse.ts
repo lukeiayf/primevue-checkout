@@ -1,3 +1,3 @@
 export class CardResponse {
-	profileId: number;
+	id: number;
 }
