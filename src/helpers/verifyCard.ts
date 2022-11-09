@@ -39,10 +39,26 @@ Backend.getInstance().getCardImplementation().getBrands(companyId.value, uuid.va
 
 
 export function verifyCard(card) {
+
 	let foundCardBrand = false;
 	const cardNumber = card.replace(/[^\d]+/g, "");
 	const cardType = creditCardType(cardNumber);
-	const modelCardBrand = cardType[0].type;
+	let modelCardBrand = cardType[0].type;
+	switch (modelCardBrand) {
+	case "mastercard":
+		modelCardBrand = "master";
+		break;
+	case "american-express":
+		modelCardBrand = "amex";
+		break;
+	case "diners-club":
+		modelCardBrand = "diners";
+		break;
+	case "discover":
+		modelCardBrand = "discovery";
+		break;
+	}
+	console.log(brandsAdministradoras.value);
 	for (let i = 0; i < brandsAdministradoras.value.length; i++) {
 		if (modelCardBrand.toLowerCase() == brandsAdministradoras.value[i].name.toLowerCase()) {
 			v.value.cardBrand.$model = brandsAdministradoras.value[i];

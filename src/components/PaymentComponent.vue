@@ -89,8 +89,6 @@ import { v$ } from "@/helpers/vuelidadeConfig";
 
 const today: Ref<Date> = ref(new Date());
 
-
-
 const props = defineProps<{
   submitted: boolean;
   maxInstallments: number;

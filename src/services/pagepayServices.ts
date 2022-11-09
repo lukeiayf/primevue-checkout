@@ -108,7 +108,7 @@ export class AddressBemPaggo implements AddressServiceable {
 				"Content-Type": "application/json"
 			}, body: JSON.stringify(addressState) });
 			if (data.ok) {
-				return await data;
+				return data;
 			} else {
 				throw new Error("erro no status da requisição");
 			}

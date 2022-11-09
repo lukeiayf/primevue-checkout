@@ -24,7 +24,7 @@
           <strong>{{ $t('quantidadeParcelas') }}</strong>: {{ props.payment.installments }}
         </li>
         <li class="item-list"  v-if="props.paymentMethod == 'CREDIT_CARD'">
-          <strong> Status </strong>: {{ transaction.status }}
+          <strong> {{ $t('status') }} </strong>: {{ $t(`transactionSummary.status.${transaction.status}`) }}
         </li>
         <li type="date" v-if="props.paymentMethod == 'PIX'" class="item-list">
           <strong>{{ $t('detalhesPagamento.dataExpiracao') }}</strong>: {{ date }}

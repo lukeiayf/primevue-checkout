@@ -83,9 +83,30 @@
 		"loja": "Loja",
 		"descricao": "Descrição"
 	},
+	"status": "Status",
 	"transactionSummary": {
 		"CREDIT_CARD": "Cartão de crédito",
 		"BANK_SLIP": "Boleto",
-		"PIX": "Pix" 
+		"PIX": "Pix", 
+		"status":{
+			"IN_PROGRESS": "Em progresso",
+			"APPROVED": "Aprovado",
+			"REFUND": "Estornado",
+			"AUTHORIZED": "Autorizado",
+			"PARTIALLY_REFUNDED": "Parcialmente estornado",
+			"MANUAL_DISCHARGE": "Baixa manual",
+			"MANUAL_REFUND": "Estorno manual",
+			"NOT_AUTHORIZED": "Não autorizado",
+			"NOT_APPROVED": "Não aprovado",
+			"CHARGEBACK": "Chargeback",
+			"PARTIALLY_MANUAL_REFUND": "Estorno parcial",
+			"COUNTERCHARGE": "Contestação",
+			"CANCELED": "Cancelado",
+			"AWAITING_PAYMENT": "Aguardando pagamento",
+			"UNDER_PAYMENT": "Pagamento menor",
+			"OVER_PAYMENT": "Pagamento maior",
+			"FAIL": "Falha",
+			"INVALID": "Inválido"
+		}
 	}
 }
