@@ -15,32 +15,56 @@
       <div class="center">
         <img :src="imgSrc" class="img"/>
       </div>
-      <ul class="list">
-        <li class=item-list v-if="paymentPage.plan?.accessionValue">
-          <strong>{{$t('detalhesCompra.adesao')}}</strong>: {{paymentPage.plan.accessionValue}}
+      <ul class="list p-icon-right">
+        <li class="item-list" v-if="paymentPage.plan?.accessionValue">
+          <span>
+            <strong>{{$t('detalhesCompra.adesao')}}</strong>: R${{paymentPage.plan.accessionValue}}
+          </span>
+          <i class="pi pi-dollar"></i>
         </li>
         <li class=item-list v-if="paymentPage.loose?.value">
-          <strong>{{$t('detalhesCompra.valorPrincipal')}}</strong>: {{paymentPage.loose?.value}}
+          <span>
+            <strong>{{$t('detalhesCompra.valorPrincipal')}}</strong>: R${{paymentPage.loose?.value}}
+          </span>
+          <i class="pi pi-dollar"></i>
         </li>
         <li class=item-list v-if="paymentPage.plan?.value">
-          <strong>{{$t('detalhesCompra.valorPlano')}}</strong>: {{paymentPage.plan?.value}}
+          <span>
+            <strong>{{$t('detalhesCompra.valorPlano')}}</strong>: R${{paymentPage.plan?.value}}
+          </span>
+          <i class="pi pi-dollar"></i>
         </li>
         <li class=item-list v-if="paymentPage.plan">
-          <strong>{{$t('detalhesCompra.total')}}</strong>: {{paymentPage.plan?.accessionValue ?
-          (paymentPage.plan?.accessionValue + paymentPage.plan?.value) :
-          paymentPage.plan?.value }}
+          <span>
+            <strong>{{$t('detalhesCompra.total')}}</strong>: R${{paymentPage.plan?.accessionValue ?
+            (paymentPage.plan?.accessionValue + paymentPage.plan?.value) :
+            paymentPage.plan?.value }}
+          </span>
+          <i class="pi pi-money-bill"></i>
         </li>
         <li class=item-list v-if="paymentPage.plan?.frequency">
-          <strong>{{$t('detalhesCompra.periodicidade.titulo')}}</strong>: {{$t(`detalhesCompra.periodicidade.${paymentPage.plan.frequency}`)}}
+          <span>
+            <strong>{{$t('detalhesCompra.periodicidade.titulo')}}</strong>: {{$t(`detalhesCompra.periodicidade.${paymentPage.plan.frequency}`)}}
+          </span>
+          <i class="pi pi-calendar"></i>
         </li>
         <li class=item-list v-if="paymentPage.plan?.name">
-          <strong>{{$t('detalhesCompra.nomePlano')}}</strong>: {{paymentPage.plan?.name}}
+          <span>
+            <strong>{{$t('detalhesCompra.nomePlano')}}</strong>: {{paymentPage.plan?.name}}
+          </span>
+          <i class="pi pi-info-circle"></i>
         </li>
         <li class=item-list v-if="paymentPage.affiliate?.name">
-          <strong>{{$t('detalhesCompra.loja')}}</strong>: {{paymentPage.affiliate?.name}}
+          <span>
+            <strong>{{$t('detalhesCompra.loja')}}</strong>: {{paymentPage.affiliate?.name}}
+          </span>
+          <i class="pi pi-shopping-cart"></i>
         </li>
         <li class=item-list v-if="paymentPage.description">
-          <strong>{{$t('detalhesCompra.descricao')}}</strong>: {{paymentPage.description}}
+          <span>
+            <strong>{{$t('detalhesCompra.descricao')}}</strong>: {{paymentPage.description}}
+          </span>
+          <i class="pi pi-info"></i>
         </li>
       </ul>
     </template>
@@ -82,6 +106,8 @@ Backend.getInstance().getPagePayImplementation().getPaymentPage(companyId.value,
 }
 
 .item-list {
+  display: flex;
+  justify-content: space-between;
   border: #d4d9de solid 1px;
   border-radius: 3px;
   margin-bottom: 5px;

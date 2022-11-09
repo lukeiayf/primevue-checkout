@@ -58,7 +58,6 @@ export function verifyCard(card) {
 		modelCardBrand = "discovery";
 		break;
 	}
-	console.log(brandsAdministradoras.value);
 	for (let i = 0; i < brandsAdministradoras.value.length; i++) {
 		if (modelCardBrand.toLowerCase() == brandsAdministradoras.value[i].name.toLowerCase()) {
 			v.value.cardBrand.$model = brandsAdministradoras.value[i];

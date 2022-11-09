@@ -3,9 +3,9 @@
     <span class="p-float-label p-input-icon-right">
         <i class="pi pi-user" />
         <InputText id="username" type="text" v-model="v$.username.$model" class="full input-size"
-            :class="{ 'full input-size p-invalid': v$.username.$invalid && props.submitted }" />
+        :class="{ 'full input-size p-invalid': v$.username.$invalid && props.submitted }" />
         <label for="username" :class="{ ' full p-inputtext-sm p-error': v$.username.$invalid && props.submitted }">{{
-                $t('cliente.nome')
+            $t('cliente.nome')
         }}*</label>
     </span>
     <small v-if="(v$.username.$invalid && props.submitted) || v$.username.$pending" class="p-error">{{

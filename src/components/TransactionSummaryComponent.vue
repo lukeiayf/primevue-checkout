@@ -7,35 +7,65 @@
     </template>
     <template #content>
       <h5>{{ $t('dadosCliente') }}</h5>
-      <ul class="list">
+      <ul class="list p-icon-right">
         <li class="item-list">
-          <strong>{{ $t('cliente.nome') }}</strong>: {{ props.customer.name }}
+          <span>
+            <strong>{{ $t('cliente.nome') }}</strong>: {{ props.customer.name }}
+          </span>
+          <i class="pi pi-user" />
         </li>
         <li class="item-list">
-          <strong>{{ $t('cliente.email') }}</strong>: {{ props.customer.email }}
+          <span>
+            <strong>{{ $t('cliente.email') }}</strong>: {{ props.customer.email }}
+          </span>
+          <i class="pi pi-at"></i>
         </li>
       </ul>
       <h5>{{ $t('dadosPagamento') }}</h5>
       <ul class="list">
         <li class="item-list">
-          <strong>{{ $t('metodoPagamento') }}</strong>: {{ $t(`transactionSummary.${paymentMethod}`) }}
+          <span>
+            <strong>{{ $t('metodoPagamento') }}</strong>: {{ $t(`transactionSummary.${paymentMethod}`) }}
+          </span>
+          <i class="pi pi-dollar"></i>
         </li>
         <li class="item-list">
-          <strong>{{ $t('quantidadeParcelas') }}</strong>: {{ props.payment.installments }}
+          <span>
+            <strong>{{ $t('quantidadeParcelas') }}</strong>: {{ props.payment.installments }}
+          </span>
+          <i class="pi pi-money-bill"></i>
         </li>
         <li class="item-list"  v-if="props.paymentMethod == 'CREDIT_CARD'">
-          <strong> {{ $t('status') }} </strong>: {{ $t(`transactionSummary.status.${transaction.status}`) }}
+          <span>
+            <strong> {{ $t('status') }} </strong>: {{ $t(`transactionSummary.status.${transaction.status}`) }}
+          </span>
+          <i class="pi pi-calendar"></i>
         </li>
         <li type="date" v-if="props.paymentMethod == 'PIX'" class="item-list">
-          <strong>{{ $t('detalhesPagamento.dataExpiracao') }}</strong>: {{ date }}
+          <span>
+            <strong>{{ $t('detalhesPagamento.dataExpiracao') }}</strong>: {{ date }}
+          </span>
+          <i class="pi pi-calendar"></i>
         </li>
         <li v-if="props.paymentMethod == 'BANK_SLIP'" class="item-list">
-          <strong>{{ $t('detalhesPagamento.dataVencimento') }}</strong>: {{ date }}
+          <span>
+            <strong>{{ $t('detalhesPagamento.dataVencimento') }}</strong>: {{ date }}
+          </span>
+          <i class="pi pi-calendar"></i>
         </li>
         <li v-if="props.paymentMethod == 'BANK_SLIP'" class="item-list">
-          <strong>{{ $t('detalhesPagamento.linhaDigitavel') }}</strong>: {{ code }}
+          <span>
+            <strong>{{ $t('detalhesPagamento.linhaDigitavel') }}</strong>: {{ code }}
+          </span>
+          <i class="pi pi-info"></i>
         </li>
       </ul>
+      <div v-if="props.paymentMethod == 'CREDIT_CARD'" class="center container-qrcode">
+        <img v-if="transaction.status == 'APPROVED'" src="../assets/shopping-cart.png" class="img-barcode" alt="Boleto" />
+        <img v-if="!transactionOk" src="../assets/warning.jpg" class="img-qrcode" alt="Houve um erro durante a transaction" />
+        <Button v-if="!transactionOk" type="button" id="btn-copy" class="refresh-button" v-tooltip="'Houve um erro durante a transação, clique aqui para tentar novamente'" 
+          icon="pi pi-refresh" iconPos="left" @click="reloadPage()">{{ textReloadTransaction }}</Button>
+      </div>
       <div v-if="props.paymentMethod == 'BANK_SLIP'" class="center">
         <img :src="imgSrcBankslip" class="img-barcode" alt="Boleto" />
       </div>
@@ -65,23 +95,23 @@ const imgSrcPix: Ref<string> = ref("");
 const props = defineProps<{
   customer: CustomerResponse;
   payment: SaleRequest;
-  location: string;
+  url: string;
   paymentMethod: string;
 }>();
 let transaction: Ref<TransactionResponse> = ref(new TransactionResponse());
-
 let companyId: Ref<number> = ref(null);
 let uuid: Ref<string> = ref("");
-
-companyId.value = parseInt(window.location.pathname.split("/")[2]);
-uuid.value = window.location.pathname.split("/")[3];
-
 let date: Ref<string> = ref("");
 let code: Ref<string> = ref("");
 let textButton: Ref<string> = ref("Pix copia e cola");
+let textReloadTransaction: Ref<string> = ref("Clique aqui para tentar novamente");
+let transactionOk: Ref<boolean> = ref(true); 
+        
+companyId.value = parseInt(window.location.pathname.split("/")[2]);
+uuid.value = window.location.pathname.split("/")[3];
 
 if (props.paymentMethod != "CREDIT_CARD") {
-	Backend.getInstance().getPaymentImplementation().getPaymentInfo(props.location).then(
+	Backend.getInstance().getPaymentImplementation().getPaymentInfo(props.url).then(
 		result => {
 			date.value = moment(result.date).format("DD/MM/yyyy");
 			code.value = result.code;
@@ -93,9 +123,12 @@ if (props.paymentMethod != "CREDIT_CARD") {
 		}
 	);
 } else {
-	Backend.getInstance().getPaymentImplementation().getTransaction(props.location).then(
+	Backend.getInstance().getPaymentImplementation().getTransaction(props.url).then(
 		result => {
 			transaction.value = result;
+			if (transaction.value.status == ("NOT_AUTHORIZED" || "NOT_APPROVED" || "CANCELED" || "FAIL" || "INVALID")) {
+				transactionOk.value = false;
+			}
 		}
 	);
 }
@@ -104,6 +137,10 @@ function copyEmv() {
 	navigator.clipboard.writeText(code.value);
 	textButton.value = "Copiado!";
 	document.getElementById("btn-copy").classList.add("copy");
+}
+
+function reloadPage(){
+	location.reload();
 }
 </script> 
 
@@ -125,6 +162,8 @@ function copyEmv() {
 }
 
 .item-list {
+  display: flex;
+  justify-content: space-between;
   border: #d4d9de solid 1px;
   border-radius: 3px;
   margin-bottom: 5px;
@@ -161,5 +200,10 @@ function copyEmv() {
   margin-bottom: 1.5em;
   margin-top: 1.5em;
   align-items: center;
+}
+
+.refresh-button {
+  width: 13rem !important;
+  padding: 0.5rem;
 }
 </style>

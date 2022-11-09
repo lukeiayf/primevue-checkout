@@ -28,7 +28,7 @@
 		</template>
 	</Card>
 
-	<TransactionSummaryComponent :customer="customer" :location="paymentLocation" :payment="payment"
+	<TransactionSummaryComponent :customer="customer" :url="paymentLocation" :payment="payment"
 		:paymentMethod="paymentMethod" v-if="showTransactionSummary">
 	</TransactionSummaryComponent>
 </template>
