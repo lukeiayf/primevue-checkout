@@ -120,7 +120,7 @@ const props = defineProps<{
 }
 
 .input-size {
-    padding: 2px;
+    padding: 2px 0 3px 10px;
 }
 
 .date-size {

@@ -1,14 +1,10 @@
 <template>
   <Card class="sale-details-card">
     <template #title>
-      <div class="flex-start-column">
-        <img class="logo" src="..\assets\bempaggo.png" />
-      </div>
-    </template>
-    <template #subtitle>
       <div class="margin center">
         <h5>{{ $t('detalhesCompraTitulo') }}</h5>
       </div>
+      
     </template>
     <template #content>
 
@@ -41,7 +37,7 @@
             {{ $t('detalhesCompra.valorPlano') }}
           </span>
           <span>
-            <strong>${{ paymentPage.plan?.value }}</strong>
+            <strong>R${{ paymentPage.plan?.value }}</strong>
           </span>
           <!-- <i class="pi pi-dollar"></i> -->
         </li>
@@ -105,6 +101,9 @@
           <!-- <i class="pi pi-info"></i> -->
         </li>
       </ul>
+      <div class="title-logo">
+        <img class="logo" src="..\assets\bempaggo.png" />
+      </div>
     </template>
 
   </Card>
@@ -145,7 +144,7 @@ Backend.getInstance().getPagePayImplementation().getPaymentPage(companyId.value,
 }
 
 span {
-  font-size: medium;
+  font-size: 1rem;
 }
 
 .item-list {
@@ -163,7 +162,7 @@ span {
 
 .logo {
   width: 150px;
-  margin: 1rem;
+  margin: auto;
 }
 
 .img {
@@ -171,9 +170,9 @@ span {
   border-radius: 10px;
 }
 
-.flex-start-column {
+.title-logo {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   flex-direction: column
 }
 
@@ -187,6 +186,7 @@ span {
   margin-bottom: 1.5em;
   margin-top: 1.5em;
   align-items: center;
+	border-radius: 5px !important;
 }
 
 .p-divider-solid.p-divider-horizontal:before {

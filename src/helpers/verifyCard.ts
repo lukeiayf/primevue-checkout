@@ -28,18 +28,24 @@ export const brandsAdministradoras: Ref<BrandsResponse[]> = ref([]);
 const companyId: Ref<number> = ref(null);
 const uuid: Ref<string> = ref("");
 
-companyId.value = parseInt(window.location.pathname.split("/")[2]);
-uuid.value = window.location.pathname.split("/")[3];
 
-Backend.getInstance().getCardImplementation().getBrands(companyId.value, uuid.value).then(
-	brands => {
-		brandsAdministradoras.value = brands;
+
+
+export function verifyCardFunction(card) {
+
+	if (import.meta.env.VITE_APP_BACK_END_CLASS == "BackendImplementationMock") {
+		companyId.value = 1;
+		uuid.value = "1";
+	} else {
+		companyId.value = parseInt(window.location.pathname.split("/")[2]);
+		uuid.value = window.location.pathname.split("/")[3];
 	}
-);
-
-
-export function verifyCard(card) {
-
+	
+	Backend.getInstance().getCardImplementation().getBrands(companyId.value, uuid.value).then(
+		brands => {
+			brandsAdministradoras.value = brands;
+		}
+	);
 	let foundCardBrand = false;
 	const cardNumber = card.replace(/[^\d]+/g, "");
 	const cardType = creditCardType(cardNumber);

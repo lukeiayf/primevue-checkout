@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-nowrap">
+  <div class="flex-nowrap" v-if="props.maxInstallments > 1">
     <span class="p-float-label">
       <InputNumber v-model="v$.installments.$model" id="installments" showButtons mode="decimal" :min="1"
         :max="props.maxInstallments"
@@ -28,7 +28,7 @@
         <i class="pi pi-credit-card"></i>
         <InputText required id="cardNumber" type="text" v-model="v$.cardNumber.$model" maxlength="19"
           class="full input-size" :class="{ 'full input-size p-invalid': v$.cardNumber.$invalid && props.submitted }"
-          @blur="verifyCard(v$.cardNumber.$model)" />
+          @blur="verifyCardFunction(v$.cardNumber.$model)" />
         <label for="number" :class="{ 'p-error': v$.cardNumber.$invalid && props.submitted }">{{ $t('cartao.numero')
         }}*</label>
       </span>
@@ -97,7 +97,7 @@ import Dropdown from "primevue/dropdown";
 import InputText from "primevue/inputtext";
 import Calendar from "primevue/calendar";
 import { validDocument } from "@/helpers/validDocument";
-import { v, brandsAdministradoras, verifyCard } from "@/helpers/verifyCard";
+import { v, brandsAdministradoras, verifyCardFunction } from "@/helpers/verifyCard";
 import InputNumber from "primevue/inputnumber";
 import { Ref, ref } from "vue";
 import { v$ } from "@/helpers/vuelidadeConfig";
@@ -138,7 +138,7 @@ const props = defineProps<{
 }
 
 .input-size {
-  padding: 2px;
+  padding: 2px 0 3px 10px;
 }
 
 .dropdown-size {

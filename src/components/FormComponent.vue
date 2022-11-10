@@ -1,15 +1,21 @@
 <template>
 	<Card class="card" v-show="!showTransactionSummary">
+		<template #title>
+      <div class="margin center">
+        <h5>Formulário de venda</h5>
+      </div>
+      
+    </template>
 		<template #content>
 			<form @submit.prevent="handleSubmit(!v$.$invalid && !v.$invalid)" class="p-fluid">
-				<h5>{{ $t('dadosCliente') }}</h5>
+				<h5 class="title-client">{{ $t('dadosCliente') }}</h5>
 				<div class="input-area">
 					<CustomerComponent :submitted="submitted"></CustomerComponent>
 					<h5>{{ $t('dadosEndereco') }}</h5>
 					<AddressComponent :submitted="submitted"></AddressComponent>
 					<div>
 						<h5>{{ $t('dadosPagamento') }}</h5>
-						<SelectButton class="button-payment center-button" v-model="v$.paymentMethod.$model"
+						<SelectButton style="border-radius: 10px" class="button-payment center-button" v-model="v$.paymentMethod.$model"
 							:options="paymentOptions2" optionLabel="name" aria-labelledby="single" />
 						<PaymentComponent :submitted="submitted" :maxInstallments="maxInstallments"></PaymentComponent>
 					</div>
@@ -253,6 +259,10 @@ const handleSubmit = async (isFormValid: boolean) => {
 </script> 
 
 <style lang="scss" scoped>
+
+.title-client{
+	margin-top: 15px;
+}
 .flex-row {
 	display: flex !important;
 	flex-direction: row !important;
@@ -270,6 +280,9 @@ const handleSubmit = async (isFormValid: boolean) => {
 	margin-bottom: 1.5em;
 	margin-top: 1.5em;
 	align-items: center;
+	padding: 2rem;
+	padding-top: 0rem;
+	border-radius: 5px !important;
 }
 
 .flex-nowrap {
@@ -292,7 +305,7 @@ const handleSubmit = async (isFormValid: boolean) => {
 }
 
 .input-size {
-	padding: 2px;
+	padding: 2px 0 3px 10px;
 }
 
 .date-size {
@@ -315,6 +328,7 @@ const handleSubmit = async (isFormValid: boolean) => {
 
 .button-payment {
 	margin-bottom: 2rem;
+    border-radius: 8px !important;
 }
 
 .dropdown-size {

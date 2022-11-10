@@ -234,7 +234,7 @@ function reloadPage() {
 }
 
 span {
-  font-size: medium;
+  font-size: 1rem;
 }
 
 .img-qrcode {
@@ -246,6 +246,8 @@ span {
   margin-bottom: 1.5em;
   margin-top: 1.5em;
   align-items: center;
+  padding: 2rem;  
+	border-radius: 5px !important;
 }
 
 .refresh-button {

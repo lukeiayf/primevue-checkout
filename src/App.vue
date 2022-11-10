@@ -19,7 +19,7 @@ import SalesDetailComponent from "./components/SalesDetailComponent.vue";
 }
 
 body {
-  background: #2196F3;
+  background: #ecf0f5;
   background-position-x: initial;
   background-position-y: initial;
   background-size: cover;
