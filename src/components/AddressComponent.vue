@@ -1,6 +1,6 @@
 <template>
 <div>
-    <span class="p-float-label p-input-icon-right">
+    <span class="p-float-label p-input-icon-right full">
         <i class="pi pi-map-marker"></i>
         <InputText required id="zipcode" type="text" v-model="v$.zipcode.$model" class="full input-size"
             :class="{ 'full input-size p-invalid': v$.zipcode.$invalid && props.submitted }"
@@ -12,7 +12,7 @@
 </div>
 <div class="flex-row">
     <div class="width-45">
-        <span class="p-float-label p-input-icon-right">
+        <span class="p-float-label p-input-icon-right full">
             <i class="pi pi-flag"></i>
             <InputText required id="state" type="text" v-model="v$.state.$model" class="full input-size"
                 :class="{ 'full input-size p-invalid': v$.state.$invalid && props.submitted }" />
@@ -22,7 +22,7 @@
             class="p-error">{{ $t('erros.endereco.estadoRequerido') }}</small>
     </div>
     <div class="width-45">
-        <span class="p-float-label p-input-icon-right">
+        <span class="p-float-label p-input-icon-right full">
             <i class="pi pi-flag"></i>
             <InputText required id="city" type="text" v-model="v$.city.$model" class="full input-size"
                 :class="{ 'full input-size p-invalid': v$.city.$invalid && props.submitted }" />
@@ -33,7 +33,7 @@
     </div>
 </div>
 <div>
-    <span class="p-float-label p-input-icon-right">
+    <span class="p-float-label p-input-icon-right full">
         <i class="pi pi-map"></i>
         <InputText required id="street" type="text" v-model="v$.street.$model" class="full input-size"
             :class="{ 'full input-size p-invalid': v$.street.$invalid && props.submitted }" />
@@ -44,7 +44,7 @@
 </div>
 <div class="flex-row">
     <div class="width-45">
-        <span class="p-float-label p-input-icon-right">
+        <span class="p-float-label p-input-icon-right full">
             <i class="pi pi-home"></i>
             <InputText required id="number" type="text" v-model="v$.number.$model" class="full input-size"
                 :class="{ 'full input-size p-invalid': v$.number.$invalid && props.submitted }" />
@@ -54,7 +54,7 @@
             class="p-error">{{ $t('erros.endereco.numeroRequerido') }}</small>
     </div>
     <div class="width-45">
-        <span class=" p-float-label p-input-icon-right">
+        <span class=" p-float-label p-input-icon-right full">
             <i class="pi pi-building"></i>
             <InputText id="line2" type="text" v-model="v$.lineTwo.$model" class="full input-size" />
             <label for="line2">{{ $t('endereco.complemento') }}</label>
@@ -166,5 +166,23 @@ function validateCep(inputCep: string) {
     height: 27.33px;
     padding: -2px;
     padding-left: -6px;
+}
+
+@media screen and (max-width: 800px) {
+  .flex-row {
+    justify-content: center;
+    display: flex;
+    flex-direction: column  !important;
+    gap: 20px;
+  }
+
+  .mobile{
+    width: 400px;
+  }
+
+  .full {
+    width: 90vw !important;
+  }
+
 }
 </style>

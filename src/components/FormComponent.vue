@@ -201,7 +201,7 @@ function loadAddress(customerId: number) {
 		addressLineTwo: v$.value.lineTwo.$model,
 		state: v$.value.state.$model,
 		city: v$.value.city.$model,
-		neighborhood:"teste"
+		neighborhood: "teste"
 	};
 	Backend.getInstance().getAddressImplementation().createAddress(AddressState, companyId.value, customerId).then(result => {
 		address.value = result;
@@ -326,5 +326,34 @@ const handleSubmit = async (isFormValid: boolean) => {
 .center-button {
 	justify-content: center;
 	display: flex;
+}
+
+@media screen and (max-width: 800px) {
+	.flex-row {
+		justify-content: center;
+		display: flex;
+		flex-direction: column !important;
+		gap: 20px;
+	}
+
+	.mobile {
+		width: 400px;
+	}
+
+	.full {
+    width: 90vw !important;
+  }
+
+  .button-payment {
+	width: 90vw;
+  }
+
+  .card {
+	width: 97vw;
+	margin-bottom: 1.5em;
+	margin-top: 1.5em;
+	align-items: center;
+}
+
 }
 </style>

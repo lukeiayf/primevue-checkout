@@ -10,58 +10,85 @@
       <ul class="list p-icon-right">
         <li class="item-list">
           <span>
+            Nome
+          </span>
+          <span>
             {{ props.customer.name }}
           </span>
-          <i class="pi pi-user" />
+          <!-- <i class="pi pi-user" /> -->
         </li>
 
+        <Divider />
         <li class="item-list">
+          <span>
+            Email
+          </span>
           <span>
             {{ props.customer.email }}
           </span>
-          <i class="pi pi-at"></i>
+          <!-- <i class="pi pi-at"></i> -->
         </li>
       </ul>
       <h5>{{ $t('dadosPagamento') }}</h5>
+
       <ul class="list">
         <li class="item-list">
           <span>
+            Método de pagamento
+          </span>
+          <span>
             {{ $t(`transactionSummary.${paymentMethod}`) }}
           </span>
-          <i class="pi pi-dollar"></i>
+          <!-- <i class="pi pi-dollar"></i> -->
         </li>
+        <Divider />
         <li class="item-list">
+          <span>
+            Parcelas
+          </span>
           <span>
             {{ props.payment.installments }}
           </span>
-          <i class="pi pi-money-bill"></i>
+          <!-- <i class="pi pi-money-bill"></i> -->
         </li>
+        <Divider />
         <li class="item-list" v-if="props.paymentMethod == 'CREDIT_CARD'">
+          Status da transação
           <span>
             {{ $t(`transactionSummary.status.${transaction.status}`) }}
           </span>
-          <i class="pi pi-calendar"></i>
+
+          <!-- <i class="pi pi-calendar"></i> -->
         </li>
+        <Divider v-if="props.paymentMethod == 'CREDIT_CARD'" />
         <li type="date" v-if="props.paymentMethod == 'PIX'" class="item-list">
           <span>
             {{ date }}
           </span>
           <i class="pi pi-calendar"></i>
         </li>
+        <Divider v-if="props.paymentMethod == 'PIX'" />
         <li v-if="props.paymentMethod == 'BANK_SLIP'" class="item-list">
+          <span>
+            Data de vencimento
+          </span>
           <span>
             {{ date }}
           </span>
-          <i class="pi pi-calendar"></i>
+          <!-- <i class="pi pi-calendar"></i> -->
         </li>
-        <li v-if="props.paymentMethod == 'BANK_SLIP'" class="item-list">
+        <Divider v-if="props.paymentMethod == 'BANK_SLIP'" />
+        <li v-if="props.paymentMethod == 'BANK_SLIP'" class="item-list wrap">
+          <span>
+            Linha digitável
+          </span>
           <span>
             {{ code }}
           </span>
-          <i class="pi pi-info-circle"></i>
+          <!-- <i class="pi pi-info-circle"></i> -->
         </li>
       </ul>
-      <div v-if="props.paymentMethod == 'CREDIT_CARD'" class="center container-qrcode">
+      <div v-if="props.paymentMethod == 'CREDIT_CARD'" class="center container-code">
         <img v-if="transaction.status == 'APPROVED'" src="../assets/shopping-cart.png" class="img-barcode"
           alt="Boleto" />
         <img v-if="!transactionOk" src="../assets/warning.jpg" class="img-qrcode"
@@ -70,12 +97,15 @@
           v-tooltip="'Houve um erro durante a transação, clique aqui para tentar novamente'" icon="pi pi-refresh"
           iconPos="left" @click="reloadPage()">{{ textReloadTransaction }}</Button>
       </div>
-      <div v-if="props.paymentMethod == 'BANK_SLIP'" class="center">
+      <div v-if="props.paymentMethod == 'BANK_SLIP'" class="container-code">
         <img :src="imgSrcBankslip" class="img-barcode" alt="Boleto" />
+        <Button type="submit" id="btn-copy" class="button-barcode" v-tooltip="'Clique para copiar'"
+          v-if="props.paymentMethod == 'BANK_SLIP'" icon="pi pi-copy" iconPos="left" @click="copyEmv()">{{ textButton
+          }}</Button>
       </div>
-      <div v-if="props.paymentMethod == 'PIX'" class="container-qrcode">
+      <div v-if="props.paymentMethod == 'PIX'" class="container-code">
         <img :src="imgSrcPix" class="img-qrcode" alt="PIX" />
-        <Button type="submit" id="btn-copy" class="button" v-tooltip="'Clique para copiar'"
+        <Button type="submit" id="btn-copy" class="button-qrcode" v-tooltip="'Clique para copiar'"
           v-if="props.paymentMethod == 'PIX'" icon="pi pi-copy" iconPos="left" @click="copyEmv()">{{ textButton
           }}</Button>
       </div>
@@ -93,6 +123,8 @@ import { Backend } from "@/services/backend";
 import { Ref, ref } from "vue";
 import moment from "moment";
 import Button from "primevue/button";
+import Divider from "primevue/divider";
+
 
 const imgSrcBankslip: Ref<string> = ref("");
 const imgSrcPix: Ref<string> = ref("");
@@ -107,7 +139,7 @@ let companyId: Ref<number> = ref(null);
 let uuid: Ref<string> = ref("");
 let date: Ref<string> = ref("");
 let code: Ref<string> = ref("");
-let textButton: Ref<string> = ref("Pix copia e cola");
+let textButton: Ref<string> = ref("");
 let textReloadTransaction: Ref<string> = ref("Clique aqui para tentar novamente");
 let transactionOk: Ref<boolean> = ref(true);
 
@@ -120,8 +152,10 @@ if (props.paymentMethod != "CREDIT_CARD") {
 			date.value = moment(result.date).format("DD/MM/yyyy");
 			code.value = result.code;
 			if (props.paymentMethod == "PIX") {
+				textButton.value = "Pix copia e cola";
 				imgSrcPix.value = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/qrcode?code=${code.value}`;
 			} else if (props.paymentMethod == "BANK_SLIP") {
+				textButton.value = "Copiar linha digitável";
 				imgSrcBankslip.value = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/barcode?code=${code.value}`;
 			}
 		}
@@ -174,15 +208,20 @@ function reloadPage() {
   font-size: small;
 }
 
-.container-qrcode {
+.container-code {
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  gap: 20px;
 }
 
-.button {
+.button-qrcode {
   width: 10rem !important;
+}
+
+.button-barcode {
+  width: 20rem !important;
 }
 
 .copy {
@@ -191,7 +230,7 @@ function reloadPage() {
 }
 
 .img-barcode {
-  width: 400px;
+  width: 600px;
 }
 
 span {
@@ -212,5 +251,27 @@ span {
 .refresh-button {
   width: 13rem !important;
   padding: 0.5rem;
+}
+
+.p-divider-solid.p-divider-horizontal:before {
+  border-top-style: solid !important;
+}
+
+@media screen and (max-width: 800px) {
+  .transaction-summary-card {
+    width: 97vw;
+    margin-bottom: 1.5em;
+    margin-top: 1.5em;
+    align-items: center;
+  }
+
+  .img-barcode {
+  width: 95vw;
+}
+
+.wrap{
+  display: none;
+}
+
 }
 </style>

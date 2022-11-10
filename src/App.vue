@@ -6,8 +6,8 @@ import SalesDetailComponent from "./components/SalesDetailComponent.vue";
 
 <template>
   <div class="flex-row">
-    <SalesDetailComponent class="margin-right"></SalesDetailComponent>
-    <FormComponent></FormComponent>
+    <SalesDetailComponent class="margin-right mobile"></SalesDetailComponent>
+    <FormComponent class="mobile"></FormComponent>
   </div>
 </template>
 
@@ -22,7 +22,7 @@ body {
   background: #2196F3;
   background-position-x: initial;
   background-position-y: initial;
-  background-size:cover;
+  background-size: cover;
   background-attachment: initial;
   background-origin: initial;
   background-clip: initial;
@@ -33,7 +33,25 @@ body {
   display: flex;
   flex-direction: row;
 }
+
 .margin-right {
   margin-right: 1rem;
+}
+
+@media screen and (max-width: 800px) {
+  .flex-row {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .margin-right {
+    margin-right: 0;
+  }
+
+  .mobile {
+    width: 95vw !important;
+  }
+
 }
 </style>
