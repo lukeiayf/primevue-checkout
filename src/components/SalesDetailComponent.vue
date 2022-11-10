@@ -105,11 +105,13 @@ Backend.getInstance().getPagePayImplementation().getPaymentPage(companyId.value,
   list-style: none;
 }
 
+span {
+  font-size: medium;
+}
+
 .item-list {
   display: flex;
   justify-content: space-between;
-  border: #d4d9de solid 1px;
-  border-radius: 3px;
   margin-bottom: 5px;
   padding: 0.2rem;
   font-size: small;

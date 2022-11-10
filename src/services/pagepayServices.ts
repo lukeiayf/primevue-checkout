@@ -29,25 +29,27 @@ export class PagePayBemPaggo implements PagePayServiceable {
 	}
 }
 export class CustomerBemPaggo implements CustomerServiceable {
-	async getCustomerId(companyId: number, customerDocument: string): Promise<CustomerMinimalResponse> {
+	async getCustomerId(companyId: number, customerDocument: string): Promise<any> {
 		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/customers/document/${customerDocument.replace(/[^\d]+/g, "")}`;
 		try {
 			const response = await fetch(url, { method: "GET" });
 			if (response.ok) {
 				return await response.json();
 			} else {
-				throw new Error("erro no status da requisição");
+				return "";
 			}
 		} catch (error) {
 			throw new Error("erro na requisição");
 		}
 	}
-	async createCustomer(companyId: number, customerState: CustomerRequest): Promise<CustomerResponse> {
-		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/pagepays/customer/new`;
+	async createCustomer(companyId: number, customerState: CustomerRequest): Promise<any> {
+		const url = `${import.meta.env.VITE_APP_BACK_END}/api/v2/checkout/companies/${companyId}/customers`;
 		try {
-			const data = await fetch(url, { method: "POST", body: JSON.stringify({ customerState }) });
+			const data = await fetch(url, { method: "POST", headers: {
+				"Content-Type": "application/json"
+			}, body: JSON.stringify(customerState) });
 			if (data.ok) {
-				return await data.json();
+				return await data;
 			} else {
 				throw new Error("erro no status da requisição");
 			}

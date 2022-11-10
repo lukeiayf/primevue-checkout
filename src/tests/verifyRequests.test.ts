@@ -1,3 +1,4 @@
+import { AddressRequest } from "@/models/request/addressRequest";
 import { CustomerRequest } from "@/models/request/customerRequest";
 import { SaleRequest } from "@/models/request/paymentRequest";
 import { BrandsResponse } from "@/models/response/brandsResponse";
@@ -27,7 +28,7 @@ describe("backend", () => {
 		expect(pagepay.plan.trialDays).toEqual(15);
 		expect(pagepay.loose.value).toEqual(10.50);
 		expect(pagepay.loose.maxInstallments).toEqual(2);
-		expect(pagepay.paymentMethods).toEqual(["CREDIT_CARD", "PIX", "BANK_SLIP"]);
+		expect(pagepay.methods).toEqual(["CREDIT_CARD", "PIX", "BANK_SLIP"]);
 		expect(pagepay.affiliate.id).toEqual(1);
 		expect(pagepay.affiliate.name).toEqual("netflix");
 		expect(pagepay.affiliate.businessName).toEqual("netflix nome");
@@ -39,7 +40,7 @@ describe("backend", () => {
 		const customer: Promise<CustomerResponse> = Backend.getInstance().getCustomerImplementation().getCustomer(1, "90076629-34dc-4a26-a333-22fab585ff5d");
 		expect((await customer).id).toEqual(1);
 		expect((await customer).name).toEqual("customer name");
-		expect((await customer).document).toEqual("10095323678");
+		expect((await customer).cpf).toEqual("10095323678");
 		expect((await customer).email).toEqual("teste@teste.com");
 		expect((await customer).birthdate).toEqual(121019914);
 		expect((await customer).phone).toEqual("23453212");
@@ -52,30 +53,34 @@ describe("backend", () => {
 			birthdate: 121019914,
 			phone: "45999999999",
 		};
-		const customer: Promise<CustomerRequest> = Backend.getInstance().getCustomerImplementation().createCustomer(1, customerState);
+		const customer: Promise<CustomerResponse> = Backend.getInstance().getCustomerImplementation().createCustomer(1, customerState);
 		expect((await customer).name).toEqual("Nome Teste");
-		expect((await customer).document).toEqual("02577973004");
+		expect((await customer).cpf).toEqual("02577973004");
 		expect((await customer).birthdate).toEqual(121019914);
 		expect((await customer).phone).toEqual("45999999999");
 	});
 	test("putCustomer", async () => {
 		const customer: CustomerResponse = await Backend.getInstance().getCustomerImplementation().getCustomer(1, "90076629-34dc-4a26-a333-22fab585ff5d");
-	
-		const updatedCustomer = Backend.getInstance().getCustomerImplementation().putCustomer(customer,1, 123);
+		const customerRequest: CustomerRequest = new CustomerRequest();
+		customerRequest.document = customer.cpf;
+		customerRequest.email = customer.email;
+		customerRequest.name = customer.name;
+		customerRequest.phone = customer.phone;
+		const updatedCustomer = Backend.getInstance().getCustomerImplementation().putCustomer(customerRequest,1, 123);
 		expect((await updatedCustomer).name).toEqual("new customer name");
 
 	});
 	test("getAddress", async () => {
 		const address: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().getAddress(1, 123);
 		expect((await address).street).toEqual("Rua 1");
-		expect((await address).streetNumber).toEqual("1");
-		expect((await address).addressLineTwo).toEqual("apto 1");
+		expect((await address).number).toEqual("1");
+		expect((await address).lineTwo).toEqual("apto 1");
 		expect((await address).zipCode).toEqual("84010010");
 		expect((await address).city).toEqual("Ponta Grossa");
 		expect((await address).state).toEqual("Paraná");
 	});
 	test("createAddress", async () => {
-		const addressState: AddressResponse = {
+		const addressState: AddressRequest = {
 			street: "Rua 2",
 			streetNumber: "2",
 			addressLineTwo: "apto 2",
@@ -85,19 +90,19 @@ describe("backend", () => {
 		};
 		const address: Promise<AddressResponse> = Backend.getInstance().getAddressImplementation().createAddress(addressState, 1, 123);
 		expect((await address).street).toEqual("Rua 2");
-		expect((await address).streetNumber).toEqual("2");
-		expect((await address).addressLineTwo).toEqual("apto 2");
+		expect((await address).number).toEqual("2");
+		expect((await address).lineTwo).toEqual("apto 2");
 		expect((await address).zipCode).toEqual("69929970");
 		expect((await address).city).toEqual("Campinas");
 		expect((await address).state).toEqual("Acre");
 	});
 	test("getCard", async () => {
 		const cardId: Promise<CardResponse> = Backend.getInstance().getCardImplementation().getCard("mockurl");
-		expect((await cardId).profileId).toEqual(1);
+		expect((await cardId).id).toEqual(1);
 	});
 	test("getCustomerId", async () => {
 		const customerId: Promise<CustomerMinimalResponse> = Backend.getInstance().getCustomerImplementation().getCustomerId(1, "02577973004");
-		expect((await customerId).customerId).toEqual(1);
+		expect((await customerId).id).toEqual(1);
 	});
 	test("createCard", async () => {
 		const cardState: CardRequest = {
@@ -106,21 +111,35 @@ describe("backend", () => {
 			holderDocument: "38461175018",
 			holderName: "Nome Teste",
 			expirationDate: 121019914,
-			securityCode: 123
+			securityCode: "123"
 		};
 		const url: string = await Backend.getInstance().getCardImplementation().createCard(cardState, 1, 123);
 		expect((url)).toEqual("urlMock");
 
 	});
-	test("createPayment", async () => {
+	test("createPaymentCreditCard", async () => {
 		const paymentState: SaleRequest = {
-			uuid:"90076629-34dc-4a26-a333-22fab585ff5d",
 			customerId:1,
-			paymentType: "CREDIT_CARD",
 			installments:2,
 			profileId:1
 		};
-		const payment: string = await Backend.getInstance().getPaymentImplementation().createPayment(paymentState, 1, "90076629-34dc-4a26-a333-22fab585ff5d");
+		const payment: string = await Backend.getInstance().getPaymentImplementation().createPaymentCreditCard(paymentState, 1, "90076629-34dc-4a26-a333-22fab585ff5d");
+		expect( payment).toEqual("urlMock");
+	});
+	test("createPaymentPix", async () => {
+		const paymentState: SaleRequest = {
+			customerId:1,
+			installments:2
+		};
+		const payment: string = await Backend.getInstance().getPaymentImplementation().createPaymentPix(paymentState, 1, "90076629-34dc-4a26-a333-22fab585ff5d");
+		expect( payment).toEqual("urlMock");
+	});
+	test("createPaymentBankslip", async () => {
+		const paymentState: SaleRequest = {
+			customerId:1,
+			installments:2
+		};
+		const payment: string = await Backend.getInstance().getPaymentImplementation().createPaymentBankSlip(paymentState, 1, "90076629-34dc-4a26-a333-22fab585ff5d");
 		expect( payment).toEqual("urlMock");
 	});
 	test("getPayment", async () => {
@@ -129,7 +148,7 @@ describe("backend", () => {
 		expect(paymentInfo.date).toEqual(1665168260);
 	});
 	test("getBrands", async () => {
-		const brands: BrandsResponse[] = await Backend.getInstance().getCardImplementation().getBrands();
+		const brands: BrandsResponse[] = await Backend.getInstance().getCardImplementation().getBrands(1, "90076629-34dc-4a26-a333-22fab585ff5d");
 		expect(brands[0].id).toEqual(1);
 		expect(brands[0].name).toEqual("Visa");
 		expect(brands[1].id).toEqual(2);
